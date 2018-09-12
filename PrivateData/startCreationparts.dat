@@ -1,0 +1,1186 @@
+event ObjectiveConfig_kaihen
+{
+	if (yet(addmemoryunit)) {event(addmemoryunit)}
+	storeAllTalent(@allUnit)
+	while (count(@allUnit) >= 1) {
+		index(@allUnit, 0, @unit)
+		subv(@allUnit, @unit)
+
+		if (SWITCHop==0) {
+			storeBaseClassOfUnit(@unit, @class)
+			if (@class == guidestaff || @class == butler || @class == army || @class == provisioner || @class == nanashi001 || @class == nanashi000 || @class == studentm || @class == studentf || @class == slime || @class == toseinin || @class == tekiya || @class == police || @class == teacher || @class == member || @class == salaryman || @class == priest || @class == tinpira || @class == tempworkerm || @class == tempworkerw || @class == investigator || @class == spy || @class == resistance || @class == zombie || @class == kaomozi030 || @class == clonefel) {
+				addSkill(@unit, energycard)
+			}
+		}
+		pushRand(rand)
+		if (rand >= 0 && rand <= 24) {
+			set(objective, 0)
+		}else if (rand >= 25 && rand <= 49) {
+			set(objective, 1)
+		}else if (rand >= 50 && rand <= 74) {
+			set(objective, 2)
+		}else {
+			set(objective, 3)
+		}
+		clear(@allObjectiveClass)
+	//ˆÄ“àlŒn____________________________________________________________________________________________________
+		if (@unit == nini) {
+			setv(@allObjectiveClass, sage)
+			addv(@allObjectiveClass, sage)
+			addv(@allObjectiveClass, divine)
+			addv(@allObjectiveClass, divine)
+		}else if (@unit == yugu) {
+			setv(@allObjectiveClass, sage)
+			addv(@allObjectiveClass, patrician)
+			addv(@allObjectiveClass, patrician)
+			addv(@allObjectiveClass, seer)
+		}else if (@unit == dhidet) {
+			setv(@allObjectiveClass, sage)
+			addv(@allObjectiveClass, chevalier)
+			addv(@allObjectiveClass, chevalier)
+			addv(@allObjectiveClass, chevalier)
+		}else if (@unit == eraa) {
+			setv(@allObjectiveClass, sage)
+			addv(@allObjectiveClass, seer)
+			addv(@allObjectiveClass, seer)
+			addv(@allObjectiveClass, divine)
+		}else if (@unit == siruria) {
+			setv(@allObjectiveClass, chevalier)
+			addv(@allObjectiveClass, chevalier)
+			addv(@allObjectiveClass, chevalier)
+			addv(@allObjectiveClass, chevalier)
+		}else if (@unit == cou) {
+			setv(@allObjectiveClass, artist)
+			addv(@allObjectiveClass, artist)
+			addv(@allObjectiveClass, artist)
+			addv(@allObjectiveClass, chevalier)
+		}else if (@unit == hikari) {
+			setv(@allObjectiveClass, artist)
+			addv(@allObjectiveClass, artist)
+			addv(@allObjectiveClass, artist)
+			addv(@allObjectiveClass, artist)
+		}else if (@unit == miru) {
+			setv(@allObjectiveClass, sage)
+			addv(@allObjectiveClass, divine)
+			addv(@allObjectiveClass, divine)
+			addv(@allObjectiveClass, divine)
+		}else if (@unit == hokiru) {
+			setv(@allObjectiveClass, patrician)
+			addv(@allObjectiveClass, seer)
+			addv(@allObjectiveClass, seer)
+			addv(@allObjectiveClass, seer)
+		}else if (@unit == sebasuto) {
+			setv(@allObjectiveClass, chevalier)
+			addv(@allObjectiveClass, chevalier)
+			addv(@allObjectiveClass, chevalier)
+			addv(@allObjectiveClass, chevalier)
+		}else if (@unit == zeusu) {
+			setv(@allObjectiveClass, patrician)
+			addv(@allObjectiveClass, patrician)
+			addv(@allObjectiveClass, patrician)
+			addv(@allObjectiveClass, divine)
+	//ŒRlŒn____________________________________________________________________________________________________
+		}else if (@unit == honoka) {
+			setv(@allObjectiveClass, tank)
+			addv(@allObjectiveClass, tank)
+			addv(@allObjectiveClass, helicopter)
+			addv(@allObjectiveClass, helicopter)
+		}else if (@unit == katuki) {
+			setv(@allObjectiveClass, hinfantry)
+			addv(@allObjectiveClass, sniper)
+			addv(@allObjectiveClass, sniper)
+			addv(@allObjectiveClass, battleship)
+		}else if (@unit == fef) {
+			setv(@allObjectiveClass, magicsoldier)
+			addv(@allObjectiveClass, magicsoldier)
+			addv(@allObjectiveClass, helicopter)
+			addv(@allObjectiveClass, battleship)
+		}else if (@unit == rex) {
+			setv(@allObjectiveClass, magicsoldier)
+			addv(@allObjectiveClass, tank)
+			addv(@allObjectiveClass, helicopter)
+			addv(@allObjectiveClass, battleship)
+		}else if (@unit == kamiya) {
+			setv(@allObjectiveClass, sniper)
+			addv(@allObjectiveClass, sniper)
+			addv(@allObjectiveClass, sniper)
+			addv(@allObjectiveClass, sniper)
+		}else if (@unit == kukumi) {
+			setv(@allObjectiveClass, hinfantry)
+			addv(@allObjectiveClass, hinfantry)
+			addv(@allObjectiveClass, sniper)
+			addv(@allObjectiveClass, battleship)
+		}else if (@unit == orusai) {
+			setv(@allObjectiveClass, tank)
+			addv(@allObjectiveClass, tank)
+			addv(@allObjectiveClass, battleship)
+			addv(@allObjectiveClass, battleship)
+		}else if (@unit == sarina) {
+			setv(@allObjectiveClass, magicsoldier)
+			addv(@allObjectiveClass, helicopter)
+			addv(@allObjectiveClass, battleship)
+			addv(@allObjectiveClass, battleship)
+		}else if (@unit == ryuun) {
+			setv(@allObjectiveClass, hinfantry)
+			addv(@allObjectiveClass, hinfantry)
+			addv(@allObjectiveClass, tank)
+			addv(@allObjectiveClass, tank)
+		}else if (@unit == armyleaderA) {
+			setv(@allObjectiveClass, hinfantry)
+			addv(@allObjectiveClass, tank)
+			addv(@allObjectiveClass, helicopter)
+			addv(@allObjectiveClass, battleship)
+		}else if (@unit == armyleaderB) {
+			setv(@allObjectiveClass, hinfantry)
+			addv(@allObjectiveClass, hinfantry)
+			addv(@allObjectiveClass, tank)
+			addv(@allObjectiveClass, helicopter)
+		}else if (@unit == armyleaderC) {
+			setv(@allObjectiveClass, hinfantry)
+			addv(@allObjectiveClass, tank)
+			addv(@allObjectiveClass, battleship)
+			addv(@allObjectiveClass, battleship)
+		}else if (@unit == armyleaderD) {
+			setv(@allObjectiveClass, hinfantry)
+			addv(@allObjectiveClass, hinfantry)
+			addv(@allObjectiveClass, tank)
+			addv(@allObjectiveClass, helicopter)
+		}else if (@unit == armyleaderE) {
+			setv(@allObjectiveClass, hinfantry)
+			addv(@allObjectiveClass, hinfantry)
+			addv(@allObjectiveClass, tank)
+			addv(@allObjectiveClass, helicopter)
+		}else if (@unit == armyleaderF) {
+			setv(@allObjectiveClass, battleship)
+			addv(@allObjectiveClass, battleship)
+			addv(@allObjectiveClass, battleship)
+			addv(@allObjectiveClass, battleship)
+	//–³l‹@Œn____________________________________________________________________________________________________
+		}else if (@unit == daiya) {
+			setv(@allObjectiveClass, nanashi003)
+			addv(@allObjectiveClass, nanashi003)
+			addv(@allObjectiveClass, nanashi003)
+			addv(@allObjectiveClass, nanashi009)
+		}else if (@unit == maerunet) {
+			setv(@allObjectiveClass, nanashi004)
+			addv(@allObjectiveClass, nanashi004)
+			addv(@allObjectiveClass, nanashi006)
+			addv(@allObjectiveClass, nanashi006)
+		}else if (@unit == togeringo) {
+			setv(@allObjectiveClass, nanashi002)
+			addv(@allObjectiveClass, nanashi003)
+			addv(@allObjectiveClass, nanashi003)
+			addv(@allObjectiveClass, nanashi008)
+		}else if (@unit == heart) {
+			setv(@allObjectiveClass, nanashi002)
+			addv(@allObjectiveClass, nanashi003)
+			addv(@allObjectiveClass, nanashi003)
+			addv(@allObjectiveClass, nanashi008)
+		}else if (@unit == godou) {
+			setv(@allObjectiveClass, nanashi003)
+			addv(@allObjectiveClass, nanashi005)
+			addv(@allObjectiveClass, nanashi005)
+			addv(@allObjectiveClass, nanashi009)
+		}else if (@unit == bandana) {
+		}else if (@unit == doubletongue) {
+			setv(@allObjectiveClass, nanashi002)
+			addv(@allObjectiveClass, nanashi002)
+			addv(@allObjectiveClass, nanashi006)
+			addv(@allObjectiveClass, nanashi007)
+		}else if (@unit == triplegaze) {
+			setv(@allObjectiveClass, nanashi003)
+			addv(@allObjectiveClass, nanashi003)
+			addv(@allObjectiveClass, nanashi003)
+			addv(@allObjectiveClass, nanashi009)
+		}else if (@unit == kaomozityan) {
+		}else if (@unit == eye) {
+			setv(@allObjectiveClass, nanashi006)
+			addv(@allObjectiveClass, nanashi006)
+			addv(@allObjectiveClass, nanashi006)
+			addv(@allObjectiveClass, nanashi008)
+		}else if (@unit == tatarira) {
+			setv(@allObjectiveClass, nanashi006)
+			addv(@allObjectiveClass, nanashi006)
+			addv(@allObjectiveClass, nanashi006)
+			addv(@allObjectiveClass, nanashi008)
+		}else if (@unit == tortoise) {
+			setv(@allObjectiveClass, nanashi003)
+			addv(@allObjectiveClass, nanashi009)
+			addv(@allObjectiveClass, nanashi009)
+			addv(@allObjectiveClass, nanashi009)
+		}else if (@unit == silkhat) {
+			setv(@allObjectiveClass, nanashi002)
+			addv(@allObjectiveClass, nanashi003)
+			addv(@allObjectiveClass, nanashi006)
+			addv(@allObjectiveClass, nanashi008)
+		}else if (@unit == matu) {
+			setv(@allObjectiveClass, nanashi006)
+			addv(@allObjectiveClass, nanashi006)
+			addv(@allObjectiveClass, nanashi006)
+			addv(@allObjectiveClass, nanashi006)
+		}else if (@unit == take) {
+			setv(@allObjectiveClass, nanashi002)
+			addv(@allObjectiveClass, nanashi002)
+			addv(@allObjectiveClass, nanashi006)
+			addv(@allObjectiveClass, nanashi008)
+		}else if (@unit == ume) {
+			setv(@allObjectiveClass, nanashi002)
+			addv(@allObjectiveClass, nanashi002)
+			addv(@allObjectiveClass, nanashi006)
+			addv(@allObjectiveClass, nanashi008)
+		}else if (@unit == machineleaderA) {
+			setv(@allObjectiveClass, nanashi003)
+			addv(@allObjectiveClass, nanashi003)
+			addv(@allObjectiveClass, nanashi006)
+			addv(@allObjectiveClass, nanashi008)
+		}else if (@unit == machineleaderB) {
+			setv(@allObjectiveClass, nanashi002)
+			addv(@allObjectiveClass, nanashi006)
+			addv(@allObjectiveClass, nanashi006)
+			addv(@allObjectiveClass, nanashi006)
+		}else if (@unit == machineleaderC) {
+			setv(@allObjectiveClass, nanashi003)
+			addv(@allObjectiveClass, nanashi003)
+			addv(@allObjectiveClass, nanashi003)
+			addv(@allObjectiveClass, nanashi007)
+		}else if (@unit == machineleaderD) {
+			setv(@allObjectiveClass, nanashi003)
+			addv(@allObjectiveClass, nanashi003)
+			addv(@allObjectiveClass, nanashi006)
+			addv(@allObjectiveClass, nanashi008)
+		}else if (@unit == machineleaderE) {
+			setv(@allObjectiveClass, nanashi003)
+			addv(@allObjectiveClass, nanashi003)
+			addv(@allObjectiveClass, nanashi003)
+			addv(@allObjectiveClass, nanashi007)
+		}else if (@unit == machineleaderF) {
+			setv(@allObjectiveClass, nanashi003)
+			addv(@allObjectiveClass, nanashi003)
+			addv(@allObjectiveClass, nanashi003)
+			addv(@allObjectiveClass, nanashi007)
+		}else if (@unit == machineleaderG) {
+			setv(@allObjectiveClass, nanashi002)
+			addv(@allObjectiveClass, nanashi006)
+			addv(@allObjectiveClass, nanashi006)
+			addv(@allObjectiveClass, nanashi006)
+		}else if (@unit == machineleaderH) {
+			setv(@allObjectiveClass, nanashi003)
+			addv(@allObjectiveClass, nanashi003)
+			addv(@allObjectiveClass, nanashi003)
+			addv(@allObjectiveClass, nanashi003)
+	//Šw¶Œn____________________________________________________________________________________________________
+		}else if (@unit == himesiro) {
+			setv(@allObjectiveClass, scouncil)
+			addv(@allObjectiveClass, scouncil)
+			addv(@allObjectiveClass, scouncil)
+			addv(@allObjectiveClass, swimmingclub)
+		}else if (@unit == saseguti) {
+			setv(@allObjectiveClass, kendoclub)
+			addv(@allObjectiveClass, kendoclub)
+			addv(@allObjectiveClass, cheerteam)
+			addv(@allObjectiveClass, cheerteam)
+		}else if (@unit == yuzu) {
+			setv(@allObjectiveClass, occultclub)
+			addv(@allObjectiveClass, occultclub)
+			addv(@allObjectiveClass, biologyclub)
+			addv(@allObjectiveClass, swimmingclub)
+		}else if (@unit == saon) {
+			setv(@allObjectiveClass, kendoclub)
+			addv(@allObjectiveClass, kendoclub)
+			addv(@allObjectiveClass, kendoclub)
+			addv(@allObjectiveClass, kendoclub)
+		}else if (@unit == eifon) {
+			setv(@allObjectiveClass, shotputter)
+			addv(@allObjectiveClass, shotputter)
+			addv(@allObjectiveClass, shotputter)
+			addv(@allObjectiveClass, shotputter)
+		}else if (@unit == fugaku) {
+			setv(@allObjectiveClass, scouncil)
+			addv(@allObjectiveClass, scouncil)
+			addv(@allObjectiveClass, biologyclub)
+			addv(@allObjectiveClass, kendoclub)
+		}else if (@unit == hiiragi) {
+			setv(@allObjectiveClass, scouncil)
+			addv(@allObjectiveClass, biologyclub)
+			addv(@allObjectiveClass, biologyclub)
+			addv(@allObjectiveClass, biologyclub)
+		}else if (@unit == hotaru) {
+			setv(@allObjectiveClass, occultclub)
+			addv(@allObjectiveClass, occultclub)
+			addv(@allObjectiveClass, swimmingclub)
+			addv(@allObjectiveClass, swimmingclub)
+		}else if (@unit == kasugaya) {
+			setv(@allObjectiveClass, scouncil)
+			addv(@allObjectiveClass, shotputter)
+			addv(@allObjectiveClass, kendoclub)
+			addv(@allObjectiveClass, cheerteam)
+		}else if (@unit == serisu) {
+			setv(@allObjectiveClass, biologyclub)
+			addv(@allObjectiveClass, biologyclub)
+			addv(@allObjectiveClass, biologyclub)
+			addv(@allObjectiveClass, biologyclub)
+		}else if (@unit == touza) {
+			setv(@allObjectiveClass, biologyclub)
+			addv(@allObjectiveClass, biologyclub)
+			addv(@allObjectiveClass, biologyclub)
+			addv(@allObjectiveClass, swimmingclub)
+		}else if (@unit == haruka) {
+			setv(@allObjectiveClass, shotputter)
+			addv(@allObjectiveClass, shotputter)
+			addv(@allObjectiveClass, cheerteam)
+			addv(@allObjectiveClass, swimmingclub)
+		}else if (@unit == maeru) {
+			setv(@allObjectiveClass, occultclub)
+			addv(@allObjectiveClass, occultclub)
+			addv(@allObjectiveClass, occultclub)
+			addv(@allObjectiveClass, occultclub)
+		}else if (@unit == mizuna) {
+			setv(@allObjectiveClass, occultclub)
+			addv(@allObjectiveClass, occultclub)
+			addv(@allObjectiveClass, occultclub)
+			addv(@allObjectiveClass, occultclub)
+		}else if (@unit == studentleaderA) {
+			setv(@allObjectiveClass, scouncil)
+			addv(@allObjectiveClass, occultclub)
+			addv(@allObjectiveClass, kendoclub)
+			addv(@allObjectiveClass, cheerteam)
+		}else if (@unit == studentleaderB) {
+			setv(@allObjectiveClass, scouncil)
+			addv(@allObjectiveClass, scouncil)
+			addv(@allObjectiveClass, occultclub)
+			addv(@allObjectiveClass, cheerteam)
+		}else if (@unit == studentleaderC) {
+			setv(@allObjectiveClass, scouncil)
+			addv(@allObjectiveClass, scouncil)
+			addv(@allObjectiveClass, occultclub)
+			addv(@allObjectiveClass, cheerteam)
+		}else if (@unit == studentleaderD) {
+			setv(@allObjectiveClass, kendoclub)
+			addv(@allObjectiveClass, occultclub)
+			addv(@allObjectiveClass, occultclub)
+			addv(@allObjectiveClass, swimmingclub)
+		}else if (@unit == studentleaderE) {
+			setv(@allObjectiveClass, scouncil)
+			addv(@allObjectiveClass, scouncil)
+			addv(@allObjectiveClass, cheerteam)
+			addv(@allObjectiveClass, cheerteam)
+		}else if (@unit == studentleaderF) {
+			setv(@allObjectiveClass, kendoclub)
+			addv(@allObjectiveClass, occultclub)
+			addv(@allObjectiveClass, occultclub)
+			addv(@allObjectiveClass, swimmingclub)
+		}else if (@unit == studentleaderG) {
+			setv(@allObjectiveClass, kendoclub)
+			addv(@allObjectiveClass, occultclub)
+			addv(@allObjectiveClass, occultclub)
+			addv(@allObjectiveClass, swimmingclub)
+		}else if (@unit == studentleaderH) {
+			setv(@allObjectiveClass, kendoclub)
+			addv(@allObjectiveClass, occultclub)
+			addv(@allObjectiveClass, occultclub)
+			addv(@allObjectiveClass, swimmingclub)
+	//¸—ìŒn____________________________________________________________________________________________________
+		}else if (@unit == riferi) {
+			setv(@allObjectiveClass, reslime)
+			addv(@allObjectiveClass, dragon)
+			addv(@allObjectiveClass, dragon)
+			addv(@allObjectiveClass, dragon)
+		}else if (@unit == rifon) {
+			setv(@allObjectiveClass, reslime)
+			addv(@allObjectiveClass, reslime)
+			addv(@allObjectiveClass, salamanber)
+			addv(@allObjectiveClass, salamanber)
+		}else if (@unit == roton) {
+			setv(@allObjectiveClass, reslime)
+			addv(@allObjectiveClass, undine)
+			addv(@allObjectiveClass, undine)
+			addv(@allObjectiveClass, undine)
+		}else if (@unit == kurumu) {
+			setv(@allObjectiveClass, undine)
+			addv(@allObjectiveClass, undine)
+			addv(@allObjectiveClass, undine)
+			addv(@allObjectiveClass, undine)
+		}else if (@unit == rerafu) {
+			setv(@allObjectiveClass, reslime)
+			addv(@allObjectiveClass, sylph)
+			addv(@allObjectiveClass, sylph)
+			addv(@allObjectiveClass, sylph)
+		}else if (@unit == gaagoriusu) {
+			setv(@allObjectiveClass, salamanber)
+			addv(@allObjectiveClass, salamanber)
+			addv(@allObjectiveClass, salamanber)
+			addv(@allObjectiveClass, dragon)
+		}else if (@unit == pooto) {
+			setv(@allObjectiveClass, reslime)
+			addv(@allObjectiveClass, reslime)
+			addv(@allObjectiveClass, reslime)
+			addv(@allObjectiveClass, reslime)
+		}else if (@unit == virado) {
+			setv(@allObjectiveClass, reslime)
+			addv(@allObjectiveClass, salamanber)
+			addv(@allObjectiveClass, salamanber)
+			addv(@allObjectiveClass, undine)
+		}else if (@unit == zora) {
+			setv(@allObjectiveClass, gnome)
+			addv(@allObjectiveClass, gnome)
+			addv(@allObjectiveClass, gnome)
+			addv(@allObjectiveClass, gnome)
+		}else if (@unit == spiritleaderA) {
+			setv(@allObjectiveClass, reslime)
+			addv(@allObjectiveClass, salamanber)
+			addv(@allObjectiveClass, undine)
+			addv(@allObjectiveClass, sylph)
+		}else if (@unit == spiritleaderB) {
+			setv(@allObjectiveClass, reslime)
+			addv(@allObjectiveClass, salamanber)
+			addv(@allObjectiveClass, undine)
+			addv(@allObjectiveClass, sylph)
+		}else if (@unit == spiritleaderC) {
+			setv(@allObjectiveClass, reslime)
+			addv(@allObjectiveClass, reslime)
+			addv(@allObjectiveClass, salamanber)
+			addv(@allObjectiveClass, salamanber)
+		}else if (@unit == spiritleaderD) {
+			setv(@allObjectiveClass, reslime)
+			addv(@allObjectiveClass, reslime)
+			addv(@allObjectiveClass, salamanber)
+			addv(@allObjectiveClass, salamanber)
+	//‹É“¹Œn____________________________________________________________________________________________________
+		}else if (@unit == suiren) {
+			setv(@allObjectiveClass, oni)
+			addv(@allObjectiveClass, ayakasi)
+			addv(@allObjectiveClass, ayakasi)
+			addv(@allObjectiveClass, ayakasi)
+		}else if (@unit == kizaki) {
+			setv(@allObjectiveClass, kibamusya)
+			addv(@allObjectiveClass, kibamusya)
+			addv(@allObjectiveClass, oni)
+			addv(@allObjectiveClass, oni)
+		}else if (@unit == yasu) {
+			setv(@allObjectiveClass, kibamusya)
+			addv(@allObjectiveClass, kibamusya)
+			addv(@allObjectiveClass, kibamusya)
+			addv(@allObjectiveClass, ninga)
+		}else if (@unit == cogarasi) {
+			setv(@allObjectiveClass, ninga)
+			addv(@allObjectiveClass, ninga)
+			addv(@allObjectiveClass, ninga)
+			addv(@allObjectiveClass, ninga)
+		}else if (@unit == eihamu) {
+			setv(@allObjectiveClass, kibamusya)
+			addv(@allObjectiveClass, kibamusya)
+			addv(@allObjectiveClass, oni)
+			addv(@allObjectiveClass, oni)
+		}else if (@unit == gogozii) {
+			setv(@allObjectiveClass, bakuto)
+			addv(@allObjectiveClass, bakuto)
+			addv(@allObjectiveClass, bakuto)
+			addv(@allObjectiveClass, bakuto)
+		}else if (@unit == migazi) {
+			setv(@allObjectiveClass, kibamusya)
+			addv(@allObjectiveClass, oni)
+			addv(@allObjectiveClass, oni)
+			addv(@allObjectiveClass, oni)
+		}else if (@unit == zakuro) {
+			setv(@allObjectiveClass, oni)
+			addv(@allObjectiveClass, oni)
+			addv(@allObjectiveClass, bakuto)
+			addv(@allObjectiveClass, bakuto)
+		}else if (@unit == mimika) {
+			setv(@allObjectiveClass, oni)
+			addv(@allObjectiveClass, ninga)
+			addv(@allObjectiveClass, bakuto)
+			addv(@allObjectiveClass, bakuto)
+		}else if (@unit == mirika) {
+			setv(@allObjectiveClass, oni)
+			addv(@allObjectiveClass, ninga)
+			addv(@allObjectiveClass, bakuto)
+			addv(@allObjectiveClass, bakuto)
+		}else if (@unit == gokudouleaderA) {
+			setv(@allObjectiveClass, kibamusya)
+			addv(@allObjectiveClass, kibamusya)
+			addv(@allObjectiveClass, oni)
+			addv(@allObjectiveClass, bakuto)
+		}else if (@unit == gokudouleaderB) {
+			setv(@allObjectiveClass, kibamusya)
+			addv(@allObjectiveClass, kibamusya)
+			addv(@allObjectiveClass, oni)
+			addv(@allObjectiveClass, oni)
+		}else if (@unit == gokudouleaderC) {
+			setv(@allObjectiveClass, bakuto)
+			addv(@allObjectiveClass, bakuto)
+			addv(@allObjectiveClass, bakuto)
+			addv(@allObjectiveClass, bakuto)
+		}else if (@unit == gokudouleaderD) {
+			setv(@allObjectiveClass, bakuto)
+			addv(@allObjectiveClass, bakuto)
+			addv(@allObjectiveClass, bakuto)
+			addv(@allObjectiveClass, bakuto)
+		}else if (@unit == gokudouleaderE) {
+			setv(@allObjectiveClass, kibamusya)
+			addv(@allObjectiveClass, kibamusya)
+			addv(@allObjectiveClass, oni)
+			addv(@allObjectiveClass, oni)
+		}else if (@unit == gokudouleaderF) {
+			setv(@allObjectiveClass, bakuto)
+			addv(@allObjectiveClass, bakuto)
+			addv(@allObjectiveClass, bakuto)
+			addv(@allObjectiveClass, bakuto)
+	//Œö–±ˆõŒn____________________________________________________________________________________________________
+		}else if (@unit == congou) {
+			setv(@allObjectiveClass, guardarmor)
+			addv(@allObjectiveClass, guardarmor)
+			addv(@allObjectiveClass, patrolcar)
+			addv(@allObjectiveClass, hero)
+		}else if (@unit == rina) {
+			setv(@allObjectiveClass, patrolcar)
+			addv(@allObjectiveClass, patrolcar)
+			addv(@allObjectiveClass, patrolcar)
+			addv(@allObjectiveClass, armoredcar)
+		}else if (@unit == hino) {
+			setv(@allObjectiveClass, spteam)
+			addv(@allObjectiveClass, spteam)
+			addv(@allObjectiveClass, hakase)
+			addv(@allObjectiveClass, guardarmor)
+		}else if (@unit == coutyou) {
+			setv(@allObjectiveClass, hakase)
+			addv(@allObjectiveClass, hakase)
+			addv(@allObjectiveClass, hakase)
+			addv(@allObjectiveClass, doctor)
+		}else if (@unit == kyoutou) {
+			setv(@allObjectiveClass, hakase)
+			addv(@allObjectiveClass, spteam)
+			addv(@allObjectiveClass, doctor)
+			addv(@allObjectiveClass, hero)
+		}else if (@unit == nisu) {
+			setv(@allObjectiveClass, doctor)
+			addv(@allObjectiveClass, doctor)
+			addv(@allObjectiveClass, doctor)
+			addv(@allObjectiveClass, doctor)
+		}else if (@unit == nozaka) {
+			setv(@allObjectiveClass, fireman)
+			addv(@allObjectiveClass, fireman)
+			addv(@allObjectiveClass, hero)
+			addv(@allObjectiveClass, hero)
+		}else if (@unit == sin) {
+			setv(@allObjectiveClass, spteam)
+			addv(@allObjectiveClass, hero)
+			addv(@allObjectiveClass, hero)
+			addv(@allObjectiveClass, hero)
+		}else if (@unit == tumiki) {
+			setv(@allObjectiveClass, hakase)
+			addv(@allObjectiveClass, hakase)
+			addv(@allObjectiveClass, doctor)
+			addv(@allObjectiveClass, doctor)
+		}else if (@unit == asamiya) {
+			setv(@allObjectiveClass, spteam)
+			addv(@allObjectiveClass, hakase)
+			addv(@allObjectiveClass, guardarmor)
+			addv(@allObjectiveClass, patrolcar)
+		}else if (@unit == publicservantleaderA) {
+			setv(@allObjectiveClass, spteam)
+			addv(@allObjectiveClass, hakase)
+			addv(@allObjectiveClass, doctor)
+			addv(@allObjectiveClass, guardarmor)
+		}else if (@unit == publicservantleaderB) {
+			setv(@allObjectiveClass, hakase)
+			addv(@allObjectiveClass, hakase)
+			addv(@allObjectiveClass, doctor)
+			addv(@allObjectiveClass, doctor)
+		}else if (@unit == publicservantleaderC) {
+			setv(@allObjectiveClass, doctor)
+			addv(@allObjectiveClass, fireman)
+			addv(@allObjectiveClass, fireman)
+			addv(@allObjectiveClass, patrolcar)
+		}else if (@unit == publicservantleaderD) {
+			setv(@allObjectiveClass, doctor)
+			addv(@allObjectiveClass, fireman)
+			addv(@allObjectiveClass, fireman)
+			addv(@allObjectiveClass, patrolcar)
+		}else if (@unit == publicservantleaderE) {
+			setv(@allObjectiveClass, spteam)
+			addv(@allObjectiveClass, guardarmor)
+			addv(@allObjectiveClass, guardarmor)
+			addv(@allObjectiveClass, guardarmor)
+		}else if (@unit == publicservantleaderF) {
+			setv(@allObjectiveClass, hakase)
+			addv(@allObjectiveClass, hakase)
+			addv(@allObjectiveClass, doctor)
+			addv(@allObjectiveClass, doctor)
+	//\¬ˆõŒn____________________________________________________________________________________________________
+		}else if (@unit == gimahi) {
+			setv(@allObjectiveClass, intellectual)
+			addv(@allObjectiveClass, charisma)
+			addv(@allObjectiveClass, charisma)
+			addv(@allObjectiveClass, charisma)
+		}else if (@unit == dokunuma) {
+			setv(@allObjectiveClass, activist)
+			addv(@allObjectiveClass, bouncer)
+			addv(@allObjectiveClass, bouncer)
+			addv(@allObjectiveClass, bouncer)
+		}else if (@unit == hebigo) {
+			setv(@allObjectiveClass, researcher)
+			addv(@allObjectiveClass, intellectual)
+			addv(@allObjectiveClass, intellectual)
+			addv(@allObjectiveClass, intellectual)
+		}else if (@unit == geki) {
+			setv(@allObjectiveClass, activist)
+			addv(@allObjectiveClass, activist)
+			addv(@allObjectiveClass, activist)
+			addv(@allObjectiveClass, charisma)
+		}else if (@unit == medyuusa) {
+			setv(@allObjectiveClass, researcher)
+			addv(@allObjectiveClass, researcher)
+			addv(@allObjectiveClass, researcher)
+			addv(@allObjectiveClass, researcher)
+		}else if (@unit == sirakaba) {
+			setv(@allObjectiveClass, intellectual)
+			addv(@allObjectiveClass, intellectual)
+			addv(@allObjectiveClass, intellectual)
+			addv(@allObjectiveClass, intellectual)
+		}else if (@unit == tosaki) {
+			setv(@allObjectiveClass, activist)
+			addv(@allObjectiveClass, activist)
+			addv(@allObjectiveClass, bouncer)
+			addv(@allObjectiveClass, researcher)
+		}else if (@unit == youhi) {
+			setv(@allObjectiveClass, activist)
+			addv(@allObjectiveClass, activist)
+			addv(@allObjectiveClass, activist)
+			addv(@allObjectiveClass, bouncer)
+		}else if (@unit == kanae) {
+			setv(@allObjectiveClass, bouncer)
+			addv(@allObjectiveClass, bouncer)
+			addv(@allObjectiveClass, bouncer)
+			addv(@allObjectiveClass, charisma)
+		}else if (@unit == groupleaderA) {
+			setv(@allObjectiveClass, activist)
+			addv(@allObjectiveClass, activist)
+			addv(@allObjectiveClass, activist)
+			addv(@allObjectiveClass, intellectual)
+		}else if (@unit == groupleaderB) {
+			setv(@allObjectiveClass, activist)
+			addv(@allObjectiveClass, activist)
+			addv(@allObjectiveClass, activist)
+			addv(@allObjectiveClass, intellectual)
+		}else if (@unit == groupleaderC) {
+			setv(@allObjectiveClass, activist)
+			addv(@allObjectiveClass, activist)
+			addv(@allObjectiveClass, activist)
+			addv(@allObjectiveClass, intellectual)
+		}else if (@unit == groupleaderD) {
+			setv(@allObjectiveClass, activist)
+			addv(@allObjectiveClass, bouncer)
+			addv(@allObjectiveClass, bouncer)
+			addv(@allObjectiveClass, bouncer)
+		}else if (@unit == groupleaderE) {
+			setv(@allObjectiveClass, activist)
+			addv(@allObjectiveClass, researcher)
+			addv(@allObjectiveClass, researcher)
+			addv(@allObjectiveClass, researcher)
+		}else if (@unit == groupleaderF) {
+			setv(@allObjectiveClass, activist)
+			addv(@allObjectiveClass, researcher)
+			addv(@allObjectiveClass, researcher)
+			addv(@allObjectiveClass, researcher)
+	//‰ïŽÐˆõŒn____________________________________________________________________________________________________
+		}else if (@unit == sekkai) {
+			setv(@allObjectiveClass, middlemanager)
+			addv(@allObjectiveClass, middlemanager)
+			addv(@allObjectiveClass, middlemanager)
+			addv(@allObjectiveClass, elite)
+		}else if (@unit == naobosi) {
+			setv(@allObjectiveClass, elite)
+			addv(@allObjectiveClass, elite)
+			addv(@allObjectiveClass, elite)
+			addv(@allObjectiveClass, elite)
+		}else if (@unit == myaumyau) {
+			setv(@allObjectiveClass, maid)
+			addv(@allObjectiveClass, idol)
+			addv(@allObjectiveClass, idol)
+			addv(@allObjectiveClass, idol)
+		}else if (@unit == yuki) {
+			setv(@allObjectiveClass, maid)
+			addv(@allObjectiveClass, cook)
+			addv(@allObjectiveClass, carpenter)
+			addv(@allObjectiveClass, mizusyoubaiw)
+		}else if (@unit == yumi) {
+			setv(@allObjectiveClass, mizusyoubaiw)
+			addv(@allObjectiveClass, mizusyoubaiw)
+			addv(@allObjectiveClass, mizusyoubaiw)
+			addv(@allObjectiveClass, mizusyoubaiw)
+		}else if (@unit == nanaka) {
+			setv(@allObjectiveClass, maid)
+			addv(@allObjectiveClass, maid)
+			addv(@allObjectiveClass, middlemanager)
+			addv(@allObjectiveClass, idol)
+		}else if (@unit == ebisu) {
+			setv(@allObjectiveClass, carpenter)
+			addv(@allObjectiveClass, carpenter)
+			addv(@allObjectiveClass, elite)
+			addv(@allObjectiveClass, elite)
+		}else if (@unit == kakkou) {
+			setv(@allObjectiveClass, maid)
+			addv(@allObjectiveClass, maid)
+			addv(@allObjectiveClass, maid)
+			addv(@allObjectiveClass, champion)
+		}else if (@unit == kazaguruma) {
+			setv(@allObjectiveClass, mizusyoubaim)
+			addv(@allObjectiveClass, idol)
+			addv(@allObjectiveClass, athlete)
+			addv(@allObjectiveClass, champion)
+		}else if (@unit == saezumi) {
+			setv(@allObjectiveClass, securityguard)
+			addv(@allObjectiveClass, middlemanager)
+			addv(@allObjectiveClass, middlemanager)
+			addv(@allObjectiveClass, middlemanager)
+		}else if (@unit == yadati) {
+			setv(@allObjectiveClass, elite)
+			addv(@allObjectiveClass, elite)
+			addv(@allObjectiveClass, elite)
+			addv(@allObjectiveClass, elite)
+		}else if (@unit == syau) {
+			setv(@allObjectiveClass, cook)
+			addv(@allObjectiveClass, cook)
+			addv(@allObjectiveClass, cook)
+			addv(@allObjectiveClass, cook)
+		}else if (@unit == ruuna) {
+			setv(@allObjectiveClass, idol)
+			addv(@allObjectiveClass, idol)
+			addv(@allObjectiveClass, idol)
+			addv(@allObjectiveClass, idol)
+		}else if (@unit == tatibana) {
+			setv(@allObjectiveClass, middlemanager)
+			addv(@allObjectiveClass, middlemanager)
+			addv(@allObjectiveClass, middlemanager)
+			addv(@allObjectiveClass, athlete)
+		}else if (@unit == workerleaderA) {
+			setv(@allObjectiveClass, cook)
+			addv(@allObjectiveClass, securityguard)
+			addv(@allObjectiveClass, middlemanager)
+			addv(@allObjectiveClass, middlemanager)
+		}else if (@unit == workerleaderB) {
+			setv(@allObjectiveClass, cook)
+			addv(@allObjectiveClass, cook)
+			addv(@allObjectiveClass, middlemanager)
+			addv(@allObjectiveClass, middlemanager)
+		}else if (@unit == workerleaderC) {
+			setv(@allObjectiveClass, cook)
+			addv(@allObjectiveClass, cook)
+			addv(@allObjectiveClass, middlemanager)
+			addv(@allObjectiveClass, middlemanager)
+		}else if (@unit == workerleaderD) {
+			setv(@allObjectiveClass, cook)
+			addv(@allObjectiveClass, securityguard)
+			addv(@allObjectiveClass, middlemanager)
+			addv(@allObjectiveClass, middlemanager)
+		}else if (@unit == workerleaderE) {
+			setv(@allObjectiveClass, cook)
+			addv(@allObjectiveClass, cook)
+			addv(@allObjectiveClass, mizusyoubaim)
+			addv(@allObjectiveClass, middlemanager)
+		}else if (@unit == workerleaderF) {
+			setv(@allObjectiveClass, cook)
+			addv(@allObjectiveClass, cook)
+			addv(@allObjectiveClass, mizusyoubaiw)
+			addv(@allObjectiveClass, middlemanager)
+		}else if (@unit == workerleaderG) {
+			setv(@allObjectiveClass, securityguard)
+			addv(@allObjectiveClass, securityguard)
+			addv(@allObjectiveClass, securityguard)
+			addv(@allObjectiveClass, carpenter)
+		}else if (@unit == workerleaderH) {
+			setv(@allObjectiveClass, securityguard)
+			addv(@allObjectiveClass, securityguard)
+			addv(@allObjectiveClass, securityguard)
+			addv(@allObjectiveClass, carpenter)
+		}else if (@unit == workerleaderI) {
+			setv(@allObjectiveClass, cook)
+			addv(@allObjectiveClass, cook)
+			addv(@allObjectiveClass, middlemanager)
+			addv(@allObjectiveClass, middlemanager)
+		}else if (@unit == workerleaderJ) {
+			setv(@allObjectiveClass, securityguard)
+			addv(@allObjectiveClass, securityguard)
+			addv(@allObjectiveClass, securityguard)
+			addv(@allObjectiveClass, carpenter)
+	//_Š¯Œn____________________________________________________________________________________________________
+		}else if (@unit == veiraru) {
+			setv(@allObjectiveClass, yorishiro)
+			addv(@allObjectiveClass, yorishiro)
+			addv(@allObjectiveClass, yorishiro)
+			addv(@allObjectiveClass, yorishiro)
+		}else if (@unit == veil) {
+			setv(@allObjectiveClass, shaman)
+			addv(@allObjectiveClass, shaman)
+			addv(@allObjectiveClass, shaman)
+			addv(@allObjectiveClass, highpriest)
+		}else if (@unit == furient) {
+			setv(@allObjectiveClass, monk)
+			addv(@allObjectiveClass, monk)
+			addv(@allObjectiveClass, monk)
+			addv(@allObjectiveClass, monk)
+		}else if (@unit == hellun) {
+			setv(@allObjectiveClass, monk)
+			addv(@allObjectiveClass, monk)
+			addv(@allObjectiveClass, monk)
+			addv(@allObjectiveClass, highpriest)
+		}else if (@unit == outhi) {
+			setv(@allObjectiveClass, monk)
+			addv(@allObjectiveClass, monk)
+			addv(@allObjectiveClass, monk)
+			addv(@allObjectiveClass, monk)
+		}else if (@unit == poopoo) {
+			setv(@allObjectiveClass, shaman)
+			addv(@allObjectiveClass, shaman)
+			addv(@allObjectiveClass, highpriest)
+			addv(@allObjectiveClass, highpriest)
+		}else if (@unit == tetetota) {
+			setv(@allObjectiveClass, shaman)
+			addv(@allObjectiveClass, highpriest)
+			addv(@allObjectiveClass, highpriest)
+			addv(@allObjectiveClass, highpriest)
+		}else if (@unit == priestleaderA) {
+			setv(@allObjectiveClass, monk)
+			addv(@allObjectiveClass, shaman)
+			addv(@allObjectiveClass, highpriest)
+			addv(@allObjectiveClass, highpriest)
+		}else if (@unit == priestleaderB) {
+			setv(@allObjectiveClass, monk)
+			addv(@allObjectiveClass, shaman)
+			addv(@allObjectiveClass, highpriest)
+			addv(@allObjectiveClass, highpriest)
+		}else if (@unit == priestleaderC) {
+			setv(@allObjectiveClass, monk)
+			addv(@allObjectiveClass, monk)
+			addv(@allObjectiveClass, monk)
+			addv(@allObjectiveClass, highpriest)
+		}else if (@unit == priestleaderD) {
+			setv(@allObjectiveClass, monk)
+			addv(@allObjectiveClass, monk)
+			addv(@allObjectiveClass, monk)
+			addv(@allObjectiveClass, highpriest)
+		}else if (@unit == priestleaderE) {
+			setv(@allObjectiveClass, shaman)
+			addv(@allObjectiveClass, shaman)
+			addv(@allObjectiveClass, shaman)
+			addv(@allObjectiveClass, highpriest)
+		}else if (@unit == priestleaderF) {
+			setv(@allObjectiveClass, shaman)
+			addv(@allObjectiveClass, shaman)
+			addv(@allObjectiveClass, shaman)
+			addv(@allObjectiveClass, highpriest)
+	//•s—ÇŒn____________________________________________________________________________________________________
+		}else if (@unit == tousi) {
+			setv(@allObjectiveClass, kenkaya)
+			addv(@allObjectiveClass, kenkaya)
+			addv(@allObjectiveClass, kenkaya)
+			addv(@allObjectiveClass, bantyou)
+		}else if (@unit == cogi) {
+			setv(@allObjectiveClass, thief)
+			addv(@allObjectiveClass, bike)
+			addv(@allObjectiveClass, dealer)
+			addv(@allObjectiveClass, dealer)
+		}else if (@unit == rin) {
+			setv(@allObjectiveClass, bike)
+			addv(@allObjectiveClass, bike)
+			addv(@allObjectiveClass, bike)
+			addv(@allObjectiveClass, bike)
+		}else if (@unit == isikawa) {
+			setv(@allObjectiveClass, thief)
+			addv(@allObjectiveClass, thief)
+			addv(@allObjectiveClass, thief)
+			addv(@allObjectiveClass, thief)
+		}else if (@unit == mouseboy) {
+			setv(@allObjectiveClass, thief)
+			addv(@allObjectiveClass, thief)
+			addv(@allObjectiveClass, thief)
+			addv(@allObjectiveClass, thief)
+		}else if (@unit == inaba) {
+			setv(@allObjectiveClass, thief)
+			addv(@allObjectiveClass, thief)
+			addv(@allObjectiveClass, thief)
+			addv(@allObjectiveClass, thief)
+		}else if (@unit == ariel) {
+			setv(@allObjectiveClass, dealer)
+			addv(@allObjectiveClass, dealer)
+			addv(@allObjectiveClass, dealer)
+			addv(@allObjectiveClass, dealer)
+		}else if (@unit == rakuyou) {
+			setv(@allObjectiveClass, kenkaya)
+			addv(@allObjectiveClass, kenkaya)
+			addv(@allObjectiveClass, thief)
+			addv(@allObjectiveClass, bike)
+		}else if (@unit == ryuuga) {
+			setv(@allObjectiveClass, kenkaya)
+			addv(@allObjectiveClass, kenkaya)
+			addv(@allObjectiveClass, bantyou)
+			addv(@allObjectiveClass, bantyou)
+		}else if (@unit == sugamiya) {
+			setv(@allObjectiveClass, thief)
+			addv(@allObjectiveClass, thief)
+			addv(@allObjectiveClass, dealer)
+			addv(@allObjectiveClass, dealer)
+		}else if (@unit == tyami) {
+			setv(@allObjectiveClass, kenkaya)
+			addv(@allObjectiveClass, kenkaya)
+			addv(@allObjectiveClass, bike)
+			addv(@allObjectiveClass, bantyou)
+		}else if (@unit == nami) {
+			setv(@allObjectiveClass, bike)
+			addv(@allObjectiveClass, dealer)
+			addv(@allObjectiveClass, dealer)
+			addv(@allObjectiveClass, dealer)
+		}else if (@unit == igasi) {
+			setv(@allObjectiveClass, kenkaya)
+			addv(@allObjectiveClass, bantyou)
+			addv(@allObjectiveClass, bantyou)
+			addv(@allObjectiveClass, bantyou)
+		}else if (@unit == outlawleaderA) {
+			setv(@allObjectiveClass, kenkaya)
+			addv(@allObjectiveClass, thief)
+			addv(@allObjectiveClass, bike)
+			addv(@allObjectiveClass, dealer)
+		}else if (@unit == outlawleaderB) {
+			setv(@allObjectiveClass, kenkaya)
+			addv(@allObjectiveClass, kenkaya)
+			addv(@allObjectiveClass, kenkaya)
+			addv(@allObjectiveClass, bike)
+		}else if (@unit == outlawleaderC) {
+			setv(@allObjectiveClass, kenkaya)
+			addv(@allObjectiveClass, thief)
+			addv(@allObjectiveClass, bike)
+			addv(@allObjectiveClass, dealer)
+		}else if (@unit == outlawleaderD) {
+			setv(@allObjectiveClass, thief)
+			addv(@allObjectiveClass, thief)
+			addv(@allObjectiveClass, dealer)
+			addv(@allObjectiveClass, dealer)
+		}else if (@unit == outlawleaderE) {
+			setv(@allObjectiveClass, kenkaya)
+			addv(@allObjectiveClass, kenkaya)
+			addv(@allObjectiveClass, kenkaya)
+			addv(@allObjectiveClass, bike)
+		}else if (@unit == outlawleaderF) {
+			setv(@allObjectiveClass, thief)
+			addv(@allObjectiveClass, thief)
+			addv(@allObjectiveClass, dealer)
+			addv(@allObjectiveClass, dealer)
+	//”ñ³‹KŒn____________________________________________________________________________________________________
+		}else if (@unit == amu) {
+		}else if (@unit == arukana) {
+		}else if (@unit == conno) {
+		}else if (@unit == coco) {
+		}else if (@unit == fusagi) {
+		}else if (@unit == itinose) {
+		}else if (@unit == miyaco) {
+		}else if (@unit == momonoki) {
+		}else if (@unit == paseri) {
+		}else if (@unit == sasabune) {
+		}else if (@unit == siisi) {
+		}else if (@unit == eil) {
+		}else if (@unit == souron) {
+		}else if (@unit == mirei) {
+		}else if (@unit == tempworkerleaderA) {
+		}else if (@unit == tempworkerleaderB) {
+		}else if (@unit == tempworkerleaderC) {
+		}else if (@unit == tempworkerleaderD) {
+		}else if (@unit == tempworkerleaderE) {
+		}else if (@unit == tempworkerleaderF) {
+		}else if (@unit == tempworkerleaderG) {
+		}else if (@unit == tempworkerleaderH) {
+		}else if (@unit == tempworkerleaderI) {
+		}else if (@unit == tempworkerleaderJ) {
+		}else if (@unit == tempworkerleaderK) {
+		}else if (@unit == tempworkerleaderL) {
+		}else if (@unit == tempworkerleaderM) {
+		}else if (@unit == tempworkerleaderN) {
+		}else if (@unit == tempworkerleaderO) {
+		}else if (@unit == tempworkerleaderP) {
+	//— ‘gDŒn____________________________________________________________________________________________________
+		}else if (@unit == youiti) {
+			setv(@allObjectiveClass, assassin)
+			addv(@allObjectiveClass, assassin)
+			addv(@allObjectiveClass, assassin)
+			addv(@allObjectiveClass, assassin)
+		}else if (@unit == hourisu) {
+			setv(@allObjectiveClass, assassin)
+			addv(@allObjectiveClass, assassin)
+			addv(@allObjectiveClass, assassin)
+			addv(@allObjectiveClass, assassin)
+		}else if (@unit == kiyuno) {
+			setv(@allObjectiveClass, assassin)
+			addv(@allObjectiveClass, assassin)
+			addv(@allObjectiveClass, umbra)
+			addv(@allObjectiveClass, umbra)
+		}else if (@unit == izuki) {
+			setv(@allObjectiveClass, assassin)
+			addv(@allObjectiveClass, assassin)
+			addv(@allObjectiveClass, umbra)
+			addv(@allObjectiveClass, umbra)
+		}else if (@unit == siraki) {
+			setv(@allObjectiveClass, umbra)
+			addv(@allObjectiveClass, umbra)
+			addv(@allObjectiveClass, umbra)
+			addv(@allObjectiveClass, umbra)
+		}else if (@unit == ivii) {
+			setv(@allObjectiveClass, assassin)
+			addv(@allObjectiveClass, assassin)
+			addv(@allObjectiveClass, assassin)
+			addv(@allObjectiveClass, assassin)
+		}else if (@unit == az) {
+			setv(@allObjectiveClass, umbra)
+			addv(@allObjectiveClass, umbra)
+			addv(@allObjectiveClass, umbra)
+			addv(@allObjectiveClass, umbra)
+		}else if (@unit == codec) {
+			setv(@allObjectiveClass, assassin)
+			addv(@allObjectiveClass, assassin)
+			addv(@allObjectiveClass, umbra)
+			addv(@allObjectiveClass, umbra)
+		}else if (@unit == riiten) {
+			setv(@allObjectiveClass, assassin)
+			addv(@allObjectiveClass, umbra)
+			addv(@allObjectiveClass, umbra)
+			addv(@allObjectiveClass, umbra)
+		}else if (@unit == assassinleaderA) {
+			setv(@allObjectiveClass, assassin)
+			addv(@allObjectiveClass, assassin)
+			addv(@allObjectiveClass, assassin)
+			addv(@allObjectiveClass, assassin)
+		}else if (@unit == assassinleaderB) {
+			setv(@allObjectiveClass, assassin)
+			addv(@allObjectiveClass, assassin)
+			addv(@allObjectiveClass, assassin)
+			addv(@allObjectiveClass, assassin)
+		}else if (@unit == assassinleaderC) {
+			setv(@allObjectiveClass, assassin)
+			addv(@allObjectiveClass, assassin)
+			addv(@allObjectiveClass, assassin)
+			addv(@allObjectiveClass, assassin)
+		}else if (@unit == assassinleaderD) {
+			setv(@allObjectiveClass, assassin)
+			addv(@allObjectiveClass, assassin)
+			addv(@allObjectiveClass, assassin)
+			addv(@allObjectiveClass, assassin)
+	//—vlŒn____________________________________________________________________________________________________
+		}else if (@unit == utari) {
+		}else if (@unit == ibari) {
+		}else if (@unit == rifaru) {
+		}else if (@unit == ryudou) {
+		}else if (@unit == ouen) {
+		}else if (@unit == burai) {
+		}else if (@unit == hikage) {
+		}else if (@unit == raigyou) {
+		}else if (@unit == romi) {
+		}else if (@unit == suzama) {
+		}else if (@unit == vipleaderA) {
+		}else if (@unit == vipleaderB) {
+		}else if (@unit == vipleaderC) {
+		}else if (@unit == vipleaderD) {
+	//Šv–½‰ÆŒn____________________________________________________________________________________________________
+		}else if (@unit == revolutionaryleaderA) {
+			setv(@allObjectiveClass, revolutionary)
+			addv(@allObjectiveClass, revolutionary)
+			addv(@allObjectiveClass, revolutionary)
+			addv(@allObjectiveClass, revolutionary)
+		}else if (@unit == revolutionaryleaderB) {
+			setv(@allObjectiveClass, revolutionary)
+			addv(@allObjectiveClass, revolutionary)
+			addv(@allObjectiveClass, revolutionary)
+			addv(@allObjectiveClass, revolutionary)
+		}else if (@unit == revolutionaryleaderC) {
+			setv(@allObjectiveClass, revolutionary)
+			addv(@allObjectiveClass, revolutionary)
+			addv(@allObjectiveClass, revolutionary)
+			addv(@allObjectiveClass, revolutionary)
+		}else if (@unit == revolutionaryleaderD) {
+			setv(@allObjectiveClass, revolutionary)
+			addv(@allObjectiveClass, revolutionary)
+			addv(@allObjectiveClass, revolutionary)
+			addv(@allObjectiveClass, revolutionary)
+		}else if (@unit == revolutionaryleaderE) {
+			setv(@allObjectiveClass, revolutionary)
+			addv(@allObjectiveClass, revolutionary)
+			addv(@allObjectiveClass, revolutionary)
+			addv(@allObjectiveClass, revolutionary)
+		}else if (@unit == revolutionaryleaderF) {
+			setv(@allObjectiveClass, revolutionary)
+			addv(@allObjectiveClass, revolutionary)
+			addv(@allObjectiveClass, revolutionary)
+			addv(@allObjectiveClass, revolutionary)
+		}else if (@unit == revolutionaryleaderG) {
+			setv(@allObjectiveClass, revolutionary)
+			addv(@allObjectiveClass, revolutionary)
+			addv(@allObjectiveClass, revolutionary)
+			addv(@allObjectiveClass, revolutionary)
+		}else if (@unit == revolutionaryleaderH) {
+			setv(@allObjectiveClass, revolutionary)
+			addv(@allObjectiveClass, revolutionary)
+			addv(@allObjectiveClass, revolutionary)
+			addv(@allObjectiveClass, revolutionary)
+		//ŽrŒn____________________________________________________________________________________________________
+		}else if (@unit == zombieleaderA) {
+		}else if (@unit == zombieleaderB) {
+		}else if (@unit == zombieleaderC) {
+		}else if (@unit == zombieleaderD) {
+		}else if (@unit == zombieleaderE) {
+		}else if (@unit == zombieleaderF) {
+		}else if (@unit == zombieleaderG) {
+		}else if (@unit == zombieleaderH) {
+		//ƒtƒFƒ‹Œn____________________________________________________________________________________________________
+		}else if (@unit == fel) {
+		}else if (@unit == fel0) {
+		}else if (@unit == felnini) {
+		}else if (@unit == felpower) {
+		}else if (@unit == felluna) {
+		}else if (@unit == felleaderA) {
+		}else if (@unit == felleaderB) {
+		}else if (@unit == felleaderC) {
+		}else if (@unit == felleaderD) {
+		}else if (@unit == felleaderE) {
+		}else if (@unit == felleaderF) {
+		}else if (@unit == felleaderG) {
+		}else if (@unit == felleaderH) {
+		}else if (@unit == felleaderI) {
+		}else if (@unit == felleaderJ) {
+		//‚»‚Ì‘¼____________________________________________________________________________________________________
+		}else if (@unit == honokaMAD) {
+			setv(@allObjectiveClass, tank)
+			addv(@allObjectiveClass, tank)
+			addv(@allObjectiveClass, helicopter)
+			addv(@allObjectiveClass, helicopter)
+		}else if (@unit == honokaAWAKE) {
+			setv(@allObjectiveClass, tank)
+			addv(@allObjectiveClass, tank)
+			addv(@allObjectiveClass, helicopter)
+			addv(@allObjectiveClass, helicopter)
+		}
+
+		index(@allObjectiveClass,objective,@ObjectiveClass)
+		setv(@memoryunit,memoryunit_)
+		addstr(@memoryunit,@unit)
+		addskill(@memoryunit,@ObjectiveClass)
+		setstatus(@memoryunit,defense,objective)
+	}
+}
+
+story ObjectiveConfig_kaihen_story
+{
+	//Šù‚ÉŠJŽn‚µ‚Ä‚¢‚éƒf[ƒ^‚ÅŽn‚ß‚½ê‡‚Ì‘Îô—p
+	if (yet(ObjectiveConfig_kaihen)) {event(ObjectiveConfig_kaihen)}
+}
+
+event addmemoryunit
+{
+	//‹L‰¯ƒ†ƒjƒbƒg‚ðaddunit‚·‚éˆ—
+	addspot(memoryunitspot) hidespot(memoryunitspot)
+	storeAllTalent(@allUnit)
+	while (count(@allUnit) >= 1) {
+		index(@allUnit, 0, @unit)
+		subv(@allUnit, @unit)
+		setv(@memoryunit,memoryunit_)
+		addstr(@memoryunit,@unit)
+		addunit(@memoryunit,memoryunitspot)
+	}
+}

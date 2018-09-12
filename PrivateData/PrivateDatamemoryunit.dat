@@ -1,0 +1,1697 @@
+//各種データをスキルとステータスに保存するユニット
+//デフォルトでは内政ユニットとクラスリセット用データを保存してあり、startCreationで指向クラスが追加される
+//案内人系____________________________________________________________________________________________________
+spot memoryunitspot
+{
+//保存領地
+}
+
+unit memoryunit_kodaizin
+{
+	//attack：初期レベル
+	//defense：objectiveNumber
+	//magic：numberOfMember
+	//race：初期クラス(classに入れるとスキルが増えてしまうので)
+	//class：内政ユニット
+	//skill：目指すクラス
+	attack=11
+	race=sage
+}
+
+unit memoryunit_nini : memoryunit_kodaizin
+{
+	class=a01PoliticsUnit_nini
+}
+
+unit memoryunit_yugu : memoryunit_kodaizin
+{
+	class=a02PoliticsUnit_yugu
+}
+
+unit memoryunit_dhidet : memoryunit_kodaizin
+{
+	class=a03PoliticsUnit_dhidet
+}
+
+unit memoryunit_eraa : memoryunit_kodaizin
+{
+	class=a04PoliticsUnit_eraa
+}
+unit memoryunit_siruria : memoryunit_kodaizin
+{
+	class=a05PoliticsUnit_siruria
+}
+
+unit memoryunit_guide
+{
+	attack=1
+	race=guidestaff
+}
+
+unit memoryunit_cou : memoryunit_guide
+{
+	class=a06PoliticsUnit_cou
+}
+unit memoryunit_hikari : memoryunit_guide
+{
+	class=a07PoliticsUnit_hikari
+}
+
+unit memoryunit_miru : memoryunit_guide
+{
+	class=a51PoliticsUnit_miru
+}
+
+unit memoryunit_hokiru : memoryunit_guide
+{
+	class=a52PoliticsUnit_hokiru
+}
+
+unit memoryunit_sebasuto
+{
+	class=a53PoliticsUnit_sebasuto)
+	race=butler
+	attack=1
+}
+unit memoryunit_zeusu : memoryunit_guide
+{
+	class=a54PoliticsUnit_zeusu
+}
+//軍人系____________________________________________________________________________________________________
+unit memoryunit_honoka
+{
+	class= b01PoliticsUnit_honoka
+	race= provisioner
+	attack= 1
+}
+unit memoryunit_katuki
+{
+	class= b02PoliticsUnit_katuki
+	race= army
+	attack= 1
+}
+unit memoryunit_fef
+{
+	class= b03PoliticsUnit_fef
+	race= army
+	attack= 1
+}
+unit memoryunit_rex
+{
+	class= b51PoliticsUnit_rex
+	race= hinfantry
+	attack= 11
+}
+unit memoryunit_kamiya
+{
+	class= b52PoliticsUnit_kamiya
+	race= sniper
+	attack= 11
+}
+unit memoryunit_kukumi
+{
+	class= b53PoliticsUnit_kukumi
+	race= provisioner
+	attack= 1
+}
+unit memoryunit_orusai
+{
+	class= b54PoliticsUnit_orusai
+	race= provisioner
+	attack= 1
+}
+unit memoryunit_sarina
+{
+	class= b55PoliticsUnit_sarina
+	race= army
+	attack= 1
+}
+unit memoryunit_ryuun
+{
+	class= b56PoliticsUnit_ryuun
+	race= army
+	attack= 1
+}
+unit memoryunit_armyleaderA
+{
+	class= b99PoliticsUnit_armyleaderA
+	race= army
+	attack= 1
+}
+unit memoryunit_armyleaderB
+{
+	class= b99PoliticsUnit_armyleaderB
+	race= army
+	attack= 1
+}
+unit memoryunit_armyleaderC
+{
+	class= b99PoliticsUnit_armyleaderC
+	race= provisioner
+	attack= 1
+}
+unit memoryunit_armyleaderD
+{
+	class= b99PoliticsUnit_armyleaderD
+	race= army
+	attack= 1
+}
+unit memoryunit_armyleaderE
+{
+	class= b99PoliticsUnit_armyleaderE
+	race= army
+	attack= 1
+}
+unit memoryunit_armyleaderF
+{
+	class= b99PoliticsUnit_armyleaderF
+	race= provisioner
+	attack= 1
+}
+//無人機系____________________________________________________________________________________________________
+unit memoryunit_daiya
+{
+	class= c01PoliticsUnit_daiya
+	race= nanashi001
+	attack= 1
+}
+unit memoryunit_maerunet
+{
+	class= c02PoliticsUnit_maerunet
+	race= nanashi001
+	attack= 1
+}
+unit memoryunit_togeringo
+{
+	class= c03PoliticsUnit_togeringo
+	race= nanashi001
+	attack= 1
+}
+unit memoryunit_heart
+{
+	class= c04PoliticsUnit_heart
+	race= nanashi001
+	attack= 1
+}
+unit memoryunit_godou
+{
+	class= c05PoliticsUnit_godou
+	race= nanashi000
+	attack= 1
+}
+unit memoryunit_bandana
+{
+	class= c06PoliticsUnit_bandana
+	race= nanashi000
+	attack= 1
+}
+unit memoryunit_doubletongue
+{
+	class= c07PoliticsUnit_doubletongue
+	race= nanashi000
+	attack= 1
+}
+unit memoryunit_triplegaze
+{
+	class= c51PoliticsUnit_triplegaze
+	race= nanashi001
+	attack= 1
+}
+unit memoryunit_kaomozityan
+{
+	class= c52PoliticsUnit_kaomozityan
+	race= kaomozi030
+	attack= 1
+}
+unit memoryunit_eye
+{
+	class= c53PoliticsUnit_eye
+	race= nanashi001
+	attack= 1
+}
+unit memoryunit_tatarira
+{
+	class= c54PoliticsUnit_tatarira
+	race= nanashi000
+	attack= 1
+}
+unit memoryunit_tortoise
+{
+	class= c55PoliticsUnit_tortoise
+	race= nanashi000
+	attack= 1
+}
+unit memoryunit_silkhat
+{
+	class= c56PoliticsUnit_silkhat
+	race= nanashi001
+	attack= 1
+}
+unit memoryunit_matu
+{
+	class= c57PoliticsUnit_matu
+	race= nanashi000
+	attack= 1
+}
+unit memoryunit_take
+{
+	class= c58PoliticsUnit_take
+	race= nanashi000
+	attack= 1
+}
+unit memoryunit_ume
+{
+	class= c59PoliticsUnit_ume
+	race= nanashi001
+	attack= 1
+}
+unit memoryunit_machineleaderA
+{
+	class= c99PoliticsUnit_machineleaderA
+	race= nanashi001
+	attack= 1
+}
+unit memoryunit_machineleaderB
+{
+	class= c99PoliticsUnit_machineleaderB
+	race= nanashi000
+	attack= 1
+}
+unit memoryunit_machineleaderC
+{
+	class= c99PoliticsUnit_machineleaderC
+	race= nanashi001
+	attack= 1
+}
+unit memoryunit_machineleaderD
+{
+	class= c99PoliticsUnit_machineleaderD
+	race= nanashi000
+	attack= 1
+}
+unit memoryunit_machineleaderE
+{
+	class= c99PoliticsUnit_machineleaderE
+	race= nanashi001
+	attack= 1
+}
+unit memoryunit_machineleaderF
+{
+	class= c99PoliticsUnit_machineleaderF
+	race= nanashi001
+	attack= 1
+}
+unit memoryunit_machineleaderG
+{
+	class= c99PoliticsUnit_machineleaderG
+	race= nanashi000
+	attack= 1
+}
+unit memoryunit_machineleaderH
+{
+	class= c99PoliticsUnit_machineleaderH
+	race= nanashi000
+	attack= 1
+}
+//学生系____________________________________________________________________________________________________
+unit memoryunit_himesiro
+{
+	class= d01PoliticsUnit_himesiro
+	race= studentf
+	attack= 1
+}
+unit memoryunit_saseguti
+{
+	class= d02PoliticsUnit_saseguti
+	race= studentm
+	attack= 1
+}
+unit memoryunit_yuzu
+{
+	class= d03PoliticsUnit_yuzu
+	race= studentf
+	attack= 1
+}
+unit memoryunit_saon
+{
+	class= d04PoliticsUnit_saon
+	race= studentm
+	attack= 1
+}
+unit memoryunit_eifon
+{
+	class= d51PoliticsUnit_eifon
+	race= studentf
+	attack= 1
+}
+unit memoryunit_fugaku
+{
+	class= d52PoliticsUnit_fugaku
+	race= studentm
+	attack= 1
+}
+unit memoryunit_hiiragi
+{
+	class= d53PoliticsUnit_hiiragi
+	race= studentf
+	attack= 1
+}
+unit memoryunit_hotaru
+{
+	class= d54PoliticsUnit_hotaru
+	race= studentf
+	attack= 1
+}
+unit memoryunit_kasugaya
+{
+	class= d55PoliticsUnit_kasugaya
+	race= studentm
+	attack= 1
+}
+unit memoryunit_serisu
+{
+	class= d56PoliticsUnit_serisu
+	race= studentf
+	attack= 1
+}
+unit memoryunit_touza
+{
+	class= d57PoliticsUnit_touza
+	race= studentf
+	attack= 1
+}
+unit memoryunit_haruka
+{
+	class= d58PoliticsUnit_haruka
+	race= studentf
+	attack= 1
+}
+unit memoryunit_maeru
+{
+	class= d59PoliticsUnit_maeru
+	race= studentf
+	attack= 1
+}
+unit memoryunit_mizuna
+{
+	class= d60PoliticsUnit_mizuna
+	race= studentf
+	attack= 1
+}
+unit memoryunit_studentleaderA
+{
+	class= d99PoliticsUnit_studentleaderA
+	race= studentf
+	attack= 1
+}
+unit memoryunit_studentleaderB
+{
+	class= d99PoliticsUnit_studentleaderB
+	race= studentm
+	attack= 1
+}
+unit memoryunit_studentleaderC
+{
+	class= d99PoliticsUnit_studentleaderC
+	race= studentf
+	attack= 1
+}
+unit memoryunit_studentleaderD
+{
+	class= d99PoliticsUnit_studentleaderD
+	race= studentm
+	attack= 1
+}
+unit memoryunit_studentleaderE
+{
+	class= d99PoliticsUnit_studentleaderE
+	race= studentf
+	attack= 1
+}
+unit memoryunit_studentleaderF
+{
+	class= d99PoliticsUnit_studentleaderF
+	race= studentm
+	attack= 1
+}
+unit memoryunit_studentleaderG
+{
+	class= d99PoliticsUnit_studentleaderG
+	race= studentf
+	attack= 1
+}
+unit memoryunit_studentleaderH
+{
+	class= d99PoliticsUnit_studentleaderH
+	race= studentm
+	attack= 1
+}
+//精霊系____________________________________________________________________________________________________
+unit memoryunit_riferi
+{
+	class= e01PoliticsUnit_riferi
+	race= reslime
+	attack= 11
+}
+unit memoryunit_rifon
+{
+	class= e02PoliticsUnit_rifon
+	race= slime
+	attack= 1
+}
+unit memoryunit_roton
+{
+	class= e03PoliticsUnit_roton
+	race= slime
+	attack= 1
+}
+unit memoryunit_kurumu
+{
+	class= e51PoliticsUnit_kurumu
+	race= slime
+	attack= 1
+}
+unit memoryunit_rerafu
+{
+	class= e52PoliticsUnit_rerafu
+	race= slime
+	attack= 1
+}
+unit memoryunit_gaagoriusu
+{
+	class= e53PoliticsUnit_gaagoriusu
+	race= slime
+	attack= 1
+}
+unit memoryunit_pooto
+{
+	class= e54PoliticsUnit_pooto
+	race= reslime
+	attack= 11
+}
+unit memoryunit_virado
+{
+	class= e55PoliticsUnit_virado
+	race= slime
+	attack= 1
+}
+unit memoryunit_zora
+{
+	class= e56PoliticsUnit_zora
+	race= reslime
+	attack= 11
+}
+unit memoryunit_spiritleaderA
+{
+	class= e99PoliticsUnit_spiritleaderA
+	race= slime
+	attack= 1
+}
+unit memoryunit_spiritleaderB
+{
+	class= e99PoliticsUnit_spiritleaderB
+	race= slime
+	attack= 1
+}
+unit memoryunit_spiritleaderC
+{
+	class= e99PoliticsUnit_spiritleaderC
+	race= slime
+	attack= 1
+}
+unit memoryunit_spiritleaderD
+{
+	class= e99PoliticsUnit_spiritleaderD
+	race= slime
+	attack= 1
+}
+//極道系____________________________________________________________________________________________________
+unit memoryunit_suiren
+{
+	class= f01PoliticsUnit_suiren
+	race= toseinin
+	attack= 1
+}
+unit memoryunit_kizaki
+{
+	class= f02PoliticsUnit_kizaki
+	race= kibamusya
+	attack= 11
+}
+unit memoryunit_yasu
+{
+	class= f03PoliticsUnit_yasu
+	race= toseinin
+	attack= 1
+}
+unit memoryunit_cogarasi
+{
+	class= f51PoliticsUnit_cogarasi
+	race= toseinin
+	attack= 1
+}
+unit memoryunit_eihamu
+{
+	class= f52PoliticsUnit_eihamu
+	race= toseinin
+	attack= 1
+}
+unit memoryunit_gogozii
+{
+	class= f53PoliticsUnit_gogozii
+	race= tekiya
+	attack= 1
+}
+unit memoryunit_migazi
+{
+	class= f54PoliticsUnit_migazi
+	race= kibamusya
+	attack= 11
+}
+unit memoryunit_zakuro
+{
+	class= f55PoliticsUnit_zakuro
+	race= toseinin
+	attack= 1
+}
+unit memoryunit_mimika
+{
+	class= f56PoliticsUnit_mimika
+	race= toseinin
+	attack= 1
+}
+unit memoryunit_mirika
+{
+	class= f57PoliticsUnit_mirika
+	race= toseinin
+	attack= 1
+}
+unit memoryunit_gokudouleaderA
+{
+	class= f99PoliticsUnit_gokudouleaderA
+	race= toseinin
+	attack= 1
+}
+unit memoryunit_gokudouleaderB
+{
+	class= f99PoliticsUnit_gokudouleaderB
+	race= toseinin
+	attack= 1
+}
+unit memoryunit_gokudouleaderC
+{
+	class= f99PoliticsUnit_gokudouleaderC
+	race= tekiya
+	attack= 1
+}
+unit memoryunit_gokudouleaderD
+{
+	class= f99PoliticsUnit_gokudouleaderD
+	race= tekiya
+	attack= 1
+}
+unit memoryunit_gokudouleaderE
+{
+	class= f99PoliticsUnit_gokudouleaderE
+	race= toseinin
+	attack= 1
+}
+unit memoryunit_gokudouleaderF
+{
+	class= f99PoliticsUnit_gokudouleaderF
+	race= tekiya
+	attack= 1
+}
+//公務員系____________________________________________________________________________________________________
+unit memoryunit_congou
+{
+	class= g01PoliticsUnit_congou
+	race= police
+	attack= 11
+}
+unit memoryunit_rina
+{
+	class= g02PoliticsUnit_rina
+	race= police
+	attack= 1
+}
+unit memoryunit_hino
+{
+	class= g03PoliticsUnit_hino
+	race= teacher
+	attack= 1
+}
+unit memoryunit_coutyou
+{
+	class= g51PoliticsUnit_coutyou
+	race= teacher
+	attack= 1
+}
+unit memoryunit_kyoutou
+{
+	class= g52PoliticsUnit_kyoutou
+	race= teacher
+	attack= 1
+}
+unit memoryunit_nisu
+{
+	class= g53PoliticsUnit_nisu
+	race= teacher
+	attack= 1
+}
+unit memoryunit_nozaka
+{
+	class= g54PoliticsUnit_nozaka
+	race= teacher
+	attack= 1
+}
+unit memoryunit_sin
+{
+	class= g55PoliticsUnit_sin
+	race= police
+	attack= 1
+}
+unit memoryunit_tumiki
+{
+	class= g56PoliticsUnit_tumiki
+	race= police
+	attack= 1
+}
+unit memoryunit_asamiya
+{
+	class= g57PoliticsUnit_asamiya
+	race= police
+	attack= 1
+}
+unit memoryunit_publicservantleaderA
+{
+	class= g99PoliticsUnit_publicservantleaderA
+	race= police
+	attack= 1
+}
+unit memoryunit_publicservantleaderB
+{
+	class= g99PoliticsUnit_publicservantleaderB
+	race= teacher
+	attack= 1
+}
+unit memoryunit_publicservantleaderC
+{
+	class= g99PoliticsUnit_publicservantleaderC
+	race= teacher
+	attack= 1
+}
+unit memoryunit_publicservantleaderD
+{
+	class= g99PoliticsUnit_publicservantleaderD
+	race= police
+	attack= 1
+}
+unit memoryunit_publicservantleaderE
+{
+	class= g99PoliticsUnit_publicservantleaderE
+	race= police
+	attack= 1
+}
+unit memoryunit_publicservantleaderF
+{
+	class= g99PoliticsUnit_publicservantleaderF
+	race= teacher
+	attack= 1
+}
+//構成員系____________________________________________________________________________________________________
+unit memoryunit_gimahi
+{
+	class= h01PoliticsUnit_gimahi
+	race= activist
+	attack= 11
+}
+unit memoryunit_dokunuma
+{
+	class= h02PoliticsUnit_dokunuma
+	race= member
+	attack= 1
+}
+unit memoryunit_hebigo
+{
+	class= h03PoliticsUnit_hebigo
+	race= member
+	attack= 1
+}
+unit memoryunit_geki
+{
+	class= h51PoliticsUnit_geki
+	race= member
+	attack= 1
+}
+unit memoryunit_medyuusa
+{
+	class= h52PoliticsUnit_medyuusa
+	race= researcher
+	attack= 11
+}
+unit memoryunit_sirakaba
+{
+	class= h53PoliticsUnit_sirakaba
+	race= member
+	attack= 1
+}
+unit memoryunit_tosaki
+{
+	class= h54PoliticsUnit_tosaki
+	race= member
+	attack= 1
+}
+unit memoryunit_youhi
+{
+	class= h55PoliticsUnit_youhi
+	race= member
+	attack= 1
+}
+unit memoryunit_kanae
+{
+	class= h56PoliticsUnit_kanae
+	race= member
+	attack= 1
+}
+unit memoryunit_groupleaderA
+{
+	class= h99PoliticsUnit_groupleaderA
+	race= member
+	attack= 1
+}
+unit memoryunit_groupleaderB
+{
+	class= h99PoliticsUnit_groupleaderB
+	race= member
+	attack= 1
+}
+unit memoryunit_groupleaderC
+{
+	class= h99PoliticsUnit_groupleaderC
+	race= member
+	attack= 1
+}
+unit memoryunit_groupleaderD
+{
+	class= h99PoliticsUnit_groupleaderD
+	race= member
+	attack= 1
+}
+unit memoryunit_groupleaderE
+{
+	class= h99PoliticsUnit_groupleaderE
+	race= member
+	attack= 1
+}
+unit memoryunit_groupleaderF
+{
+	class= h99PoliticsUnit_groupleaderF
+	race= member
+	attack= 1
+}
+//会社員系____________________________________________________________________________________________________
+unit memoryunit_sekkai
+{
+	class= i01PoliticsUnit_sekkai
+	race= salaryman
+	attack= 1
+}
+unit memoryunit_naobosi
+{
+	class= i02PoliticsUnit_naobosi
+	race= salaryman
+	attack= 1
+}
+unit memoryunit_myaumyau
+{
+	class= i03PoliticsUnit_myaumyau
+	race= salaryman
+	attack= 1
+}
+unit memoryunit_yuki
+{
+	class= i04PoliticsUnit_yuki
+	race= salaryman
+	attack= 1
+}
+unit memoryunit_yumi
+{
+	class= i05PoliticsUnit_yumi
+	race= salaryman
+	attack= 1
+}
+unit memoryunit_nanaka
+{
+	class= i51PoliticsUnit_nanaka
+	race= salaryman
+	attack= 1
+}
+unit memoryunit_ebisu
+{
+	class= i52PoliticsUnit_ebisu
+	race= carpenter
+	attack= 11
+}
+unit memoryunit_kakkou
+{
+	class= i53PoliticsUnit_kakkou
+	race= salaryman
+	attack= 1
+}
+unit memoryunit_kazaguruma
+{
+	class= i54PoliticsUnit_kazaguruma
+	race= salaryman
+	attack= 1
+}
+unit memoryunit_saezumi
+{
+	class= i55PoliticsUnit_saezumi
+	race= salaryman
+	attack= 1
+}
+unit memoryunit_yadati
+{
+	class= i56PoliticsUnit_yadati
+	race= salaryman
+	attack= 1
+}
+unit memoryunit_syau
+{
+	class= i57PoliticsUnit_syau
+	race= cook
+	attack= 11
+}
+unit memoryunit_ruuna
+{
+	class= i58PoliticsUnit_ruuna
+	race= salaryman
+	attack= 1
+}
+unit memoryunit_tatibana
+{
+	class= i59PoliticsUnit_tatibana
+	race= salaryman
+	attack= 1
+}
+unit memoryunit_workerleaderA
+{
+	class= i99PoliticsUnit_workerleaderA
+	race= salaryman
+	attack= 1
+}
+unit memoryunit_workerleaderB
+{
+	class= i99PoliticsUnit_workerleaderB
+	race= salaryman
+	attack= 1
+}
+unit memoryunit_workerleaderC
+{
+	class= i99PoliticsUnit_workerleaderC
+	race= salaryman
+	attack= 1
+}
+unit memoryunit_workerleaderD
+{
+	class= i99PoliticsUnit_workerleaderD
+	race= salaryman
+	attack= 1
+}
+unit memoryunit_workerleaderE
+{
+	class= i99PoliticsUnit_workerleaderE
+	race= salaryman
+	attack= 1
+}
+unit memoryunit_workerleaderF
+{
+	class= i99PoliticsUnit_workerleaderF
+	race= salaryman
+	attack= 1
+}
+unit memoryunit_workerleaderG
+{
+	class= i99PoliticsUnit_workerleaderG
+	race= salaryman
+	attack= 1
+}
+unit memoryunit_workerleaderH
+{
+	class= i99PoliticsUnit_workerleaderH
+	race= salaryman
+	attack= 1
+}
+unit memoryunit_workerleaderI
+{
+	class= i99PoliticsUnit_workerleaderI
+	race= salaryman
+	attack= 1
+}
+unit memoryunit_workerleaderJ
+{
+	class= i99PoliticsUnit_workerleaderJ
+	race= salaryman
+	attack= 1
+}
+//神官系____________________________________________________________________________________________________
+unit memoryunit_veiraru
+{
+	class= j01PoliticsUnit_veiraru
+	race= priest
+	attack= 1
+}
+unit memoryunit_veil
+{
+	class= j02PoliticsUnit_veil
+	race= priest
+	attack= 1
+}
+unit memoryunit_furient
+{
+	class= j03PoliticsUnit_furient
+	race= monk
+	attack= 11
+}
+unit memoryunit_hellun
+{
+	class= j04PoliticsUnit_hellun
+	race= priest
+	attack= 1
+}
+unit memoryunit_outhi
+{
+	class= j51PoliticsUnit_outhi
+	race= monk
+	attack= 11
+}
+unit memoryunit_poopoo
+{
+	class= j52PoliticsUnit_poopoo
+	race= priest
+	attack= 1
+}
+unit memoryunit_tetetota
+{
+	class= j53PoliticsUnit_tetetota
+	race= priest
+	attack= 1
+}
+unit memoryunit_priestleaderA
+{
+	class= j99PoliticsUnit_priestleaderA
+	race= priest
+	attack= 1
+}
+unit memoryunit_priestleaderB
+{
+	class= j99PoliticsUnit_priestleaderB
+	race= priest
+	attack= 1
+}
+unit memoryunit_priestleaderC
+{
+	class= j99PoliticsUnit_priestleaderC
+	race= priest
+	attack= 1
+}
+unit memoryunit_priestleaderD
+{
+	class= j99PoliticsUnit_priestleaderD
+	race= priest
+	attack= 1
+}
+unit memoryunit_priestleaderE
+{
+	class= j99PoliticsUnit_priestleaderE
+	race= priest
+	attack= 1
+}
+unit memoryunit_priestleaderF
+{
+	class= j99PoliticsUnit_priestleaderF
+	race= priest
+	attack= 1
+}
+//不良系____________________________________________________________________________________________________
+unit memoryunit_tousi
+{
+	class= k01PoliticsUnit_tousi
+	race= tinpira
+	attack= 1
+}
+unit memoryunit_cogi
+{
+	class= k02PoliticsUnit_cogi
+	race= tinpira
+	attack= 1
+}
+unit memoryunit_rin
+{
+	class= k03PoliticsUnit_rin
+	race= tinpira
+	attack= 1
+}
+unit memoryunit_isikawa
+{
+	class= k04PoliticsUnit_isikawa
+	race= tinpira
+	attack= 1
+}
+unit memoryunit_mouseboy
+{
+	class= k05PoliticsUnit_mouseboy
+	race= tinpira
+	attack= 1
+}
+unit memoryunit_inaba
+{
+	class= k06PoliticsUnit_inaba
+	race= tinpira
+	attack= 1
+}
+unit memoryunit_ariel
+{
+	class= k51PoliticsUnit_ariel
+	race= tinpira
+	attack= 1
+}
+unit memoryunit_rakuyou
+{
+	class= k52PoliticsUnit_rakuyou
+	race= tinpira
+	attack= 1
+}
+unit memoryunit_ryuuga
+{
+	class= k53PoliticsUnit_ryuuga
+	race= tinpira
+	attack= 1
+}
+unit memoryunit_sugamiya
+{
+	class= k54PoliticsUnit_sugamiya
+	race= tinpira
+	attack= 1
+}
+unit memoryunit_tyami
+{
+	class= k55PoliticsUnit_tyami
+	race= tinpira
+	attack= 1
+}
+unit memoryunit_nami
+{
+	class= k56PoliticsUnit_nami
+	race= tinpira
+	attack= 1
+}
+unit memoryunit_igasi
+{
+	class= k57PoliticsUnit_igasi
+	race= tinpira
+	attack= 1
+}
+unit memoryunit_outlawleaderA
+{
+	class= k99PoliticsUnit_outlawleaderA
+	race= tinpira
+	attack= 1
+}
+unit memoryunit_outlawleaderB
+{
+	class= k99PoliticsUnit_outlawleaderB
+	race= tinpira
+	attack= 1
+}
+unit memoryunit_outlawleaderC
+{
+	class= k99PoliticsUnit_outlawleaderC
+	race= tinpira
+	attack= 1
+}
+unit memoryunit_outlawleaderD
+{
+	class= k99PoliticsUnit_outlawleaderD
+	race= tinpira
+	attack= 1
+}
+unit memoryunit_outlawleaderE
+{
+	class= k99PoliticsUnit_outlawleaderE
+	race= tinpira
+	attack= 1
+}
+unit memoryunit_outlawleaderF
+{
+	class= k99PoliticsUnit_outlawleaderF
+	race= tinpira
+	attack= 1
+}
+//非正規系____________________________________________________________________________________________________
+unit memoryunit_amu
+{
+	class= l51PoliticsUnit_amu
+	race= tempworkerw
+	attack= 1
+}
+unit memoryunit_arukana
+{
+	class= l52PoliticsUnit_arukana
+	race= tempworkerw
+	attack= 1
+}
+unit memoryunit_conno
+{
+	class= l53PoliticsUnit_conno
+	race= tempworkerw
+	attack= 1
+}
+unit memoryunit_coco
+{
+	class= l54PoliticsUnit_coco
+	race= tempworkerw
+	attack= 1
+}
+unit memoryunit_fusagi
+{
+	class= l55PoliticsUnit_fusagi
+	race= tempworkerm
+	attack= 1
+}
+unit memoryunit_itinose
+{
+	class= l56PoliticsUnit_itinose
+	race= tempworkerm
+	attack= 1
+}
+unit memoryunit_miyaco
+{
+	class= l57PoliticsUnit_miyaco
+	race= tempworkerw
+	attack= 1
+}
+unit memoryunit_momonoki
+{
+	class= l58PoliticsUnit_momonoki
+	race= tempworkerm
+	attack= 1
+}
+unit memoryunit_paseri
+{
+	class= l59PoliticsUnit_paseri
+	race= tempworkerw
+	attack= 1
+}
+unit memoryunit_sasabune
+{
+	class= l60PoliticsUnit_sasabune
+	race= tempworkerm
+	attack= 1
+}
+unit memoryunit_siisi
+{
+	class= l61PoliticsUnit_siisi
+	race= tempworkerw
+	attack= 1
+}
+unit memoryunit_eil
+{
+	class= l62PoliticsUnit_eil
+	race= tempworkerm
+	attack= 1
+}
+unit memoryunit_souron
+{
+	class= l63PoliticsUnit_souron
+	race= tempworkerw
+	attack= 1
+}
+unit memoryunit_mirei
+{
+	class= l64PoliticsUnit_mirei
+	race= tempworkerw
+	attack= 1
+}
+unit memoryunit_tempworkerleaderA
+{
+	class= l99PoliticsUnit_tempworkerleaderA
+	race= tempworkerm
+	attack= 1
+}
+unit memoryunit_tempworkerleaderB
+{
+	class= l99PoliticsUnit_tempworkerleaderB
+	race= tempworkerw
+	attack= 1
+}
+unit memoryunit_tempworkerleaderC
+{
+	class= l99PoliticsUnit_tempworkerleaderC
+	race= tempworkerm
+	attack= 1
+}
+unit memoryunit_tempworkerleaderD
+{
+	class= l99PoliticsUnit_tempworkerleaderD
+	race= tempworkerw
+	attack= 1
+}
+unit memoryunit_tempworkerleaderE
+{
+	class= l99PoliticsUnit_tempworkerleaderE
+	race= tempworkerm
+	attack= 1
+}
+unit memoryunit_tempworkerleaderF
+{
+	class= l99PoliticsUnit_tempworkerleaderF
+	race= tempworkerw
+	attack= 1
+}
+unit memoryunit_tempworkerleaderG
+{
+	class= l99PoliticsUnit_tempworkerleaderG
+	race= tempworkerm
+	attack= 1
+}
+unit memoryunit_tempworkerleaderH
+{
+	class= l99PoliticsUnit_tempworkerleaderH
+	race= tempworkerw
+	attack= 1
+}
+unit memoryunit_tempworkerleaderI
+{
+	class= l99PoliticsUnit_tempworkerleaderI
+	race= tempworkerm
+	attack= 1
+}
+unit memoryunit_tempworkerleaderJ
+{
+	class= l99PoliticsUnit_tempworkerleaderJ
+	race= tempworkerw
+	attack= 1
+}
+unit memoryunit_tempworkerleaderK
+{
+	class= l99PoliticsUnit_tempworkerleaderK
+	race= tempworkerm
+	attack= 1
+}
+unit memoryunit_tempworkerleaderL
+{
+	class= l99PoliticsUnit_tempworkerleaderL
+	race= tempworkerw
+	attack= 1
+}
+unit memoryunit_tempworkerleaderM
+{
+	class= l99PoliticsUnit_tempworkerleaderM
+	race= tempworkerw
+	attack= 1
+}
+unit memoryunit_tempworkerleaderN
+{
+	class= l99PoliticsUnit_tempworkerleaderN
+	race= tempworkerm
+	attack= 1
+}
+unit memoryunit_tempworkerleaderO
+{
+	class= l99PoliticsUnit_tempworkerleaderO
+	race= tempworkerm
+	attack= 1
+}
+unit memoryunit_tempworkerleaderP
+{
+	class= l99PoliticsUnit_tempworkerleaderP
+	race= tempworkerw
+	attack= 1
+}
+//裏組織系____________________________________________________________________________________________________
+unit memoryunit_youiti
+{
+	class= m01PoliticsUnit_youiti
+	race= investigator
+	attack= 11
+}
+unit memoryunit_hourisu
+{
+	class= m02PoliticsUnit_hourisu
+	race= investigator
+	attack= 1
+}
+unit memoryunit_kiyuno
+{
+	class= m03PoliticsUnit_kiyuno
+	race= investigator
+	attack= 1
+}
+unit memoryunit_izuki
+{
+	class= m04PoliticsUnit_izuki
+	race= spy
+	attack= 1
+}
+unit memoryunit_siraki
+{
+	class= m05PoliticsUnit_siraki
+	race= assassin
+	attack= 11
+}
+unit memoryunit_ivii
+{
+	class= m51PoliticsUnit_ivii
+	race= assassin
+	attack= 11
+}
+unit memoryunit_az
+{
+	class= m52PoliticsUnit_az
+	race= assassin
+	attack= 11
+}
+unit memoryunit_codec
+{
+	class= m53PoliticsUnit_codec
+	race= investigator
+	attack= 1
+}
+unit memoryunit_riiten
+{
+	class= m54PoliticsUnit_riiten
+	race= spy
+	attack= 1
+}
+unit memoryunit_assassinleaderA
+{
+	class= m99PoliticsUnit_assassinleaderA
+	race= investigator
+	attack= 1
+}
+unit memoryunit_assassinleaderB
+{
+	class= m99PoliticsUnit_assassinleaderB
+	race= spy
+	attack= 1
+}
+unit memoryunit_assassinleaderC
+{
+	class= m99PoliticsUnit_assassinleaderC
+	race= investigator
+	attack= 1
+}
+unit memoryunit_assassinleaderD
+{
+	class= m99PoliticsUnit_assassinleaderD
+	race= spy
+	attack= 1
+}
+//要人系____________________________________________________________________________________________________
+unit memoryunit_utari
+{
+	class= n01PoliticsUnit_utari
+	race= vip
+	attack= 11
+}
+unit memoryunit_ibari
+{
+	class= n02PoliticsUnit_ibari
+	race= vip
+	attack= 11
+}
+unit memoryunit_rifaru
+{
+	class= n03PoliticsUnit_rifaru
+	race= vip
+	attack= 11
+}
+unit memoryunit_ryudou
+{
+	class= n04PoliticsUnit_ryudou
+	race= vip
+	attack= 11
+}
+unit memoryunit_ouen
+{
+	class= n51PoliticsUnit_ouen
+	race= vip
+	attack= 11
+}
+unit memoryunit_burai
+{
+	class= n52PoliticsUnit_burai
+	race= vip
+	attack= 11
+}
+unit memoryunit_hikage
+{
+	class= n53PoliticsUnit_hikage
+	race= vip
+	attack= 11
+}
+unit memoryunit_raigyou
+{
+	class= n54PoliticsUnit_raigyou
+	race= vip
+	attack= 11
+}
+unit memoryunit_romi
+{
+	class= n55PoliticsUnit_romi
+	race= vip
+	attack= 11
+}
+unit memoryunit_suzama
+{
+	class= n56PoliticsUnit_suzama
+	race= vip
+	attack= 11
+}
+unit memoryunit_vipleaderA
+{
+	class= n99PoliticsUnit_vipleaderA
+	race= vip
+	attack= 11
+}
+unit memoryunit_vipleaderB
+{
+	class= n99PoliticsUnit_vipleaderB
+	race= vip
+	attack= 11
+}
+unit memoryunit_vipleaderC
+{
+	class= n99PoliticsUnit_vipleaderC
+	race= vip
+	attack= 11
+}
+unit memoryunit_vipleaderD
+{
+	class= n99PoliticsUnit_vipleaderD
+	race= vip
+	attack= 11
+}
+//革命家系____________________________________________________________________________________________________
+unit memoryunit_revolutionaryleaderA
+{
+	class= o99PoliticsUnit_revolutionaryleaderA
+	race= resistance
+	attack= 1
+}
+unit memoryunit_revolutionaryleaderB
+{
+	class= o99PoliticsUnit_revolutionaryleaderB
+	race= resistance
+	attack= 1
+}
+unit memoryunit_revolutionaryleaderC
+{
+	class= o99PoliticsUnit_revolutionaryleaderC
+	race= resistance
+	attack= 1
+}
+unit memoryunit_revolutionaryleaderD
+{
+	class= o99PoliticsUnit_revolutionaryleaderD
+	race= resistance
+	attack= 1
+}
+unit memoryunit_revolutionaryleaderE
+{
+	class= o99PoliticsUnit_revolutionaryleaderE
+	race= resistance
+	attack= 1
+}
+unit memoryunit_revolutionaryleaderF
+{
+	class= o99PoliticsUnit_revolutionaryleaderF
+	race= resistance
+	attack= 1
+}
+unit memoryunit_revolutionaryleaderG
+{
+	class= o99PoliticsUnit_revolutionaryleaderG
+	race= resistance
+	attack= 1
+}
+unit memoryunit_revolutionaryleaderH
+{
+	class= o99PoliticsUnit_revolutionaryleaderH
+	race= resistance
+	attack= 1
+}
+//屍系____________________________________________________________________________________________________
+unit memoryunit_zombieleaderA
+{
+	class= p99PoliticsUnit_zombieleaderA
+	race= zombie
+	attack= 16
+}
+unit memoryunit_zombieleaderB
+{
+	class= p99PoliticsUnit_zombieleaderB
+	race= zombie
+	attack= 16
+}
+unit memoryunit_zombieleaderC
+{
+	class= p99PoliticsUnit_zombieleaderC
+	race= zombie
+	attack= 16
+}
+unit memoryunit_zombieleaderD
+{
+	class= p99PoliticsUnit_zombieleaderD
+	race= zombie
+	attack= 16
+}
+unit memoryunit_zombieleaderE
+{
+	class= p99PoliticsUnit_zombieleaderE
+	race= zombie
+	attack= 16
+}
+unit memoryunit_zombieleaderF
+{
+	class= p99PoliticsUnit_zombieleaderF
+	race= zombie
+	attack= 16
+}
+unit memoryunit_zombieleaderG
+{
+	class= p99PoliticsUnit_zombieleaderG
+	race= zombie
+	attack= 16
+}
+unit memoryunit_zombieleaderH
+{
+	class= p99PoliticsUnit_zombieleaderH
+	race= zombie
+	attack= 16
+}
+//フェル系____________________________________________________________________________________________________
+unit memoryunit_fel
+{
+	race= hifel
+	attack= 31
+}
+unit memoryunit_fel0
+{
+	class= z01PoliticsUnit_fel0
+	race= hifel
+	attack= 31
+}
+unit memoryunit_felnini
+{
+	class= z02PoliticsUnit_felnini
+	race= hifel
+	attack= 21
+}
+unit memoryunit_felpower
+{
+	class= z03PoliticsUnit_felpower
+	race= hifel
+	attack= 21
+}
+unit memoryunit_felluna
+{
+	class= z04PoliticsUnit_felluna
+	race= hifel
+	attack= 21
+}
+unit memoryunit_felleaderA
+{
+	class= z99PoliticsUnit_felleaderA
+	race= hifel
+	attack= 21
+}
+unit memoryunit_felleaderB
+{
+	class= z99PoliticsUnit_felleaderB
+	race= hifel
+	attack= 21
+}
+unit memoryunit_felleaderC
+{
+	class= z99PoliticsUnit_felleaderC
+	race= hifel
+	attack= 21
+}
+unit memoryunit_felleaderD
+{
+	class= z99PoliticsUnit_felleaderD
+	race= hifel
+	attack= 21
+}
+unit memoryunit_felleaderE
+{
+	class= z99PoliticsUnit_felleaderE
+	race= hifel
+	attack= 21
+}
+unit memoryunit_felleaderF
+{
+	class= z99PoliticsUnit_felleaderF
+	race= hifel
+	attack= 21
+}
+unit memoryunit_felleaderG
+{
+	class= z99PoliticsUnit_felleaderG
+	race= hifel
+	attack= 21
+}
+unit memoryunit_felleaderH
+{
+	class= z99PoliticsUnit_felleaderH
+	race= hifel
+	attack= 21
+}
+unit memoryunit_felleaderI
+{
+	class= z99PoliticsUnit_felleaderI
+	race= hifel
+	attack= 21
+}
+unit memoryunit_felleaderJ
+{
+	class= z99PoliticsUnit_felleaderJ
+	race= hifel
+	attack= 21
+}
+//その他____________________________________________________________________________________________________
+unit memoryunit_honokaMAD
+{
+	class= b01PoliticsUnit_honokaMAD
+	race= hinfantry
+	attack= 11
+}
+unit memoryunit_honokaAWAKE
+{
+	class= b01PoliticsUnit_honokaAWAKE
+	race= hinfantry
+	attack= 11
+}

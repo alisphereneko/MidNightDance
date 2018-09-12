@@ -1,0 +1,25 @@
+event PrivateData_kaihen
+{
+	setv(@memoryunit,memoryunit_)
+	addstr(@memoryunit,@unit)
+	setv(@belongingToPower,SAVEbelongingToPower_)
+	addstr(@belongingToPower,@unit)
+	if (purpose == 1) {
+		setud(@belongingToPower, @power)
+	}else if (purpose == 2) {
+		storeud(@belongingToPower,@belongingToPower)
+	}else if (purpose == 3) {
+		setstatus(@memoryunit,magic,numberOfMember)
+	}else if (purpose == 4) {
+		pushstatus(@memoryunit,magic,numberOfMember)
+	}else if (purpose == 5) {
+		storeskillofunit(@memoryunit,@objectiveClass)
+		index(@objectiveClass,1,@objectiveClass)
+		pushstatus(@memoryunit,defense,objectiveNumber)
+	}else if (purpose == 6) {
+		storeclassofunit(@memoryunit,@politicsUnit)
+	}else if (purpose == 7) {
+		storeraceofunit(@memoryunit,@startClass)
+		pushstatus(@memoryunit,attack,startLv)
+	}
+}
