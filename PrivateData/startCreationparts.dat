@@ -1,5 +1,8 @@
 event ObjectiveConfig_kaihen
 {
+	//startCreationの指向クラス決定処理の改変
+	//本家はこの部分で指向変数を乱数で決め、クラスチェンジ処理時にその指向変数に沿ってクラスチェンジ先を選ぶが
+	//改変後はこの段階でもうクラスチェンジ先を抽選し記録ユニットに保存する
 	if (yet(addmemoryunit)) {event(addmemoryunit)}
 	storeAllTalent(@allUnit)
 	while (count(@allUnit) >= 1) {
@@ -966,37 +969,6 @@ event ObjectiveConfig_kaihen
 			addv(@allObjectiveClass, thief)
 			addv(@allObjectiveClass, dealer)
 			addv(@allObjectiveClass, dealer)
-	//非正規系____________________________________________________________________________________________________
-		}else if (@unit == amu) {
-		}else if (@unit == arukana) {
-		}else if (@unit == conno) {
-		}else if (@unit == coco) {
-		}else if (@unit == fusagi) {
-		}else if (@unit == itinose) {
-		}else if (@unit == miyaco) {
-		}else if (@unit == momonoki) {
-		}else if (@unit == paseri) {
-		}else if (@unit == sasabune) {
-		}else if (@unit == siisi) {
-		}else if (@unit == eil) {
-		}else if (@unit == souron) {
-		}else if (@unit == mirei) {
-		}else if (@unit == tempworkerleaderA) {
-		}else if (@unit == tempworkerleaderB) {
-		}else if (@unit == tempworkerleaderC) {
-		}else if (@unit == tempworkerleaderD) {
-		}else if (@unit == tempworkerleaderE) {
-		}else if (@unit == tempworkerleaderF) {
-		}else if (@unit == tempworkerleaderG) {
-		}else if (@unit == tempworkerleaderH) {
-		}else if (@unit == tempworkerleaderI) {
-		}else if (@unit == tempworkerleaderJ) {
-		}else if (@unit == tempworkerleaderK) {
-		}else if (@unit == tempworkerleaderL) {
-		}else if (@unit == tempworkerleaderM) {
-		}else if (@unit == tempworkerleaderN) {
-		}else if (@unit == tempworkerleaderO) {
-		}else if (@unit == tempworkerleaderP) {
 	//裏組織系____________________________________________________________________________________________________
 		}else if (@unit == youiti) {
 			setv(@allObjectiveClass, assassin)
@@ -1063,21 +1035,6 @@ event ObjectiveConfig_kaihen
 			addv(@allObjectiveClass, assassin)
 			addv(@allObjectiveClass, assassin)
 			addv(@allObjectiveClass, assassin)
-	//要人系____________________________________________________________________________________________________
-		}else if (@unit == utari) {
-		}else if (@unit == ibari) {
-		}else if (@unit == rifaru) {
-		}else if (@unit == ryudou) {
-		}else if (@unit == ouen) {
-		}else if (@unit == burai) {
-		}else if (@unit == hikage) {
-		}else if (@unit == raigyou) {
-		}else if (@unit == romi) {
-		}else if (@unit == suzama) {
-		}else if (@unit == vipleaderA) {
-		}else if (@unit == vipleaderB) {
-		}else if (@unit == vipleaderC) {
-		}else if (@unit == vipleaderD) {
 	//革命家系____________________________________________________________________________________________________
 		}else if (@unit == revolutionaryleaderA) {
 			setv(@allObjectiveClass, revolutionary)
@@ -1119,31 +1076,6 @@ event ObjectiveConfig_kaihen
 			addv(@allObjectiveClass, revolutionary)
 			addv(@allObjectiveClass, revolutionary)
 			addv(@allObjectiveClass, revolutionary)
-		//屍系____________________________________________________________________________________________________
-		}else if (@unit == zombieleaderA) {
-		}else if (@unit == zombieleaderB) {
-		}else if (@unit == zombieleaderC) {
-		}else if (@unit == zombieleaderD) {
-		}else if (@unit == zombieleaderE) {
-		}else if (@unit == zombieleaderF) {
-		}else if (@unit == zombieleaderG) {
-		}else if (@unit == zombieleaderH) {
-		//フェル系____________________________________________________________________________________________________
-		}else if (@unit == fel) {
-		}else if (@unit == fel0) {
-		}else if (@unit == felnini) {
-		}else if (@unit == felpower) {
-		}else if (@unit == felluna) {
-		}else if (@unit == felleaderA) {
-		}else if (@unit == felleaderB) {
-		}else if (@unit == felleaderC) {
-		}else if (@unit == felleaderD) {
-		}else if (@unit == felleaderE) {
-		}else if (@unit == felleaderF) {
-		}else if (@unit == felleaderG) {
-		}else if (@unit == felleaderH) {
-		}else if (@unit == felleaderI) {
-		}else if (@unit == felleaderJ) {
 		//その他____________________________________________________________________________________________________
 		}else if (@unit == honokaMAD) {
 			setv(@allObjectiveClass, tank)
@@ -1158,6 +1090,7 @@ event ObjectiveConfig_kaihen
 		}
 
 		index(@allObjectiveClass,objective,@ObjectiveClass)
+		if (@ObjectiveClass==0) {setv(@ObjectiveClass,empty)}
 		setv(@memoryunit,memoryunit_)
 		addstr(@memoryunit,@unit)
 		addskill(@memoryunit,@ObjectiveClass)
@@ -1167,13 +1100,13 @@ event ObjectiveConfig_kaihen
 
 story ObjectiveConfig_kaihen_story
 {
-	//既に開始しているデータで始めた場合の対策用
+	//既にオープニングを終えているデータで始めた場合の対策用
 	if (yet(ObjectiveConfig_kaihen)) {event(ObjectiveConfig_kaihen)}
 }
 
 event addmemoryunit
 {
-	//記憶ユニットをaddunitする処理
+	//記録ユニットをaddunitする処理
 	addspot(memoryunitspot) hidespot(memoryunitspot)
 	storeAllTalent(@allUnit)
 	while (count(@allUnit) >= 1) {
