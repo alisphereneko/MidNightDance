@@ -1,0 +1,80 @@
+unit h01LoyaldownOFF : h01discreditOFF
+{
+	name=忠誠低下OFF
+	merce=LoyaldownON
+}
+
+unit h01LoyaldownON : h01discreditON
+{
+	name=忠誠低下ON
+	merce=LoyaldownOFF
+}
+
+class LoyaldownOFF
+{
+	name=忠誠低下をOFFにする
+	image = systemicon_discreditOFF
+	politics=erase
+}
+
+class LoyaldownON
+{
+	name=忠誠低下をONにする
+	image = systemicon_discreditON
+	politics=erase
+}
+
+event LoyaldownONOFF_addunit
+{
+	if (inspot(politics2,h01LoyaldownOFF)==0 && inspot(politics2,h01LoyaldownON)==0) {
+		setv(@LoyaldownONOFF,politics2)
+		routine(LoyaldownONOFF_addunit_main)
+	}
+	if (inspot(camp1,h01LoyaldownOFF)==0 && inspot(camp1,h01LoyaldownON)==0) {
+		setv(@LoyaldownONOFF,camp1)
+		routine(LoyaldownONOFF_addunit_main)
+	}
+	clear(@LoyaldownONOFF)
+}
+
+event LoyaldownONOFF_addunit_main
+{
+	//設定によってaddunitする処理
+	if (getMode() > 1 || LoyaldownONOFFmod==1) {addunit(h01LoyaldownON,@LoyaldownONOFF)}
+	else {addunit(h01LoyaldownOFF,@LoyaldownONOFF)}
+}
+
+event LoyaldownONOFF_trigger_master
+{
+	if (ptest(politics2,LoyaldownON) || ptest(politics2,LoyaldownOFF)) {event(LoyaldownONOFF)}
+}
+
+event LoyaldownONOFF_trigger_other
+{
+	if (ptest(camp1,LoyaldownON) || ptest(camp1,LoyaldownOFF)) {event(LoyaldownONOFF)}
+}
+
+event LoyaldownONOFF
+{
+	if (getMode() > 1) {
+		talk(felclone, fel_comari.png, この設定はノーマル以下の難易度で変更できるよ！)
+		return()
+	}
+
+	if (LoyaldownONOFFmod==0) {set(LoyaldownONOFFmod,1)}
+	else {set(LoyaldownONOFFmod,0)}
+
+	eraseunit2(politics2,h01LoyaldownOFF,h01LoyaldownON,LoyaldownOFF,LoyaldownON)
+	eraseunit2(camp1,h01LoyaldownOFF,h01LoyaldownON,LoyaldownOFF,LoyaldownON)
+
+	routine(LoyaldownONOFF_addunit)
+
+	save()
+	talk(felclone, fel_emi.png,設定を変更したよ！)
+}
+
+detail
+{
+	h01LoyaldownOFF=現在、忠誠値が下がらない設定になっています。難易度ノーマル以下であればこの内政ユニットから設定を変更できます。;
+	h01LoyaldownON=現在、人材やその部下の撃破時などに忠誠値が低下する設定になっています。難易度ノーマル以下であればこの内政ユニットから設定を変更できます。;
+}

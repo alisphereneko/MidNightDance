@@ -1,0 +1,196 @@
+//■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■
+//▼▼(全内政イベント管理場所)▼▼★
+//▼▼【解説】・全内政項目「クラスチェンジ」「勢力戦略」「ヘルプ＆設定」を呼び出す管理場所。
+event politicsSet
+{
+	storePlayerUnit(@playerUnit)
+	event(mod_trigger) //mod変更行
+	if (isMaster(@playerUnit) == 1) {
+		event(sortOut)
+		event(allAutoChangeGimmick)
+		event(classChange)
+	}else {
+		event(classChange_camp)
+	}
+	event(searchChangeGimmick)
+	event(eastpoliceADGimmick)
+	event(other)
+}
+//■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■
+
+//■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■
+//▼▼(内政ギミックイベント「ソート関連」管理場所)▼▼★
+//▼▼【解説】・個別メニューを表示する処理…へ飛ぶための経由場所。
+event sortOut
+{
+	if (ptest(politics1, dropAll1)){
+		set(sortOutPurpose, 0)
+		event(sortOutAction)
+	}else if (ptest(politics1, dropClass01)){
+		set(sortOutPurpose, 1)
+		event(sortOutAction)
+	}else if (ptest(politics1, dropClass02)){
+		set(sortOutPurpose, 2)
+		event(sortOutAction)
+	}else if (ptest(politics1, dropClass03)){
+		set(sortOutPurpose, 3)
+		event(sortOutAction)
+	}else if (ptest(politics1, dropClass04)){
+		set(sortOutPurpose, 4)
+		event(sortOutAction)
+	}else if (ptest(politics1, dropClass05)){
+		set(sortOutPurpose, 5)
+		event(sortOutAction)
+	}else if (ptest(politics1, dropClass06)){
+		set(sortOutPurpose, 6)
+		event(sortOutAction)
+	}else if (ptest(politics1, dropClass07)){
+		set(sortOutPurpose, 7)
+		event(sortOutAction)
+	}else if (ptest(politics1, dropClass08)){
+		set(sortOutPurpose, 8)
+		event(sortOutAction)
+	}else if (ptest(politics1, dropClass09)){
+		set(sortOutPurpose, 9)
+		event(sortOutAction)
+	}else if (ptest(politics1, dropClass10)){
+		set(sortOutPurpose, 10)
+		event(sortOutAction)
+	}else if (ptest(politics1, dropClass11)){
+		set(sortOutPurpose, 11)
+		event(sortOutAction)
+	}else if (ptest(politics1, dropClass21)){
+		set(sortOutPurpose, 21)
+		event(sortOutAction)
+	}else if (ptest(politics1, dropClass22)){
+		set(sortOutPurpose, 22)
+		event(sortOutAction)
+	}else if (ptest(politics1, dropClass23)){
+		set(sortOutPurpose, 23)
+		event(sortOutAction)
+	}else if (ptest(politics1, dropClass24)){
+		set(sortOutPurpose, 24)
+		event(sortOutAction)
+	}else if (ptest(politics1, dropClass25)){
+		set(sortOutPurpose, 25)
+		event(sortOutAction)
+	}else if (ptest(politics1, dropClass99)){
+		set(sortOutPurpose, 99)
+		event(sortOutAction)
+	}else if (ptest(politics1, dropAuto1)){
+		set(sortOutPurpose, 101)
+		event(sortOutAction)
+	}else if (ptest(politics1, dropAuto2)){
+		set(sortOutPurpose, 102)
+		event(sortOutAction)
+	}
+}
+//■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■
+
+//■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■
+//▼▼(内政ギミックイベント「一括オートＣＣ」管理場所)▼▼★
+//▼▼【解説】・一括でオートクラスチェンジ化を行う処理…へ飛ぶための経由場所。
+event allAutoChangeGimmick
+{
+	if (ptest(politics1, autoChange1)){
+		set(allAutoChangePurpose, 1)
+		event(allAutoChangeGimmickAction)
+	}else if (ptest(politics1, autoChange2)){
+		set(allAutoChangePurpose, 2)
+		event(allAutoChangeGimmickAction)
+	}else if (ptest(politics1, autoChange3)){
+		set(allAutoChangePurpose, 3)
+		event(allAutoChangeGimmickAction)
+	}else if (ptest(politics1, autoChange4)){
+		set(allAutoChangePurpose, 4)
+		event(allAutoChangeGimmickAction)
+	}
+}
+//■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■
+
+//■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■
+//▼▼(個別内政イベント「クラスチェンジ」管理場所)▼▼★
+//▼▼【解説】・各内政ユニットの「クラスチェンジ」選択時に
+//▼▼選択者データを「@unit」に代入させＣＣを実行する処理…へ飛ぶための経由場所。
+event classChange
+{
+	//以下約1800行mod変更行(変更後は約20行)
+	//本当は人様のスクリプトには手を付けたくないんだけど、ここだけはどうしても気になってしまったんや…
+	storePlayerPower(@power)
+	storeAllTalent(@allOtherTalent)
+	storeUnitOfPower(@power, @allPowerUnit)
+	subv(@allOtherTalent, @allPowerUnit)
+	storeAllTalent(@allPowerTalent)
+	subv(@allPowerTalent, @allOtherTalent)
+	setv(@politicsspot,politics1)
+	
+	event(classChangetrigger_while)
+}
+//■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■
+
+//■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■
+//▼▼(個別内政イベント「クラスチェンジ『※キャンプ』」管理場所)▼▼★
+//▼▼【解説】・各内政ユニットの「クラスチェンジ」選択時に
+//▼▼選択者データを「@unit」に代入させＣＣを実行する処理…へ飛ぶための経由場所。
+//▼▼ただし、こちらは人材プレイによるキャンプメニュー時で使用するバージョン。
+event classChange_camp
+{
+	storeplayerunit(@player)
+	storememberofunit(@player,@allPowerTalent)
+	addv(@allPowerTalent,@player)
+	setv(@politicsspot,camp1)
+	
+	event(classChangetrigger_while)
+}
+
+event classChangetrigger_while
+{
+	while (@allPowerTalent!=0) {
+		index(@allPowerTalent,0,@unit) subv(@allPowerTalent,@unit)
+		setv(@classchangepoliticsunit,politicsClassChange_) addstr(@classchangepoliticsunit,@unit)
+		if (inSpot(@politicsspot,@classchangepoliticsunit)!=0) {
+			event(classChangeAction)
+			return()
+		}
+	}
+}
+//■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■
+
+//■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■
+//▼▼(内政ギミックイベント「勢力戦略「人材探索」による探索クラスの変更」管理場所)▼▼★
+//▼▼【解説】・勢力戦略「人材探索」によって得られる探索クラスを変更する処理…へ飛ぶための経由場所。
+event searchChangeGimmick
+{
+	if (ptest(politics2, searchChange1)){
+		event(searchChangeGimmickAction)
+	}
+}
+//■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■
+
+//■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■
+//▼▼(内政ギミックイベント「東署専用ギミック「特殊同盟破棄」」管理場所)▼▼★
+//▼▼【解説】・東署開始時のみ付与されるEV同盟破棄イベント。
+event eastpoliceADGimmick
+{
+	if (ptest(politics2, eastpoliceAllianceDiscarded1)){
+		event(eastpoliceADGimmickAction)
+	}
+}
+//■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■
+
+//■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■
+//▼▼(内政イベント「ヘルプ＆設定」管理場所)▼▼★
+//▼▼【解説】・各ヘルプイベントと設定変更の処理…へ飛ぶための経由場所。
+event other
+{
+	if (ptest(politics3, help1)){
+		event(helpAction1)
+	}else if (ptest(politics3, help2)){
+		event(helpAction2)
+	}else if (ptest(politics3, help3)){
+		event(helpAction3)
+	}else if (ptest(politics3, setting1)){
+		event(settingAction1)
+	}
+}
+//■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■

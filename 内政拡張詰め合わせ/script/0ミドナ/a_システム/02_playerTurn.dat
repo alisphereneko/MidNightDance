@@ -1,0 +1,244 @@
+//■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■
+story 05playerTurn
+{
+if (isScenario(scenarioMein) == 1 && isPlayerTurn()) {
+	storePlayerUnit(@player)
+	storePlayerPower(@power)
+	storeUnitOfPower(@power, @allPlayerPowerUnit)
+	spotmark()
+	scroll(@player)
+	spotmark(@power)
+  	image(PTstarteffect_word.png, 65, 30, 6, 10)
+	image(PTstarteffect_back.png, 0, 100, 1, 10)
+	wait(50)
+	image(PTstarteffect0.png, 0, 100, 2, 1)
+ 	wait(1)
+ 	image(PTstarteffect0.png, 1)
+ 	image(PTstarteffect1.png, 0, 100, 2, 1)
+ 	wait(1)
+ 	image(PTstarteffect1.png, 1)
+ 	image(PTstarteffect2.png, 0, 100, 2, 1)
+ 	wait(1)
+ 	image(PTstarteffect2.png, 1)
+	image(PTstarteffect.png, 0, 100, 2, 1)
+	wait(10)
+	playSE(switch01)
+	playSE(scissors01)
+	image(PTstarteffect_on.png, 0, 100, 3, 10)
+	wait(20)
+	image(PTstarteffect_on1.png, 0, 100, 4, 10)
+	wait(10)
+
+	set(SWITCHplayerTurn, 1)
+	storeUnitOfPower(@power, @allPowerUnit)
+	storeLeaderOfPower(@power, @allPowerLeader)
+	storeUnitOfPower(@power, @allPowerMember)
+	subv(@allPowerMember, @allPowerLeader)
+	storeud(SAVEallAutoClassChangeUnit, @allAutoClassChangeUnit)
+
+	storeMasterOfPower(@power, @master)
+//■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■
+//▼▼(１消去フェイズ)▼▼
+//▼▼【解説】・【routine(eraseAction)】を実行し、
+//▼▼プレイヤー勢力の全ユニットから一時能力スキルを失わせる。
+//▼▼ただし一時能力スキル「固有能力封印(seal10～)」等の処理は下記の「３個別処理開始・読み込み」で行い
+//▼▼ここでは演出の便宜上発動扱いとする。
+//▼▼またプレイヤーターン限定処理として内政ユニット除去とギミックユニット追加も実行。
+//▼▼
+//▼▼一部変数(固有能力所持者数や総Ｒａｎｋ等)もリセット。現在設定途中
+	wait(5)
+	image(PTstarteffect_on2.png, 0, 100, 4, 5)
+	routine(eraseAction)
+	storeUnitOfSpot(politics1, @allPoliticsUnit)
+	storeud(SAVEallGimmickUnit, @allGimmickUnit)
+	subv(@allPoliticsUnit, @allGimmickUnit)
+	eraseUnit(@allPoliticsUnit)
+	set(autoClassChangeSortONOFF, 0)
+//■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■
+
+//■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■
+//▼▼(２忠誠フェイズ)▼▼
+//▼▼【解説】・「休暇(忠誠値が０になったユニットを非表示領地に送るシステム)」
+//▼▼及び「復帰(非表示領地から行動中勢力へ復帰させるシステム)」の二つを担当するフェイズ。
+//▼▼ただし休暇システムの実際処理は下記の「３個別処理開始・読み込み」で行い
+//▼▼ここでは演出の便宜上発動扱いとする。
+//▼▼
+//▼▼非表示領地所属ユニットを一人選び(@unit)に入力、
+//▼▼【sleepComeback】にてそのユニットの所属勢力(@belongingToPower_?)が
+//▼▼行動中勢力(@power)なら復帰させる。
+//▼▼※またプレイヤーターン限定処理として(@unit)がプレイヤー勢力所属ユニットなら
+//▼▼(@allPlayerSleepUnit)へ登録し勢力内出来事の表示にて使用する。
+	wait(5)
+	image(PTstarteffect_on3.png, 0, 100, 4, 5)
+	storeud(SAVEallInvisibleSpot, @allInvisibleSpot)
+	subv(@allInvisibleSpot, invisible0)
+	storeLeaderOfSpot(@allInvisibleSpot, @allInvisibleUnit)
+	while (count(@allInvisibleUnit) >= 1) {
+		index(@allInvisibleUnit, 0, @unit)
+		subv(@allInvisibleUnit, @unit)
+		set(purpose, 2)
+		routine(privateData)
+		routine(sleepComeback)
+		if (@belongingToPower == @power) {
+			storeSkillOfUnit(@unit, @skill)
+			if (has(@skill, unitsleeping7) == 1 || has(@skill, unitsleeping6) == 1 || has(@skill, unitsleeping5) == 1 || has(@skill, unitsleeping4) == 1 || has(@skill, unitsleeping3) == 1 || has(@skill, unitsleeping2) == 1 || has(@skill, unitsleeping1) == 1) {
+				addv(@allPlayerSleepUnit, @unit)
+			}
+		}
+	}
+//■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■
+
+//■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■
+//▼▼(３Ｒａｎｋ反映フェイズ(※個別処理タイミング))▼▼
+//▼▼【解説】・ここでは個々のＲａｎｋ値を総Ｒａｎｋに入れるのが演出的にメインの処理となる…
+//▼▼…が、内部ではそれ以外にも個々での処理が必要なモノ全てを行う場所でもある。
+//▼▼
+//▼▼勢力内のリーダーユニットを一人選び(@unit)に入力し下記を実行。
+//▼▼①ユニットの在籍勢力を登録【privateData】
+//▼▼②【routine(classChangeUnitSet_player)】でクラスチェンジ候補者を(@allClassChangeUnit)に登録。
+//▼▼※CPU版との違いは(@allAutoClassChangeUnit)に登録されていないユニットは除外されること。
+//▼▼③クラスを読み込み「戦闘Ｒａｎｋ→(@battleRank)」「経済Ｒａｎｋ→(@economyRank)」へ
+//▼▼それぞれ入力【classRank】し、【fluctuateRank】で人材スキルを反映後、総Ｒａｎｋへ加算。
+//▼▼④【routine(uniqueAbilityPossessor)】にて固有能力発動者リスト(@all??????Unit)に登録。
+//▼▼なお「固有能力封印(seal10～)除去」＆休暇処理もこのフェイズで実行（※ゲーム上は忠誠フェイズ時発動として扱う）
+//▼▼休暇処理時はプレイヤーターン限定処理として(@allPlayerSleepUnit)へ登録すること。
+//▼▼
+//▼▼以上の工程を全員分終えるまで繰り返す。
+	wait(5)
+	image(PTstarteffect_on4.png, 0, 100, 4, 5)
+	while (count(@allPowerLeader) >= 1) {
+		index(@allPowerLeader, 0, @unit)
+		subv(@allPowerLeader, @unit)
+		storeSkillOfUnit(@unit, @skill)
+		pushLoyal(@unit, loyal)
+
+		clear(@objectiveClass)
+		set(purpose, 1)
+		routine(privateData)
+		routine(sealDelete)
+		if (loyal <= 0 && isMaster(@unit) == 0) {
+			routine(sleepRemoval)
+			addv(@allPlayerSleepUnit, @unit)
+			continue()
+		}
+		routine(classChangeUnitSet_player)
+		routine(classRank)
+		routine(fluctuateRank)
+		add(totalBattleRank, battleRank)
+		add(totalEconomyRank, economyRank)
+		routine(uniqueAbilityPossessor)
+//ΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞ
+//pushv(@allPowerLeader, leaderCount)
+//talk(fel, fel_tu.png, ［デバックメッセージ］個別読み込みが発動したよ。$人材名「&unit&」現行勢力「&power&」$人材名「&unit&」あと「&leaderCount&」人)
+//ΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞ
+	}
+//■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■
+
+//■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■
+//▼▼(４固有能力フェイズ)▼▼
+//▼▼【解説】・【routine(traitAction)】を実行し、
+//▼▼固有能力発動者リスト(@all??????Unit)に登録されたメンバーの固有能力を発動。
+//▼▼一時能力の実際の付与はこの段階では行わず取得予定者に登録する。
+//▼▼また必要ならば固有能力発動者の数もそれぞれ控えておき、勢力戦略にて使用。
+//▼▼最後(全固有能力発動した後)に【routine(traitActionGetSkill)】を実行。
+//▼▼全一時能力取得予定者(@all??????GetUnit)に一時能力を実際に付与させる。
+	wait(5)
+	image(PTstarteffect_on5.png, 0, 100, 4, 5)
+	routine(traitAction)
+	routine(traitGetSkillAction)
+//■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■
+
+//■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■
+//▼▼(５一時能力フェイズ)▼▼
+//▼▼【解説】・【routine(traitTemporaryAction)】を実行し、
+//▼▼一部一時能力を所持している各ユニットからそれぞれ効果を発揮させる。
+//▼▼なお所持者を確認するためここでも全一時能力取得予定者(@all??????GetUnit)を使用。
+	wait(5)
+	image(PTstarteffect_on6.png, 0, 100, 4, 5)
+	routine(traitTemporaryAction)
+//■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■
+
+//■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■
+//▼▼(６勢力戦略フェイズ)▼▼
+//▼▼【解説】・このフェイズで勢力戦略を発動させる。
+//▼▼※なおプレイヤーターン限定処理として【routine(powerTacticsAction_display)】を実行。
+	wait(5)
+	image(PTstarteffect_on7.png, 0, 100, 4, 5)
+	routine(powerTacticsAction)
+	routine(powerTacticsAction_display)
+//■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■
+
+//■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■
+//▼▼(７エフィクト消去と勢力内出来事の表示)▼▼
+//▼▼【解説】・プレイヤーターン限定処理で、他場所でも展開しているエフィクトを消去する。
+//▼▼また【routine(NoticeDisplay)】にて勢力内での出来事をプレイヤーに知らせる。
+	wait(5)
+	image(PTstarteffect_on8.png, 0, 100, 5, 20)
+	wait(10)
+	playSE(button04b)
+	wait(80)
+	image(PTstarteffect_on7.png, 1)
+	image(PTstarteffect_on6.png, 1)
+	image(PTstarteffect_on5.png, 1)
+	image(PTstarteffect_on4.png, 1)
+	image(PTstarteffect_on3.png, 1)
+	image(PTstarteffect_on2.png, 1)
+	image(PTstarteffect_on1.png, 1)
+  	image(PTstarteffect_word.png, 10)
+	wait(20)
+	routine(NoticeDisplayAction)
+	wait(10)
+	image(PTstarteffect_on8.png, 10)
+	wait(10)
+	image(PTstarteffect_on.png, 10)
+	wait(10)
+	image(PTstarteffect.png, 1)
+	image(PTstarteffect4.png, 0, 100, 2, 1)
+	wait(1)
+	image(PTstarteffect4.png, 1)
+	image(PTstarteffect5.png, 0, 100, 2, 1)
+	wait(1)
+	image(PTstarteffect5.png, 1)
+	image(PTstarteffect6.png, 0, 100, 2, 1)
+	wait(1)
+	image(PTstarteffect6.png, 1)
+	wait(5)
+ 	image(PTstarteffect_back.png, 20)
+	spotmark()
+//■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■
+
+//■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■
+//▼▼(８オートクラスチェンジ実行)▼▼
+//▼▼【解説】・クラスチェンジ実行者(@allClassChangeUnit)に登録された全ユニットの
+//▼▼クラスチェンジをここで実行する。
+	while (count(@allClassChangeUnit) >= 1) {
+		index(@allClassChangeUnit, 0, @unit)
+		subv(@allClassChangeUnit, @unit)
+		clear(@objectiveClass)
+		routine(ObjectiveautoCCmod_main)  if (@objectiveClass!=0) {routine(autoClassChangeAction) continue()}//mod変更行
+		set(purpose, 5)
+		routine(privateData)
+		routine(spObjectiveClassSet)
+		routine(autoClassChangeAction)
+	}
+	routine(autoSpClassChangeAction)
+//■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■
+	set(SWITCHplayerTurn, 0)
+//ΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞ
+//テストプレイ用自勢力無敵化ΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞ
+//  	storeRoamUnitOfSpot(@allRoamSpot, @allRoamUnit)
+//  	shuffle(@allRoamUnit)
+//  	index(@allRoamUnit, 0, @unit)
+//  	index(@allRoamUnit, 1, @unit2)
+//  	storeUnitOfPower(@power, @allTestUnit)
+//  	setLevel(@allTestUnit, 30)
+//  	addLevel(@allTestUnit, 1)
+//  	setMoney(@power, 999999)
+//  	setv(@EVaddPower, @power)
+//  	setv(@EVaddUnit, @unit)
+//  	routine(EVaddUnitTool)
+//  	setv(@EVaddUnit, @unit2)
+//  	routine(EVaddUnitTool)
+//ΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞ
+}
+}

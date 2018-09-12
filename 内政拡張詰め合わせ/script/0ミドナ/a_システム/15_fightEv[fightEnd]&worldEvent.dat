@@ -1,0 +1,390 @@
+event worldEvent
+{
+//■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■
+//▼▼(０戦闘後処理の開始)▼▼
+//▼▼【解説】・world構造体の読み込み性質を利用して戦闘後の処理をここから開始する。
+//▼▼(※ターン開始時等読み込みをしない設定だが、それだけではロード時にも読み込みを行ってしまう模様)
+//▼▼(※そのため戦闘実行済SWITCH(SWITCHbattleAfter)がＯＮになっていない場合は発動しないよう条件を追加)
+if (SWITCHbattleAfter == 1 && SWITCHbattleSystemOff == 0 && isNewTurn() == 0 && isPlayerTurn() == 0 && isPlayerEnd() == 0 && isComTurn() == 0){
+//msg(■【デバックメッセージ】■$戦闘後処理発動。)
+//■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■
+
+//■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■
+//▼▼(１強制クラスチェンジの実行)▼▼
+//▼▼【解説】・クラススキル「ゾンビ感染」「顔文字感染」「クローンフェル化」のスキルを実行。
+//▼▼上記スキルの効果対象として登録されていたユニットを呼び出して審査、真ならばチェンジする。
+	while (count(@allInfectVictimUnit) >= 1) {
+		index(@allInfectVictimUnit, 0, @unit)
+		subv(@allInfectVictimUnit, @unit)
+		set(infectActive, 0)
+		storeSkillOfUnit(@unit, @skill)
+		pushRand(randPoint)
+		if (has(@allZombieVictimUnit, @unit) == 1) {
+			subv(@allZombieVictimUnit, @unit)
+			if (has(@skill, pride_d) == 1 && randPoint < 90) {
+				set(infectActive, 1)
+				setv(@class, zombie)
+			}else if (has(@skill, pride_c) == 1 && randPoint < 70) {
+				set(infectActive, 1)
+				setv(@class, zombie)
+			}else if (has(@skill, pride_b) == 1 && randPoint < 50) {
+				set(infectActive, 1)
+				setv(@class, zombie)
+			}else if (has(@skill, pride_a) == 1 && randPoint < 30) {
+				set(infectActive, 1)
+				setv(@class, zombie)
+			}else if (has(@skill, pride_s) == 1 && randPoint < 10) {
+				set(infectActive, 1)
+				setv(@class, zombie)
+			}
+		}else if (has(@allKaomoziVictimUnit, @unit) == 1) {
+			subv(@allKaomoziVictimUnit, @unit)
+			if (has(@skill, pride_d) == 1 && randPoint < 100) {
+				set(infectActive, 1)
+				setv(@class, kaomozi030)
+			}else if (has(@skill, pride_c) == 1 && randPoint < 100) {
+				set(infectActive, 1)
+				setv(@class, kaomozi030)
+			}else if (has(@skill, pride_b) == 1 && randPoint < 100) {
+				set(infectActive, 1)
+				setv(@class, kaomozi030)
+			}else if (has(@skill, pride_a) == 1 && randPoint < 75) {
+				set(infectActive, 1)
+				setv(@class, kaomozi030)
+			}else if (has(@skill, pride_s) == 1 && randPoint < 50) {
+				set(infectActive, 1)
+				setv(@class, kaomozi030)
+			}
+		}else if (has(@allFelVictimUnit, @unit) == 1) {
+			subv(@allFelVictimUnit, @unit)
+			if (has(@skill, pride_d) == 1 && randPoint < 90) {
+				set(infectActive, 1)
+				setv(@class, clonefel)
+			}else if (has(@skill, pride_c) == 1 && randPoint < 70) {
+				set(infectActive, 1)
+				setv(@class, clonefel)
+			}else if (has(@skill, pride_b) == 1 && randPoint < 50) {
+				set(infectActive, 1)
+				setv(@class, clonefel)
+			}else if (has(@skill, pride_a) == 1 && randPoint < 30) {
+				set(infectActive, 1)
+				setv(@class, clonefel)
+			}else if (has(@skill, pride_s) == 1 && randPoint < 10) {
+				set(infectActive, 1)
+				setv(@class, clonefel)
+			}
+		}
+		if (has(@skill, metamorphosis) == 1) {
+			if (has(@skill, metamorphosistime10) == 1 || has(@skill, metamorphosistime9) == 1 || has(@skill, metamorphosistime8) == 1 || has(@skill, metamorphosistime7) == 1 || has(@skill, metamorphosistime6) == 1 || has(@skill, metamorphosistime5) == 1 || has(@skill, metamorphosistime4) == 1 || has(@skill, metamorphosistime3) == 1 || has(@skill, metamorphosistime2) == 1 || has(@skill, metamorphosistime1) == 1) {
+				set(infectActive, 0)
+			}
+		}
+		if (infectActive == 1) {
+//ΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞ
+//msg(■【デバックメッセージ】■「感染系」発動。$対象者「&unit&」感染クラス「&class&」)
+//ΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞ
+			changeClass(@unit, @class)
+			pushLevel(@unit, level)
+			setLevel(@unit, 1)
+			sub(level, 1)
+			addLevel(@unit, level)
+			if (level == 0) {
+				addLevel(@unit, 1)
+				setLevel(@unit, 1)
+			}
+			eraseSkill(@unit, energycard)
+			storeud(SAVEspChangeUnit, @spChangeUnit)
+			addv(@spChangeUnit, @unit)
+			setud(SAVEspChangeUnit, @spChangeUnit)
+
+			storeMemberOfUnit(@unit, @allMember)
+			while (count(@allMember) >= 1) {
+				index(@allMember, 0, @member)
+				subv(@allMember, @member)
+				if (isTalent(@member) == 0) {
+					changeClass(@member, @class)
+					pushLevel(@member, level)
+					setLevel(@member, 1)
+					sub(level, 1)
+					addLevel(@member, level)
+					if (level == 0) {
+						addLevel(@member, 1)
+						setLevel(@member, 1)
+					}
+				}
+			}
+		}
+	}
+//■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■
+
+//■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■
+//▼▼(２一時能力「非難」の付与)▼▼
+//▼▼【解説】・スキル「非難」の効果対象として登録されていたユニットへ実際のスキル付与を行う。
+	setv(@allCondemnEquippingUnit, @condemn5EquippingUnit)
+	addv(@allCondemnEquippingUnit, @condemn10EquippingUnit)
+	while (count(@allCondemnEquippingUnit) >= 1) {
+		index(@allCondemnEquippingUnit, 0, @unit)
+		subv(@allCondemnEquippingUnit, @unit)
+		storeSkillOfUnit(@unit, @skill)
+		if (has(@skill, eccentric) == 1 && has(@condemn5EquippingUnit, @unit) == 1) {
+			subv(@condemn5EquippingUnit, @unit)
+		}else if (has(@skill, eccentric) == 1 && has(@condemn10EquippingUnit, @unit) == 1) {
+			subv(@condemn10EquippingUnit, @unit)
+		}
+	}
+	addSkill(@condemn5EquippingUnit, seal5)
+	addSkill(@condemn10EquippingUnit, seal10)
+//■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■
+
+//■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■
+//▼▼(３強化一時能力付与の発動)▼▼
+//▼▼【解説】・スキル「好戦家」の効果で発生するスキル付与を実施する。
+	while (count(@allBattleLeader) >= 1) {
+		index(@allBattleLeader, 0, @unit)
+		subv(@allBattleLeader, @unit)
+		storeSkillOfUnit(@unit, @skill)
+
+		if (has(@skill, warlike) == 1) {
+			if (has(@skill, seal10) == 0 && has(@skill, seal9) == 0 && has(@skill, seal8) == 0 && has(@skill, seal7) == 0 && has(@skill, seal6) == 0 && has(@skill, seal5) == 0 && has(@skill, seal4) == 0 && has(@skill, seal3) == 0 && has(@skill, seal2) == 0 && has(@skill, seal1) == 0) {
+				if (has(@skill, elation10) == 1) {
+				}else if (has(@skill, elation9) == 1) {
+					addSkill(@unit, elation10)
+				}else if (has(@skill, elation8) == 1) {
+					addSkill(@unit, elation10)
+				}else if (has(@skill, elation7) == 1) {
+					if (has(@skill, double) == 0) {
+						addSkill(@unit, elation9)
+					}else if (has(@skill, double) == 1) {
+						addSkill(@unit, elation10)
+					}
+				}else if (has(@skill, elation6) == 1) {
+					if (has(@skill, double) == 0) {
+						addSkill(@unit, elation8)
+					}else if (has(@skill, double) == 1) {
+						addSkill(@unit, elation10)
+					}
+				}else if (has(@skill, elation5) == 1) {
+					if (has(@skill, double) == 0) {
+						addSkill(@unit, elation7)
+					}else if (has(@skill, double) == 1) {
+						addSkill(@unit, elation9)
+					}
+				}else if (has(@skill, elation4) == 1) {
+					if (has(@skill, double) == 0) {
+						addSkill(@unit, elation6)
+					}else if (has(@skill, double) == 1) {
+						addSkill(@unit, elation8)
+					}
+				}else if (has(@skill, elation3) == 1) {
+					if (has(@skill, double) == 0) {
+						addSkill(@unit, elation5)
+					}else if (has(@skill, double) == 1) {
+						addSkill(@unit, elation7)
+					}
+				}else if (has(@skill, elation2) == 1) {
+					if (has(@skill, double) == 0) {
+						addSkill(@unit, elation4)
+					}else if (has(@skill, double) == 1) {
+						addSkill(@unit, elation6)
+					}
+				}else if (has(@skill, elation1) == 1) {
+					if (has(@skill, double) == 0) {
+						addSkill(@unit, elation3)
+					}else if (has(@skill, double) == 1) {
+						addSkill(@unit, elation5)
+					}
+				}else  {
+					if (has(@skill, double) == 0) {
+						addSkill(@unit, elation2)
+					}else if (has(@skill, double) == 1) {
+						addSkill(@unit, elation4)
+					}
+				}
+			}
+		}
+//■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■
+
+//■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■
+//▼▼(４忠誠変動系一時能力の発動)▼▼
+//▼▼【解説】・スキル「狂気」「慈愛」「サディスト」の効果で発生する忠誠変動を実施する。
+		if (has(@skill, madness) == 1) {
+			if (has(@skill, seal10) == 0 && has(@skill, seal9) == 0 && has(@skill, seal8) == 0 && has(@skill, seal7) == 0 && has(@skill, seal6) == 0&& has(@skill, seal5) == 0 && has(@skill, seal4) == 0 && has(@skill, seal3) == 0 && has(@skill, seal2) == 0 && has(@skill, seal1) == 0) {
+				pushv(@allDeadLeader, allDeadLeaderCount)
+				if (has(@skill, double) == 0) {
+					mul(allDeadLeaderCount, 2)
+				}else if (has(@skill, double) == 1) {
+					mul(allDeadLeaderCount, 4)
+				}
+				addLoyal(@unit, allDeadLeaderCount)
+			}
+		}
+		if (has(@skill, affectionate) == 1) {
+			if (has(@skill, seal10) == 0 && has(@skill, seal9) == 0 && has(@skill, seal8) == 0 && has(@skill, seal7) == 0 && has(@skill, seal6) == 0&& has(@skill, seal5) == 0 && has(@skill, seal4) == 0 && has(@skill, seal3) == 0 && has(@skill, seal2) == 0 && has(@skill, seal1) == 0) {
+				subv(@allDeadLeader, @unit)
+				pushv(@allDeadLeader, allDeadLeaderCount)
+				if (has(@skill, double) == 0) {
+					mul(allDeadLeaderCount, -2)
+				}else if (has(@skill, double) == 1) {
+					mul(allDeadLeaderCount, -4)
+				}
+				addLoyal(@unit, allDeadLeaderCount)
+			}
+		}
+		if (has(@skill, sadist) == 1) {
+			if (has(@skill, seal10) == 0 && has(@skill, seal9) == 0 && has(@skill, seal8) == 0 && has(@skill, seal7) == 0 && has(@skill, seal6) == 0&& has(@skill, seal5) == 0 && has(@skill, seal4) == 0 && has(@skill, seal3) == 0 && has(@skill, seal2) == 0 && has(@skill, seal1) == 0) {
+				storePowerOfUnit(@unit, @power)
+				storeLeaderOfPower(@power, @allLeader)
+				subv(@allDeadLeader, @allLeader)
+				pushv(@allDeadLeader, allDeadLeaderCount)
+				if (has(@skill, double) == 0) {
+					mul(allDeadLeaderCount, 4)
+				}else if (has(@skill, double) == 1) {
+					mul(allDeadLeaderCount, 8)
+				}
+				addLoyal(@unit, allDeadLeaderCount)
+			}
+		}
+//■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■
+
+//■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■
+//▼▼(５戦闘後の部隊員喪失による忠誠低下処理の実行)▼▼
+//▼▼【解説】・戦闘前に調べておいた部隊員数をリーダー達から個別に読み込み、現在の部隊員数から除算。
+//▼▼「気位の設定数値×除算後の値」分ユニットから忠誠値を下げる作業を繰り返し行う。
+//▼▼また敵側が「離間策」系スキルを発動している場合、追加で忠誠を下げる作業も行う。
+		storeMemberOfUnit(@unit, @allMember)
+		pushv(@allMember, numberOfMemberAfter)
+		set(purpose, 4)
+		routine(privateData)
+//ΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞ
+//set(beforeNumberOfMember, numberOfMember)
+//pushLoyal(@unit, beforeloyal)
+//ΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞ
+		sub(numberOfMember, numberOfMemberAfter)
+//ΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞ
+//set(victimNumberOfMember, numberOfMember)
+//ΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞ
+		if (numberOfMember >= 1 && isMaster(@unit) == 0) {
+				if (has(@skill, pride_d) == 1) {
+					set(loyalSubSize, 5)
+				}else if (has(@skill, pride_c) == 1) {
+					set(loyalSubSize, 10)
+				}else if (has(@skill, pride_b) == 1) {
+					set(loyalSubSize, 15)
+				}else if (has(@skill, pride_a) == 1) {
+					set(loyalSubSize, 20)
+				}else if (has(@skill, pride_s) == 1) {
+					set(loyalSubSize, 25)
+				}
+				if (has(@allAlienateVictim_Double, @unit) == 1) {
+					set(victimDamage, 6)
+					pushv(@allAlienateVictim_Double, @unit, victimDamageMul)
+					mul(victimDamage, victimDamageMul)
+					add(loyalSubSize, victimDamage)
+				}
+				if (has(@allAlienateVictim, @unit) == 1) {
+					set(victimDamage, 3)
+					pushv(@allAlienateVictim, @unit, victimDamageMul)
+					mul(victimDamage, victimDamageMul)
+					add(loyalSubSize, victimDamage)
+				}
+				if (has(@allGlibtalkerVictim_Double, @unit) == 1) {
+					set(victimDamage, 4)
+					pushv(@allGlibtalkerVictim_Double, @unit, victimDamageMul)
+					mul(victimDamage, victimDamageMul)
+					add(loyalSubSize, victimDamage)
+				}
+				if (has(@allGlibtalkerVictim, @unit) == 1) {
+					set(victimDamage, 2)
+					pushv(@allGlibtalkerVictim, @unit, victimDamageMul)
+					mul(victimDamage, victimDamageMul)
+					add(loyalSubSize, victimDamage)
+				}
+				if (has(@allNuisanceVictim_Double, @unit) == 1) {
+					set(victimDamage, 4)
+					pushv(@allNuisanceVictim_Double, @unit, victimDamageMul)
+					mul(victimDamage, victimDamageMul)
+					add(loyalSubSize, victimDamage)
+				}
+				if (has(@allNuisanceVictim, @unit) == 1) {
+					set(victimDamage, 2)
+					pushv(@allNuisanceVictim, @unit, victimDamageMul)
+					mul(victimDamage, victimDamageMul)
+					add(loyalSubSize, victimDamage)
+				}
+				mul(loyalSubSize, numberOfMember)
+				if (has(@skill, loyaltykeep) == 1 || has(@skill, coldblood) == 1) {
+					set(loyalSubSize, 0)
+				}else if (has(@skill, loyaltybuffer) == 1) {
+					per(loyalSubSize, 50)
+				}
+				if (has(@skill, twosides) == 1) {
+					if (has(@skill, affectionate) == 1 || has(@skill, sociable) == 1) {
+						pushLoyal(@unit, loyal)
+						if (loyal <= 50 && has(@skill, seal10) == 0 && has(@skill, seal9) == 0 && has(@skill, seal8) == 0 && has(@skill, seal7) == 0 && has(@skill, seal6) == 0&& has(@skill, seal5) == 0 && has(@skill, seal4) == 0 && has(@skill, seal3) == 0 && has(@skill, seal2) == 0 && has(@skill, seal1) == 0) {
+							set(loyalSubSize, 0)
+						}
+					}
+				}
+				if (has(@skill, madness) == 1) {
+					if (has(@skill, seal10) == 0 && has(@skill, seal9) == 0 && has(@skill, seal8) == 0 && has(@skill, seal7) == 0 && has(@skill, seal6) == 0&& has(@skill, seal5) == 0 && has(@skill, seal4) == 0 && has(@skill, seal3) == 0 && has(@skill, seal2) == 0 && has(@skill, seal1) == 0) {
+						set(madnessLoyalHeal, numberOfMember)
+						mul(madnessLoyalHeal, 2)
+						addLoyal(@unit, madnessLoyalHeal)
+					}
+				}
+				mul(loyalSubSize, -1)
+				addLoyal(@unit, loyalSubSize)
+//ΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞ
+// if (has(@skill, pride_d) == 1) {
+// 	set(loyalSize, 5)
+// }else if (has(@skill, pride_c) == 1) {
+// 	set(loyalSize, 10)
+// }else if (has(@skill, pride_b) == 1) {
+// 	set(loyalSize, 15)
+// }else if (has(@skill, pride_a) == 1) {
+// 	set(loyalSize, 20)
+// }else if (has(@skill, pride_s) == 1) {
+// 	set(loyalSize, 25)
+// }
+// set(loyalSize2, loyalSize)
+// add(loyalSize2, victimDamage)
+// if (has(@allAlienateVictim_Double, @unit) == 1 || has(@allAlienateVictim, @unit) == 1 || has(@allGlibtalkerVictim_Double, @unit) == 1 || has(@allGlibtalkerVictim, @unit) == 1 || has(@allNuisanceVictim_Double, @unit) == 1 || has(@allNuisanceVictim, @unit) == 1) {
+// pushLoyal(@unit, loyalAfter)
+// msg(■【デバックメッセージ】■忠誠攻撃発動後処置。$「&unit&」犠牲者数「&victimNumberOfMember&」×忠誠低下サイズ「&loyalSize2&」（気位値&loyalSize&）$変化前忠誠「&beforeloyal&」変化後忠誠「&loyalAfter&」)
+// }
+//ΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞ
+//pushLoyal(@unit, loyalAfter)
+//msg(■【デバックメッセージ】■戦闘前リーダー個別処理発動。$「&unit&」戦闘前部隊人数「&beforeNumberOfMember&」戦闘後部隊人数「&numberOfMemberAfter&」$変化前忠誠「&beforeloyal&」変化後忠誠「&loyalAfter&」)
+//ΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞ
+		}
+	}
+//■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■
+
+//■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■
+//▼▼(６戦闘後の追加スキル除去＆ノーマル以下の忠誠全快)▼▼
+//▼▼【解説】・戦闘後のバフスキルやＣＰＵ専用スキル、セット展開スキルの消去を行う。
+//▼▼またノーマル以下の難易度なら全ＰＬユニットの忠誠を全快させ上記処理による忠誠値低下をリセット。
+	storePlayerUnit(@playerUnit)
+	if (isMaster(@playerUnit) == 1) {
+		storePowerOfUnit(@playerUnit, @playerPower)
+		storeUnitOfPower(@playerPower, @allPlayerUnit)
+	}else {
+		storeMemberOfUnit(@playerUnit, @playerUnitMember)
+		setv(@allPlayerUnit, @playerUnit)
+		addv(@allPlayerUnit, @playerUnitMember)
+	}
+	eraseSkill(@allPlayerUnit, attackbuff, defensebuff, magicbuff, magdefbuff, dextbuff)
+	eraseSkill(@allBattleUnit, CPUstonethrowing, CPUhandgun, CPUhandgun2, CPUhandgun3, CPUhandgun4, CPUrevolver, CPUhandgrenade, CPUhandgrenade2, CPUthrowingknife, CPUthrowingknife2, CPUthrowingknife3, CPUthrowingknife4, CPUchakram, CPUchakram2, CPUbuiltingun, CPUshotgun, CPUshotgun2, CPUmortar, CPUmortar2, CPUtorpedo, CPUtorpedo2, CPUsoccerball, CPUap, CPUhammerthrow, CPUfireball, CPUwaterfairy, OPENhanafuda_hikari, OPENhanafuda_tane, OPENhanafuda_tanzaku, OPENhanafuda_kas, OPENsummon_artslime, OPENsummon_artgoblin, OPENsummon_artcyclops, OPENsummon_babyspider, OPENsummon_option, OPENsummon_bombmachine, OPENsummon_mouse, OPENsummon_paralysismouse, OPENsummon_poisonmouse, OPENsummon_deathmouse, OPENsummon_police, OPENsummon_sp, OPENsummon_doctor)
+//ΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞ
+//msg(■【デバックメッセージ】■$戦闘後処理確認。プレイヤーユニット「&allPlayerUnit&」)
+//ΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞ
+	if (getMode() <= 1) {
+		if (LoyaldownONOFFmod==0) {addLoyal(@allPlayerUnit, 1000)}//mod変更行
+	}
+	set(SWITCHbattleAfter, 0)
+}
+//■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■
+
+	if (isPlayerEnd()){
+	} 
+}

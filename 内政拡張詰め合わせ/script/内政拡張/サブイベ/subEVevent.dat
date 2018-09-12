@@ -1,0 +1,17 @@
+event subEVmod_trigger
+{
+	//内政トリガー
+	storeplayerunit(@subEVmod) storepowerofunit(@subEVmod,@subEVmod)
+	if (ptest(politics2,SUBEV1replayunit)){addstr(@subEVmod,SUB01)}
+	else if (ptest(politics2,SUBEV2replayunit)){addstr(@subEVmod,SUB02)}
+	else if (ptest(politics2,SUBEV3replayunit)){addstr(@subEVmod,SUB03)}
+	else if (ptest(politics2,SUBEV4replayunit)){addstr(@subEVmod,SUB04)}
+	else if (ptest(politics2,SUBEV5replayunit)){addstr(@subEVmod,SUB05)}
+	else if (ptest(politics2,SUBEV6replayunit)){addstr(@subEVmod,SUB06)}
+	else if (ptest(politics2,SUBEV7replayunit)){addstr(@subEVmod,SUB07)}
+	else {clear(@subEVmod)}
+	//現状サブイベントの識別子名は(勢力識別子+SUB+番号)の形になっているのでaddstrでイベント名を作って呼び出し
+	//製作者様のイベント名の付け方の方針が変わらなければ以降の追加分もこのままで使えるはず
+	event(@subEVmod)
+	clear(@subEVmod)
+}

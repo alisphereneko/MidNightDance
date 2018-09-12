@@ -1,0 +1,38 @@
+class Objectiveautoclasschangeclass
+{
+	politics = erase
+	name = 系統毎のオートクラスチェンジ先指定
+	image = @
+}
+
+unit 011autoChange_kaihen : 011autoChange
+{
+	merce = autoChange1, autoChange2, autoChange3, autoChange4,Objectiveautoclasschangeclass
+}
+
+class ObjectiveautoCCmod_omakase
+{
+	//表示用
+	name=おまかせ
+}
+
+class ObjectiveautoCCmod_EachTalent
+{
+	//表示用
+	name=各人材
+}
+
+class ObjectiveautoCCmod_cache_unit
+{
+	name=ユニットキャッシュ
+}
+
+class ObjectiveautoCCmod_cache_class
+{
+	name=クラスキャッシュ
+}
+
+detail
+{
+	Objectiveautoclasschangeclass=オートクラスチェンジ時に優先的に選択するクラスを指定します。個別メニューでチェンジ先を指定したユニットはそちらが優先されます。;
+}

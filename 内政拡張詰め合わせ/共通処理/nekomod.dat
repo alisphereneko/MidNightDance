@@ -1,0 +1,784 @@
+//NGTのmodで使ってた処理のまとめファイル
+//なんか久しぶりに見るとわけわかんない処理もあるが、消しても影響でないかもわけわかんないので全部持ってきた
+//重要なのはsikibetusi_hozon_main
+story aaaaaaaaaaaaaaaanekomod_turn_1.01
+{
+	if (yet(nekotempspot_add_1.01)) {routine(nekotempspot_add_1.01)}
+	if (@nekoplay==0 || @nekoplay==new_player_choice) {
+		if (iswatching()) {storeud(nekoplayer,@nekoplay)}
+		else {
+			storeplayerunit(@nekoplay)
+			if (yet(nekoplay_setud) && @nekoplay!=new_player_choice) {routine(nekoplay_setud)}
+		}
+	}
+	
+	storeunitofspot(nekotempspot,@nekotemp)
+	addunit(@nekotemp,nekoerasespot)
+	
+	if (nekomodT==0) {pushturn(nekomodT)}
+	set(nekomodNT,0)
+	if (isnewturn()) {
+		set(nekomodNT,1) pushturn(nekomodT)
+		//焼却処理
+		storeunitofspot(nekoerasespot,@nekotemp)
+		while (@nekotemp!=0) {
+			eraseunit2(nekoerasespot,@nekotemp)
+			eraseunit(@nekotemp)
+			storeunitofspot(nekoerasespot,@nekotemp)
+		}
+	}
+	
+	set(nekomodCT,0)
+	if (iscomturn()) {set(nekomodCT,1)}
+	
+	clear(@sikibetusihozonresults) clear(@nekotemp)
+}
+
+event nekotempspot_add_1.01
+{
+	//焼却炉と中継地点を出す
+	addspot(nekotempspot) hidespot(nekotempspot)
+	addspot(nekotempspot2) hidespot(nekotempspot2)
+	addspot(nekoerasespot) hidespot(nekoerasespot)
+}
+
+event nekoplay_setud
+{
+	//プレイヤーを保存識別子に保存する　観戦モードになったらここから呼び出せば元プレイヤーのユニットを取得できる
+	//modを読み込んだ時点で既に観戦だとどっちにしろ無理です
+	setud(nekoplayer,@nekoplay)
+}
+
+spot nekotempspot : nekoerasespot
+{
+	name=中継地点
+}
+
+spot nekotempspot2 : nekoerasespot
+{
+	//文字通りの色々置いていい場所
+	name=色々置いていい場所
+}
+
+spot nekoerasespot
+{
+	//eraseunit2がどうやら文字変数の先頭の識別子のクラスだけを消すもののようで、複数クラスを消す場合はwhileループを組まねばならない模様
+	//いちいち書くのが面倒なのでeraseunit2したいユニットはここに集めて共通処理でターン開始毎にすべてまとめて燃やす
+	//ここなら仮に削除失敗でも周りに影響でなくて安全だし一石二鳥であった(削除失敗して雑兵が増殖した人並感)
+	name=焼却炉
+	no_home=on
+}
+
+event sikibetusi_hozon_main
+{
+	//@sikibetusihozontargetに対応する保存ユニットの作成、作成済みの保存ユニットの検索処理を兼ねるルーティン
+	//ステータスに各種数値を保存することで擬似的に配列のように利用できる ステータス数が足りなければ新しい領地を作りそこに新しく保存ユニットを作ればいい
+	//検索に使用されるのはスキルの1番目のみなので、addskillで2番目以降に他の勢力などを付与することでそれらの関係性を表す保存ユニットも作れる
+	//検索して見つかれば@sikibetusihozonresultsに代入　居なければ新しく生成し代入
+	//複数要素変数対応 @sikibetusihozontargetと同じ順に@sikibetusihozonresultsに代入される
+	//対象勢力・領地・ユニットなどを@sikibetusihozontarget,保存領地を@sikibetusihozonspotに代入して呼ぶ
+	//キャッシュ用ユニットがいれば@sikibetusihozoncacheに入れ、sikibetusi_hozon_indexoptionに1以上の数字を入れる
+	clear(@sikibetusihozonresults)
+	if (@sikibetusihozontarget==0) {return()}
+	storeskillofunit(@sikibetusihozoncache,@sikibetusihozontemp) /+pushv(@sikibetusihozontemp,num) msg(&num&)
+	storeunitofspot(@sikibetusihozonspot,@sikibetusihozontemp2)
+	subv(@sikibetusihozontemp2,@sikibetusihozontemp)//キャッシュとの被りを除去
+	addv(@sikibetusihozontemp,@sikibetusihozontemp2)
+	pushv(@sikibetusihozontarget,sikibetusihozon1)
+	set(sikibetusihozon_idx,0)
+	while (sikibetusihozon1>sikibetusihozon_idx) {
+		index(@sikibetusihozontarget,sikibetusihozon_idx,@sikibetusihozonunit)
+		pushv(@sikibetusihozontemp,sikibetusihozon2)
+		set(sikibetusihozon_idx2,0)
+		while (sikibetusihozon2>sikibetusihozon_idx2) {
+			index(@sikibetusihozontemp,sikibetusihozon_idx2,@sikibetusihozontemp2)
+			storeskillofunit(@sikibetusihozontemp2,@sikibetusihozonunit2)
+			index(@sikibetusihozonunit2,0,@sikibetusihozonunit2)
+			if (@sikibetusihozonunit2==@sikibetusihozonunit) {break()}
+			clear(@sikibetusihozontemp2)
+			add(sikibetusihozon_idx2,1)
+		}
+		if (@sikibetusihozontemp2==0) {
+			//保存クラスが居なければ新しく作り、@sikibetusihozontemp2に代入
+			addunit(sikibetusi_class,nekotempspot) //一時領地は常に空いている場所ならどこでも良い
+			storeunitofspot(nekotempspot,@sikibetusihozontemp2)
+
+			addunit(@sikibetusihozontemp2,@sikibetusihozonspot)
+
+			addskill(@sikibetusihozontemp2,@sikibetusihozonunit)
+			addv(@sikibetusihozontemp,@sikibetusihozontemp2)
+			//+if (isalive(@sikibetusihozontemp2)==0) {msg(&sikibetusihozonunit&の保存ユニットが生成失敗しました。)}
+			//+msg(&sikibetusihozonunit&の保存ユニットが生成されました。)
+			routine(sikibetusi_hozon_born)
+		}
+		addv(@sikibetusihozonresults,@sikibetusihozontemp2)//ユニットを@sikibetusihozonresultsに追加
+		add(sikibetusihozon_idx,1)
+	}
+	if (sikibetusi_hozon_indexoption>=1) {
+		//オプションをオンにすると参照ターン数と参照回数を記録しキャッシュ
+		//数が多いときはこれを使って並べ替えたりすると良いかも
+		addskill(@sikibetusihozoncache,@sikibetusihozonresults)//キャッシュ用ユニットに保存
+		setstatus(@sikibetusihozonresults,speed,nekomodT)//最後に参照したターン数を素早さに保存
+		//参照回数をHP回復力に保存 重要度に応じて増加数値を変えられる
+		addstatus(@sikibetusihozonresults,hprec,sikibetusi_hozon_indexoption)
+		set(sikibetusi_hozon_indexoption,0)
+	}
+
+	clear(@sikibetusihozontemp) clear(@sikibetusihozontemp2) clear(@sikibetusihozonunit) clear(@sikibetusihozonunit2)
+	clear(@sikibetusihozontarget) clear(@sikibetusihozonspot) clear(@sikibetusihozoncache)
+	set(sikibetusihozon1,0) set(sikibetusihozon2,0) set(sikibetusihozon_idx,0) set(sikibetusihozon_idx2,0)
+}
+
+event sikibetusi_hozon_born
+{
+	//初期生成時の追加処理をここに書く
+}
+
+class sikibetusi_class
+{
+	//一般兵に勢力・ユニット・領地識別子をスキルとして付与して目印にし、
+	//各種データをステータスとして保存することで
+	//多数の勢力・ユニット・領地をデータベース化することができるなんて夢みたいです　しかも合法だなんて…
+	name=識別子保存ユニット
+	attack=0
+	defense=0
+	magic=0
+	magdef=0
+	dext=0
+	mp=0
+	move=0
+	hprec=0
+	mprec=0
+	speed=0
+}
+	
+event sikibetusi_hozon_index_main
+{
+	//保存ユニットを参照頻度順に並べ替えるサンプル　もっといいやり方がありそう
+	//対象キャッシュユニットを全て@sikibetusiidxunitに代入して呼び出す
+	pushv(@sikibetusiidxunit,sikibetusiidx1)
+	while (sikibetusiidx1>0) {
+		clear(@sikibetusiidxtemp4) clear(@sikibetusiidxtemp5) clear(@sikibetusiidxtemp6) clear(@sikibetusiidxtemp7) clear(@sikibetusiidxtemp8)
+		clear(@sikibetusiidxtemp9) clear(@sikibetusiidxtemp10) clear(@sikibetusiidxtemp11) clear(@sikibetusiidxtemp12) clear(@sikibetusiidxtemp13)
+		clear(@sikibetusiidxtemp14) clear(@sikibetusiidxtemp15)
+		sub(sikibetusiidx1,1)
+		index(@sikibetusiidxunit,sikibetusiidx1,@sikibetusiidxtemp)
+		storeskillofunit(@sikibetusiidxtemp,@sikibetusiidxtemp2)
+		pushv(@sikibetusiidxtemp2,sikibetusiidx2)
+		set(sikibetusiidx_idx,0)
+		while (sikibetusiidx2>sikibetusiidx_idx) {
+			index(@sikibetusiidxtemp2,sikibetusiidx_idx,@sikibetusiidxtemp3)
+			add(sikibetusiidx_idx,1)
+			pushstatus(@sikibetusiidxtemp3,speed,sikibetusiidx3)
+			//未参照8ターン以上経過はキャッシュから削除
+			sub(sikibetusiidx3,nekomodT)
+			if (sikibetusiidx3<=-8) {setstatus(@sikibetusiidxtemp3,hprec,0) continue()}
+			//参照回数順に並べ替える
+			pushstatus(@sikibetusiidxtemp3,hprec,sikibetusiidx3)
+			div(sikibetusiidx3,2)
+			if (sikibetusiidx3==0) {addv(@sikibetusiidxtemp5,@sikibetusiidxtemp3)}
+			else if (sikibetusiidx3==1) {addv(@sikibetusiidxtemp6,@sikibetusiidxtemp3)}
+			else if (sikibetusiidx3==2) {addv(@sikibetusiidxtemp7,@sikibetusiidxtemp3)}
+			else if (sikibetusiidx3==3) {addv(@sikibetusiidxtemp8,@sikibetusiidxtemp3)}
+			else if (sikibetusiidx3==4) {addv(@sikibetusiidxtemp9,@sikibetusiidxtemp3)}
+			else if (sikibetusiidx3==5) {addv(@sikibetusiidxtemp10,@sikibetusiidxtemp3)}
+			else if (sikibetusiidx3==6) {addv(@sikibetusiidxtemp11,@sikibetusiidxtemp3)}
+			else if (sikibetusiidx3==7) {addv(@sikibetusiidxtemp12,@sikibetusiidxtemp3)}
+			else if (sikibetusiidx3==8) {addv(@sikibetusiidxtemp13,@sikibetusiidxtemp3)}
+			else if (sikibetusiidx3==9) {addv(@sikibetusiidxtemp14,@sikibetusiidxtemp3)}
+			else if (sikibetusiidx3>=10) {addv(@sikibetusiidxtemp15,@sikibetusiidxtemp3)}
+		}
+		//一度eraseskill後、順番にaddskillする
+		eraseskill(@sikibetusiidxtemp)
+		addskill(@sikibetusiidxtemp,@sikibetusiidxtemp15,@sikibetusiidxtemp14,@sikibetusiidxtemp13,@sikibetusiidxtemp12,@sikibetusiidxtemp11,@sikibetusiidxtemp10,@sikibetusiidxtemp9,@sikibetusiidxtemp8,@sikibetusiidxtemp7,@sikibetusiidxtemp6,@sikibetusiidxtemp5)
+	}
+	
+	set(sikibetusiidx1,nekomodT)
+	mod(sikibetusiidx1,5)
+	if (sikibetusiidx1==0) {
+		//5ターン毎にキャッシュの参照回数をリセット
+		//上の方法は22回以上が記録できないため
+		pushv(@sikibetusiidxunit,sikibetusiidx1)
+		while (sikibetusiidx1>0) {
+			sub(sikibetusiidx1,1)
+			index(@sikibetusiidxunit,sikibetusiidx1,@sikibetusiidxtemp)
+			storeskillofunit(@sikibetusiidxtemp,@sikibetusiidxtemp)
+			setstatus(@sikibetusiidxtemp,hprec,0)
+		}
+	}
+	clear(@sikibetusiidxtemp) clear(@sikibetusiidxtemp2) clear(@sikibetusiidxtemp3)
+	clear(@sikibetusiidxtemp4) clear(@sikibetusiidxtemp5) clear(@sikibetusiidxtemp6)
+	clear(@sikibetusiidxtemp7) clear(@sikibetusiidxtemp8) clear(@sikibetusiidxtemp9)
+	clear(@sikibetusiidxtemp10) clear(@sikibetusiidxtemp11) clear(@sikibetusiidxtemp12)
+	clear(@sikibetusiidxtemp13) clear(@sikibetusiidxtemp14) clear(@sikibetusiidxtemp15)
+	clear(@sikibetusiidxunit) set(sikibetusiidx_idx,0) set(sikibetusiidx1,0)
+	set(sikibetusiidx2,0) set(sikibetusiidx3,0) set(sikibetusiidx_turn,0)
+}
+
+class nekochoice_none
+{
+	//追加情報がなかった場合に代わりに入る空白
+	name=　
+}
+
+skillset nekochoice_levelskill
+{
+	name=レベル表示
+	member=nekochoicelevel1,nekochoicelevel2,nekochoicelevel3,nekochoicelevel4,nekochoicelevel5,nekochoicelevel6,nekochoicelevel7,nekochoicelevel8,nekochoicelevel9,nekochoicelevel10,nekochoicelevel11,nekochoicelevel12,nekochoicelevel13,nekochoicelevel14,nekochoicelevel15,nekochoicelevel16,nekochoicelevel17,nekochoicelevel18,nekochoicelevel19,nekochoicelevel20,nekochoicelevel21,nekochoicelevel22,nekochoicelevel23,nekochoicelevel24,nekochoicelevel25,nekochoicelevel26,nekochoicelevel27,nekochoicelevel28,nekochoicelevel29,nekochoicelevel30,nekochoicelevel31,nekochoicelevel32,nekochoicelevel33,nekochoicelevel34,nekochoicelevel35,nekochoicelevel36,nekochoicelevel37,nekochoicelevel38,nekochoicelevel39,nekochoicelevel40,nekochoicelevel41,nekochoicelevel42,nekochoicelevel43,nekochoicelevel44,nekochoicelevel45,nekochoicelevel46,nekochoicelevel47,nekochoicelevel48,nekochoicelevel49,nekochoicelevel50,nekochoicelevel51,nekochoicelevel52,nekochoicelevel53,nekochoicelevel54,nekochoicelevel55,nekochoicelevel56,nekochoicelevel57,nekochoicelevel58,nekochoicelevel59,nekochoicelevel60,nekochoicelevel61,nekochoicelevel62,nekochoicelevel63,nekochoicelevel64,nekochoicelevel65,nekochoicelevel66,nekochoicelevel67,nekochoicelevel68,nekochoicelevel69,nekochoicelevel70,nekochoicelevel71,nekochoicelevel72,nekochoicelevel73,nekochoicelevel74,nekochoicelevel75,nekochoicelevel76,nekochoicelevel77,nekochoicelevel78,nekochoicelevel79,nekochoicelevel80,nekochoicelevel81,nekochoicelevel82,nekochoicelevel83,nekochoicelevel84,nekochoicelevel85,nekochoicelevel86,nekochoicelevel87,nekochoicelevel88,nekochoicelevel89,nekochoicelevel90,nekochoicelevel91,nekochoicelevel92,nekochoicelevel93,nekochoicelevel94,nekochoicelevel95,nekochoicelevel96,nekochoicelevel97,nekochoicelevel98,nekochoicelevel99,nekochoicelevel100
+}
+
+skill nekochoicelevel1
+{
+	name=Lv1
+}
+skill nekochoicelevel2
+{
+	name=Lv2
+}
+skill nekochoicelevel3
+{
+	name=Lv3
+}
+skill nekochoicelevel4
+{
+	name=Lv4
+}
+skill nekochoicelevel5
+{
+	name=Lv5
+}
+skill nekochoicelevel6
+{
+	name=Lv6
+}
+skill nekochoicelevel7
+{
+	name=Lv7
+}
+skill nekochoicelevel8
+{
+	name=Lv8
+}
+skill nekochoicelevel9
+{
+	name=Lv9
+}
+skill nekochoicelevel10
+{
+	name=Lv10
+}
+skill nekochoicelevel11
+{
+	name=Lv11
+}
+skill nekochoicelevel12
+{
+	name=Lv12
+}
+skill nekochoicelevel13
+{
+	name=Lv13
+}
+skill nekochoicelevel14
+{
+	name=Lv14
+}
+skill nekochoicelevel15
+{
+	name=Lv15
+}
+skill nekochoicelevel16
+{
+	name=Lv16
+}
+skill nekochoicelevel17
+{
+	name=Lv17
+}
+skill nekochoicelevel18
+{
+	name=Lv18
+}
+skill nekochoicelevel19
+{
+	name=Lv19
+}
+skill nekochoicelevel20
+{
+	name=Lv20
+}
+skill nekochoicelevel21
+{
+	name=Lv21
+}
+skill nekochoicelevel22
+{
+	name=Lv22
+}
+skill nekochoicelevel23
+{
+	name=Lv23
+}
+skill nekochoicelevel24
+{
+	name=Lv24
+}
+skill nekochoicelevel25
+{
+	name=Lv25
+}
+skill nekochoicelevel26
+{
+	name=Lv26
+}
+skill nekochoicelevel27
+{
+	name=Lv27
+}
+skill nekochoicelevel28
+{
+	name=Lv28
+}
+skill nekochoicelevel29
+{
+	name=Lv29
+}
+skill nekochoicelevel30
+{
+	name=Lv30
+}
+skill nekochoicelevel31
+{
+	name=Lv31
+}
+skill nekochoicelevel32
+{
+	name=Lv32
+}
+skill nekochoicelevel33
+{
+	name=Lv33
+}
+skill nekochoicelevel34
+{
+	name=Lv34
+}
+skill nekochoicelevel35
+{
+	name=Lv35
+}
+skill nekochoicelevel36
+{
+	name=Lv36
+}
+skill nekochoicelevel37
+{
+	name=Lv37
+}
+skill nekochoicelevel38
+{
+	name=Lv38
+}
+skill nekochoicelevel39
+{
+	name=Lv39
+}
+skill nekochoicelevel40
+{
+	name=Lv40
+}
+skill nekochoicelevel41
+{
+	name=Lv41
+}
+skill nekochoicelevel42
+{
+	name=Lv42
+}
+skill nekochoicelevel43
+{
+	name=Lv43
+}
+skill nekochoicelevel44
+{
+	name=Lv44
+}
+skill nekochoicelevel45
+{
+	name=Lv45
+}
+skill nekochoicelevel46
+{
+	name=Lv46
+}
+skill nekochoicelevel47
+{
+	name=Lv47
+}
+skill nekochoicelevel48
+{
+	name=Lv48
+}
+skill nekochoicelevel49
+{
+	name=Lv49
+}
+skill nekochoicelevel50
+{
+	name=Lv50
+}
+skill nekochoicelevel51
+{
+	name=Lv51
+}
+skill nekochoicelevel52
+{
+	name=Lv52
+}
+skill nekochoicelevel53
+{
+	name=Lv53
+}
+skill nekochoicelevel54
+{
+	name=Lv54
+}
+skill nekochoicelevel55
+{
+	name=Lv55
+}
+skill nekochoicelevel56
+{
+	name=Lv56
+}
+skill nekochoicelevel57
+{
+	name=Lv57
+}
+skill nekochoicelevel58
+{
+	name=Lv58
+}
+skill nekochoicelevel59
+{
+	name=Lv59
+}
+skill nekochoicelevel60
+{
+	name=Lv60
+}
+skill nekochoicelevel61
+{
+	name=Lv61
+}
+skill nekochoicelevel62
+{
+	name=Lv62
+}
+skill nekochoicelevel63
+{
+	name=Lv63
+}
+skill nekochoicelevel64
+{
+	name=Lv64
+}
+skill nekochoicelevel65
+{
+	name=Lv65
+}
+skill nekochoicelevel66
+{
+	name=Lv66
+}
+skill nekochoicelevel67
+{
+	name=Lv67
+}
+skill nekochoicelevel68
+{
+	name=Lv68
+}
+skill nekochoicelevel69
+{
+	name=Lv69
+}
+skill nekochoicelevel70
+{
+	name=Lv70
+}
+skill nekochoicelevel71
+{
+	name=Lv71
+}
+skill nekochoicelevel72
+{
+	name=Lv72
+}
+skill nekochoicelevel73
+{
+	name=Lv73
+}
+skill nekochoicelevel74
+{
+	name=Lv74
+}
+skill nekochoicelevel75
+{
+	name=Lv75
+}
+skill nekochoicelevel76
+{
+	name=Lv76
+}
+skill nekochoicelevel77
+{
+	name=Lv77
+}
+skill nekochoicelevel78
+{
+	name=Lv78
+}
+skill nekochoicelevel79
+{
+	name=Lv79
+}
+skill nekochoicelevel80
+{
+	name=Lv80
+}
+skill nekochoicelevel81
+{
+	name=Lv81
+}
+skill nekochoicelevel82
+{
+	name=Lv82
+}
+skill nekochoicelevel83
+{
+	name=Lv83
+}
+skill nekochoicelevel84
+{
+	name=Lv84
+}
+skill nekochoicelevel85
+{
+	name=Lv85
+}
+skill nekochoicelevel86
+{
+	name=Lv86
+}
+skill nekochoicelevel87
+{
+	name=Lv87
+}
+skill nekochoicelevel88
+{
+	name=Lv88
+}
+skill nekochoicelevel89
+{
+	name=Lv89
+}
+skill nekochoicelevel90
+{
+	name=Lv90
+}
+skill nekochoicelevel91
+{
+	name=Lv91
+}
+skill nekochoicelevel92
+{
+	name=Lv92
+}
+skill nekochoicelevel93
+{
+	name=Lv93
+}
+skill nekochoicelevel94
+{
+	name=Lv94
+}
+skill nekochoicelevel95
+{
+	name=Lv95
+}
+skill nekochoicelevel96
+{
+	name=Lv96
+}
+skill nekochoicelevel97
+{
+	name=Lv97
+}
+skill nekochoicelevel98
+{
+	name=Lv98
+}
+skill nekochoicelevel99
+{
+	name=Lv99
+}
+skill nekochoicelevel100
+{
+	name=Lv100
+}
+
+event nekochoice
+{
+	//@nekomemberの要素を選択肢表示するルーティン
+	//@nekomember2に追加情報を入れられる(@nekomemberと同じ順に入れる)
+	//nekochoice_leveloption=1で呼び出すとこの追加情報がレベル表示になる　レベル0は非表示となる
+	//選択された要素は@nekotempに代入　やめるを選択すると0が入る
+	//nekochoicenoresetに1を代入して呼び出すと前回のページから再開する
+	//その場合ループ前にnekochoicenum3をリセットする
+
+	set(nekochoicenum,0) pushv(@nekomember,nekochoicenum2)
+	if (nekochoicenoreset==1) {add(nekochoicenum,nekochoicenum3) sub(nekochoicenum2,nekochoicenum3)}
+	else {set(nekochoicenum3,0)}
+	clear(@nekochoiceunit0) clear(@nekochoiceunit1) clear(@nekochoiceunit2)
+	clear(@nekochoiceunit3) clear(@nekochoiceunit4) clear(@nekochoiceunit5)
+	clear(@nekochoiceunit6) clear(@nekochoiceunit7)
+	while (1==1) {
+		index(@nekomember,nekochoicenum,@nekochoiceunit0) index(@nekomember2,nekochoicenum,@nekochoiceunit20)
+		add(nekochoicenum,1)
+		index(@nekomember,nekochoicenum,@nekochoiceunit1) index(@nekomember2,nekochoicenum,@nekochoiceunit21)
+		add(nekochoicenum,1)
+		index(@nekomember,nekochoicenum,@nekochoiceunit2) index(@nekomember2,nekochoicenum,@nekochoiceunit22)
+		add(nekochoicenum,1)
+		index(@nekomember,nekochoicenum,@nekochoiceunit3) index(@nekomember2,nekochoicenum,@nekochoiceunit23)
+		add(nekochoicenum,1)
+		index(@nekomember,nekochoicenum,@nekochoiceunit4) index(@nekomember2,nekochoicenum,@nekochoiceunit24)
+		add(nekochoicenum,1)
+		index(@nekomember,nekochoicenum,@nekochoiceunit5) index(@nekomember2,nekochoicenum,@nekochoiceunit25)
+		add(nekochoicenum,1)
+		index(@nekomember,nekochoicenum,@nekochoiceunit6) index(@nekomember2,nekochoicenum,@nekochoiceunit26)
+		add(nekochoicenum,1)
+		index(@nekomember,nekochoicenum,@nekochoiceunit7) index(@nekomember2,nekochoicenum,@nekochoiceunit27)
+		
+		if (nekochoice_leveloption==1) {
+			storeskillset(nekochoice_levelskill,@nekochoiceskillset)
+			pushlevel(@nekochoiceunit0,nekochoicenum4) sub(nekochoicenum4,1)
+			if (nekochoicenum4==-1) {setv(@nekochoiceunit20,nekochoice_none)}
+			else {index(@nekochoiceskillset,nekochoicenum4,@nekochoiceunit20)}
+			pushlevel(@nekochoiceunit1,nekochoicenum4) sub(nekochoicenum4,1)
+			if (nekochoicenum4==-1) {setv(@nekochoiceunit21,nekochoice_none)}
+			else {index(@nekochoiceskillset,nekochoicenum4,@nekochoiceunit21)}
+			pushlevel(@nekochoiceunit2,nekochoicenum4) sub(nekochoicenum4,1)
+			if (nekochoicenum4==-1) {setv(@nekochoiceunit22,nekochoice_none)}
+			else {index(@nekochoiceskillset,nekochoicenum4,@nekochoiceunit22)}
+			pushlevel(@nekochoiceunit3,nekochoicenum4) sub(nekochoicenum4,1)
+			if (nekochoicenum4==-1) {setv(@nekochoiceunit23,nekochoice_none)}
+			else {index(@nekochoiceskillset,nekochoicenum4,@nekochoiceunit23)}
+			pushlevel(@nekochoiceunit4,nekochoicenum4) sub(nekochoicenum4,1)
+			if (nekochoicenum4==-1) {setv(@nekochoiceunit24,nekochoice_none)}
+			else {index(@nekochoiceskillset,nekochoicenum4,@nekochoiceunit24)}
+			pushlevel(@nekochoiceunit5,nekochoicenum4) sub(nekochoicenum4,1)
+			if (nekochoicenum4==-1) {setv(@nekochoiceunit25,nekochoice_none)}
+			else {index(@nekochoiceskillset,nekochoicenum4,@nekochoiceunit25)}
+			pushlevel(@nekochoiceunit6,nekochoicenum4) sub(nekochoicenum4,1)
+			if (nekochoicenum4==-1) {setv(@nekochoiceunit26,nekochoice_none)}
+			else {index(@nekochoiceskillset,nekochoicenum4,@nekochoiceunit26)}
+			pushlevel(@nekochoiceunit7,nekochoicenum4) sub(nekochoicenum4,1)
+			if (nekochoicenum4==-1) {setv(@nekochoiceunit27,nekochoice_none)}
+			else {index(@nekochoiceskillset,nekochoicenum4,@nekochoiceunit27)}
+			clear(@nekochoiceskillset)
+		}
+		
+		
+		if (@nekochoiceunit20==0) {setv(@nekochoiceunit20,nekochoice_none)}
+		if (nekochoicenum2<2 || @nekochoiceunit21==0) {setv(@nekochoiceunit21,nekochoice_none)}
+		if (nekochoicenum2<3 || @nekochoiceunit22==0) {setv(@nekochoiceunit22,nekochoice_none)}
+		if (nekochoicenum2<4 || @nekochoiceunit23==0) {setv(@nekochoiceunit23,nekochoice_none)}
+		if (nekochoicenum2<5 || @nekochoiceunit24==0) {setv(@nekochoiceunit24,nekochoice_none)}
+		if (nekochoicenum2<6 || @nekochoiceunit25==0) {setv(@nekochoiceunit25,nekochoice_none)}
+		if (nekochoicenum2<7 || @nekochoiceunit26==0) {setv(@nekochoiceunit26,nekochoice_none)}
+		if (nekochoicenum2<8 || @nekochoiceunit27==0) {setv(@nekochoiceunit27,nekochoice_none)}
+		
+		if (nekochoicenum3<8) {
+			if (nekochoicenum2==1) {choice(nekochoicenum4, 　 　&nekochoiceunit0& &nekochoiceunit20&,やめる)}
+			else if (nekochoicenum2==2) {choice(nekochoicenum4, 　&nekochoiceunit0& &nekochoiceunit20&, 　&nekochoiceunit1& &nekochoiceunit21&,やめる)}
+			else if (nekochoicenum2==3) {choice(nekochoicenum4, 　&nekochoiceunit0& &nekochoiceunit20&, 　&nekochoiceunit1& &nekochoiceunit21&, 　&nekochoiceunit2& &nekochoiceunit22&,やめる)}
+			else if (nekochoicenum2==4) {choice(nekochoicenum4, 　&nekochoiceunit0& &nekochoiceunit20&, 　&nekochoiceunit1& &nekochoiceunit21&, 　&nekochoiceunit2& &nekochoiceunit22&, 　&nekochoiceunit3& &nekochoiceunit23&,やめる)}
+			else if (nekochoicenum2==5) {choice(nekochoicenum4, 　&nekochoiceunit0& &nekochoiceunit20&, 　&nekochoiceunit1& &nekochoiceunit21&, 　&nekochoiceunit2& &nekochoiceunit22&, 　&nekochoiceunit3& &nekochoiceunit23&, 　&nekochoiceunit4& &nekochoiceunit24&,やめる)}
+			else if (nekochoicenum2==6) {choice(nekochoicenum4, 　&nekochoiceunit0& &nekochoiceunit20&, 　&nekochoiceunit1& &nekochoiceunit21&, 　&nekochoiceunit2& &nekochoiceunit22&, 　&nekochoiceunit3& &nekochoiceunit23&, 　&nekochoiceunit4& &nekochoiceunit24&, 　&nekochoiceunit5& &nekochoiceunit25&,やめる)}
+			else if (nekochoicenum2==7) {choice(nekochoicenum4, 　&nekochoiceunit0& &nekochoiceunit20&, 　&nekochoiceunit1& &nekochoiceunit21&, 　&nekochoiceunit2& &nekochoiceunit22&, 　&nekochoiceunit3& &nekochoiceunit23&, 　&nekochoiceunit4& &nekochoiceunit24&, 　&nekochoiceunit5& &nekochoiceunit25&, 　&nekochoiceunit6& &nekochoiceunit26&,やめる)}
+			else if (nekochoicenum2==8) {choice(nekochoicenum4, 　&nekochoiceunit0& &nekochoiceunit20&, 　&nekochoiceunit1& &nekochoiceunit21&, 　&nekochoiceunit2& &nekochoiceunit22&, 　&nekochoiceunit3& &nekochoiceunit23&, 　&nekochoiceunit4& &nekochoiceunit24&, 　&nekochoiceunit5& &nekochoiceunit25&, 　&nekochoiceunit6& &nekochoiceunit26&, 　&nekochoiceunit7& &nekochoiceunit27&,やめる)}
+			else {choice(nekochoicenum4, 　&nekochoiceunit0& &nekochoiceunit20&, 　&nekochoiceunit1& &nekochoiceunit21&, 　&nekochoiceunit2& &nekochoiceunit22&, 　&nekochoiceunit3& &nekochoiceunit23&, 　&nekochoiceunit4& &nekochoiceunit24&, 　&nekochoiceunit5& &nekochoiceunit25&, 　&nekochoiceunit6& &nekochoiceunit26&, 　&nekochoiceunit7& &nekochoiceunit27&,次へ,やめる)}
+			clear(@nekochoiceunit0) clear(@nekochoiceunit1) clear(@nekochoiceunit2)
+			clear(@nekochoiceunit3) clear(@nekochoiceunit4) clear(@nekochoiceunit5)
+			clear(@nekochoiceunit6) clear(@nekochoiceunit7)
+			clear(@nekochoiceunit20) clear(@nekochoiceunit21) clear(@nekochoiceunit22)
+			clear(@nekochoiceunit23) clear(@nekochoiceunit24) clear(@nekochoiceunit25)
+			clear(@nekochoiceunit26) clear(@nekochoiceunit27)
+			if (nekochoicenum4==nekochoicenum2 || nekochoicenum4==9) {clear(@nekotemp) break() }
+			else if (nekochoicenum4==8) {
+				add(nekochoicenum,1)
+				sub(nekochoicenum2,8)
+				add(nekochoicenum3,8)
+				continue()
+			}
+			else {
+				add(nekochoicenum4,nekochoicenum3)
+				index(@nekomember,nekochoicenum4,@nekotemp)
+				break()
+			}
+		}
+		else {
+			if (nekochoicenum2==1) {choice(nekochoicenum4, 　&nekochoiceunit0& &nekochoiceunit20&,前へ,やめる)}
+			else if (nekochoicenum2==2) {choice(nekochoicenum4, 　&nekochoiceunit0& &nekochoiceunit20&, 　&nekochoiceunit1& &nekochoiceunit21&,前へ,やめる)}
+			else if (nekochoicenum2==3) {choice(nekochoicenum4, 　&nekochoiceunit0& &nekochoiceunit20&, 　&nekochoiceunit1& &nekochoiceunit21&, 　&nekochoiceunit2& &nekochoiceunit22&,前へ,やめる)}
+			else if (nekochoicenum2==4) {choice(nekochoicenum4, 　&nekochoiceunit0& &nekochoiceunit20&, 　&nekochoiceunit1& &nekochoiceunit21&, 　&nekochoiceunit2& &nekochoiceunit22&, 　&nekochoiceunit3& &nekochoiceunit23&,前へ,やめる)}
+			else if (nekochoicenum2==5) {choice(nekochoicenum4, 　&nekochoiceunit0& &nekochoiceunit20&, 　&nekochoiceunit1& &nekochoiceunit21&, 　&nekochoiceunit2& &nekochoiceunit22&, 　&nekochoiceunit3& &nekochoiceunit23&, 　&nekochoiceunit4& &nekochoiceunit24&,前へ,やめる)}
+			else if (nekochoicenum2==6) {choice(nekochoicenum4, 　&nekochoiceunit0& &nekochoiceunit20&, 　&nekochoiceunit1& &nekochoiceunit21&, 　&nekochoiceunit2& &nekochoiceunit22&, 　&nekochoiceunit3& &nekochoiceunit23&, 　&nekochoiceunit4& &nekochoiceunit24&, 　&nekochoiceunit5& &nekochoiceunit25&,前へ,やめる)}
+			else if (nekochoicenum2==7) {choice(nekochoicenum4, 　&nekochoiceunit0& &nekochoiceunit20&, 　&nekochoiceunit1& &nekochoiceunit21&, 　&nekochoiceunit2& &nekochoiceunit22&, 　&nekochoiceunit3& &nekochoiceunit23&, 　&nekochoiceunit4& &nekochoiceunit24&, 　&nekochoiceunit5& &nekochoiceunit25&, 　&nekochoiceunit6& &nekochoiceunit26&,前へ,やめる)}
+			else if (nekochoicenum2==8) {choice(nekochoicenum4, 　&nekochoiceunit0& &nekochoiceunit20&, 　&nekochoiceunit1& &nekochoiceunit21&, 　&nekochoiceunit2& &nekochoiceunit22&, 　&nekochoiceunit3& &nekochoiceunit23&, 　&nekochoiceunit4& &nekochoiceunit24&, 　&nekochoiceunit5& &nekochoiceunit25&, 　&nekochoiceunit6& &nekochoiceunit26&, 　&nekochoiceunit7& &nekochoiceunit27&,前へ,やめる)}
+			else {choice(nekochoicenum4, 　&nekochoiceunit0& &nekochoiceunit20&, 　&nekochoiceunit1& &nekochoiceunit21&, 　&nekochoiceunit2& &nekochoiceunit22&, 　&nekochoiceunit3& &nekochoiceunit23&, 　&nekochoiceunit4& &nekochoiceunit24&, 　&nekochoiceunit5& &nekochoiceunit25&, 　&nekochoiceunit6& &nekochoiceunit26&, 　&nekochoiceunit7& &nekochoiceunit27&,前へ,次へ,やめる)}
+			clear(@nekochoiceunit0) clear(@nekochoiceunit1) clear(@nekochoiceunit2)
+			clear(@nekochoiceunit3) clear(@nekochoiceunit4) clear(@nekochoiceunit5)
+			clear(@nekochoiceunit6) clear(@nekochoiceunit7)
+			clear(@nekochoiceunit20) clear(@nekochoiceunit21) clear(@nekochoiceunit22)
+			clear(@nekochoiceunit23) clear(@nekochoiceunit24) clear(@nekochoiceunit25)
+			clear(@nekochoiceunit26) clear(@nekochoiceunit27)
+			if (nekochoicenum2>8) {
+				if (nekochoicenum4==8) {
+					sub(nekochoicenum,15)
+					add(nekochoicenum2,8)
+					sub(nekochoicenum3,8)
+					continue()
+				}
+				else if (nekochoicenum4==9) {
+					add(nekochoicenum,1)
+					sub(nekochoicenum2,8)
+					add(nekochoicenum3,8)
+					continue()
+				}
+				else if (nekochoicenum4==10) {clear(@nekotemp) break()}
+				else {
+					add(nekochoicenum4,nekochoicenum3)
+					index(@nekomember,nekochoicenum4,@nekotemp)
+					break()
+				}
+			}
+			else {
+				if (nekochoicenum4==nekochoicenum2) {
+					sub(nekochoicenum,15)
+					add(nekochoicenum2,8)
+					sub(nekochoicenum3,8)
+					continue()
+				}
+				else if (nekochoicenum4>nekochoicenum2){clear(@nekotemp) break()}
+				else {
+					add(nekochoicenum4,nekochoicenum3)
+					index(@nekomember,nekochoicenum4,@nekotemp)
+					break()
+				}
+			}
+		}
+	}
+	set(nekochoicenoreset,0) set(nekochoice_leveloption,0)
+}

@@ -1,0 +1,266 @@
+event ObjectiveautoCCmod_addspot_main
+{
+	addspot(autoCCmodspot) hidespot(autoCCmodspot)
+	addspot(autoCCmodspot2) hidespot(autoCCmodspot2)
+}
+
+event ObjectiveautoCCmod_trigger
+{
+	//内政トリガー
+	if (ptest(politics1,Objectiveautoclasschangeclass)) {event(ObjectiveautoCCmod_classchoiceforEachClass)}
+}
+
+event objectiveautoCCmod_addunit
+{
+	eraseunit(011autoChange)
+	addunit(011autoChange_kaihen,politics1)
+}
+
+event ObjectiveautoCCmod_main
+{
+	//@objectiveClassを指定したクラスに書き換える処理
+	//未指定ならそのまま
+	if (yet(ObjectiveautoCCmod_addspot_main)==0) {
+		storeskillofunit(@unit,@objectiveCC)
+		setv(@objectiveCC2,@objectiveCC)
+		subv(@objectiveCC,infectzombie) subv(@objectiveCC,infectkaomozi) subv(@objectiveCC,infectfel)
+		//感染系でクラスチェンジされたユニットは対象にならない
+		if (@objectiveCC!=@objectiveCC2) {return()}
+		routine(ObjectiveautoCCmod_hozon)
+		pushstatus(@sikibetusihozonresults,attack,ObjectiveautoCCONOFF)
+		if (ObjectiveautoCCONOFF!=0) {
+			storeskillofunit(@sikibetusihozonresults,@objectiveClass)
+			index(@objectiveClass,1,@objectiveClass)
+			//msg(&unit& &ObjectiveautoCCONOFF& &objectiveClass&)
+		}
+		else {
+			addunit(@sikibetusihozonresults,nekoerasespot)
+			storebaseclassofunit(@unit,@class)
+			routine(ObjectiveautoCCmod_hozon2)
+			pushstatus(@sikibetusihozonresults,attack,ObjectiveautoCCONOFF)
+			if (ObjectiveautoCCONOFF!=0) {
+				storeskillofunit(@sikibetusihozonresults,@objectiveClass)
+				index(@objectiveClass,1,@objectiveClass)
+				//msg(&class& &ObjectiveautoCCONOFF& &objectiveClass&)
+			}
+			else {addunit(@sikibetusihozonresults,nekoerasespot)}
+		}
+		if (@objectiveClass==mizusyoubaim || @objectiveClass==mizusyoubaiw) {
+			pushsex(@unit,unitSex)
+			if (unitSex==1) {setv(@objectiveClass,mizusyoubaim)}
+			else {setv(@objectiveClass,mizusyoubaiw)}
+		}
+	}
+}
+
+event ObjectiveautoCCmod_main2
+{
+	if (autoClassChangeCheck == 0) {
+		talk(felclone, fel_tu.png, 今はオートクラスチェンジをＯＦＦにしてるよ。$ＯＮにするとあなた（※&unit&）は自動的にクラスチェンジするようになるからね。)
+		choice(actNumber_autoClassChange, やめる, 【ＯＮにする】)
+		if (actNumber_autoClassChange == 1) {
+			addv(@allAutoClassChangeUnit, @unit)
+			setud(SAVEallAutoClassChangeUnit, @allAutoClassChangeUnit)
+			routine(ObjectiveautoCCmod_main3)
+			set(autoClassChangeCheck, 1)
+			if (autoClassChangeSortONOFF == 1) {
+				msg(※オートクラスチェンジ設定を変更しました。$なおメニュー欄は更新されないため、このユニットのメニューは引き続き表示されます。最新情報に更新する場合はもう一度ソート機能を実行して下さい。)
+			}
+		}
+	}else if (autoClassChangeCheck == 1) {
+		talk(felclone, fel_tu.png, 今はオートクラスチェンジをＯＮにしてるよ。$ＯＦＦにするとこのメニューからのクラスチェンジ以外でクラスチェンジはしなくなるからね（※ＣＰＵ所属時を除く）)
+		choice(actNumber_autoClassChange, やめる, 【ＯＦＦにする】)
+		if (actNumber_autoClassChange == 1) {
+			subv(@allAutoClassChangeUnit, @unit)
+			setud(SAVEallAutoClassChangeUnit, @allAutoClassChangeUnit)
+			set(autoClassChangeCheck, 0)
+			if (autoClassChangeSortONOFF == 2) {
+				msg(※オートクラスチェンジ設定を変更しました。$なおメニュー欄は更新されないため、このユニットのメニューは引き続き表示されます。最新情報に更新する場合はもう一度ソート機能を実行して下さい。)
+			}
+		}
+	}
+	routine(autoCC_save)
+}
+
+event ObjectiveautoCCmod_main3
+{
+	//指向性クラスチェンジのクラス選択イベント
+	//ほぼ本体のクラスチェンジイベントの流用でメッセージや細かい処理を変更したもの
+	set(classChangeActive, 0)
+	set(ccHelpTalkSkip, 0)
+	clear(@allSpChangeClass)
+	storeBaseClassOfUnit(@unit, @class)
+	pushLevel(@unit, level)
+	pushSex(@unit, unitSex)
+	storeSkillOfUnit(@unit, @skill)
+	storePowerOfUnit(@unit, @power)
+	storeMasterOfPower(@power, @master)
+	routine(ObjectiveautoCCmod_classchoicesetroutine)
+
+	while (SWITCHwhile == 0) {
+		if (has(@skill, energycard) == 1 && numberOfChoices >= 4) {
+			talk(felclone, fel_tu.png, クラスチェンジ先を選択する？$しない場合はあなた（※&unit&）は独自の判断で勝手にクラスチェンジするようになるからね。)
+			routine(ObjectiveautoCCmod_classchoice_main)
+			routine(ObjectiveautoCCmod_classchoicesetroutine2)
+
+			if (@class == @targetClass) {
+				talk(felclone, fel_comari.png, …ん？$そのクラスは現在のあなたのクラスと同じだよ？)
+			}else if (level >= LevelPrerequisite) {
+				talk(felclone, fel_tu.png, 「…ん？$&targetClass&」のクラスになるレベルは既に満たしてるよ？$今クラスチェンジしちゃう？)
+				talk(felclone, fel_tu.png,コストとしてあなたの所持してるエネルギーカードを貰うけど、再入手が大変だから慎重にね。)
+				choice(check, やめる, 【実行する】)
+				if (check == 1) {
+					changeClass(@unit, @targetClass)
+					setLevel(@unit, 1)
+					sub(level, 1)
+					addLevel(@unit, level)
+					if (level == 0) {
+						addLevel(@unit, 1)
+						setLevel(@unit, 1)
+					}
+					eraseSkill(@unit, energycard)
+
+					storeMemberOfUnit(@unit, @allMember)
+					storeAllTalent(@allTalent)
+					subv(@allMember, @allTalent)
+					while (count(@allMember) >= 1) {
+						index(@allMember, 0, @member)
+						subv(@allMember, @member)
+						changeClass(@member, @targetClass)
+						pushLevel(@member, level)
+	//					if (LevelPrerequisite > level) {
+	//						set(level, LevelPrerequisite)
+	//					}
+						setLevel(@member, 1)
+						sub(level, 1)
+						addLevel(@member, level)
+						if (level == 0) {
+							addLevel(@member, 1)
+							setLevel(@member, 1)
+						}
+					}
+					playSE(se_maoudamashii_onepoint16)
+					talk(felclone, fel_emi.png, クラスチェンジ完了したよ！)
+					set(classChangeActive, 0)
+					erase()
+					return()
+				}
+			}
+			else {
+				routine(ObjectiveautoCCmod_addspot_main)
+				routine(ObjectiveautoCCmod_hozon)
+				//前回のが残っている可能性があるので消してからaddskill
+				eraseskill(@sikibetusihozonresults)
+				addskill(@sikibetusihozonresults,@unit,@targetClass)
+				setstatus(@sikibetusihozonresults,attack,LevelPrerequisite)
+				talk(felclone, fel_emi.png,クラスチェンジを予約したよ！)
+				break()
+			}
+			erase()
+		}else if (has(@skill, energycard) == 1 && numberOfChoices <= 3) {
+			break()
+		}else if (has(@skill, energycard) == 0) {
+			break()
+		}
+
+		if (actNumber == 0) {
+			routine(ObjectiveautoCCmod_hozon)
+			addunit(@sikibetusihozonresults,nekoerasespot)
+			break()
+		}
+	}
+	set(classChangeActive, 0)
+	erase()
+}
+
+event ObjectiveautoCCmod_classchoiceforEachClass
+{
+	//クラス毎設定用の改変スクリプト
+	routine(ObjectiveautoCCmod_addspot_main)
+	while (SWITCHwhile == 0) {
+		setv(@class,guidestaff) addv(@class,army) addv(@class,nanashi000)
+		addv(@class,studentm) addv(@class,slime) addv(@class,toseinin)
+		addv(@class,police) addv(@class,member) addv(@class,salaryman)
+		addv(@class,priest) addv(@class,tinpira) addv(@class,investigator)
+		addv(@class,resistance)
+		
+		routine(ObjectiveautoCCmod_hozon2)
+		
+		clear(@ObjectiveautoCCmodtemp2)
+		while (@sikibetusihozonresults!=0) {
+			index(@sikibetusihozonresults,0,@ObjectiveautoCCmodtemp) subv(@sikibetusihozonresults,@ObjectiveautoCCmodtemp)
+			storeskillofunit(@ObjectiveautoCCmodtemp,@ObjectiveautoCCmodtemp)
+			if (count(@ObjectiveautoCCmodtemp)==1) {addv(@ObjectiveautoCCmodtemp2,ObjectiveautoCCmod_omakase)}
+			else {
+				index(@ObjectiveautoCCmodtemp,1,@ObjectiveautoCCmodtemp)
+				addv(@ObjectiveautoCCmodtemp2,@ObjectiveautoCCmodtemp)
+			}
+		}
+		
+		index(@ObjectiveautoCCmodtemp2,0,@ObjectiveautoCCmod0)
+		index(@ObjectiveautoCCmodtemp2,1,@ObjectiveautoCCmod1)
+		index(@ObjectiveautoCCmodtemp2,2,@ObjectiveautoCCmod2)
+		index(@ObjectiveautoCCmodtemp2,3,@ObjectiveautoCCmod3)
+		index(@ObjectiveautoCCmodtemp2,4,@ObjectiveautoCCmod4)
+		index(@ObjectiveautoCCmodtemp2,5,@ObjectiveautoCCmod5)
+		index(@ObjectiveautoCCmodtemp2,6,@ObjectiveautoCCmod6)
+		index(@ObjectiveautoCCmodtemp2,7,@ObjectiveautoCCmod7)
+		index(@ObjectiveautoCCmodtemp2,8,@ObjectiveautoCCmod8)
+		index(@ObjectiveautoCCmodtemp2,9,@ObjectiveautoCCmod9)
+		index(@ObjectiveautoCCmodtemp2,10,@ObjectiveautoCCmod10)
+		index(@ObjectiveautoCCmodtemp2,11,@ObjectiveautoCCmod11)
+		index(@ObjectiveautoCCmodtemp2,12,@ObjectiveautoCCmod12)
+
+		choice(actNumber,やめる,案内人（ｶﾞｲﾄﾞ）系統 現在設定：&@ObjectiveautoCCmod0&,軍人（ｱｰﾐｰ）系統 現在設定：&@ObjectiveautoCCmod1&,無人機（ﾏｼﾝ）系統 現在設定：&@ObjectiveautoCCmod2&,学生（ｽﾁｭｰﾃﾞﾝﾄ）系統 現在設定：&@ObjectiveautoCCmod3&,精霊（ｽﾋﾟﾘｯﾄ）系統 現在設定：&@ObjectiveautoCCmod4&,極道（ｺﾞｸﾄﾞｳ）系統 現在設定：&@ObjectiveautoCCmod5&,公務員（Pｻｰｳﾞｧﾝﾄ）系統 現在設定：&@ObjectiveautoCCmod6&,構成員（ｸﾞﾙｰﾌﾟ）系統 現在設定：&@ObjectiveautoCCmod7&,会社員（ﾜｰｶｰ）系統 現在設定：&@ObjectiveautoCCmod8&,神官（ﾌﾟﾘｰｽﾄ）系統 現在設定：&@ObjectiveautoCCmod9&,不良（ｱｳﾄﾛｰ）系統 現在設定：&@ObjectiveautoCCmod10&,裏組織（ｱｻｼﾝ）系統 現在設定：&@ObjectiveautoCCmod11&,革命家（ﾚﾎﾞﾘｭｰｼｮﾅﾘｰ）系統 現在設定：&@ObjectiveautoCCmod12&)
+
+		if (actNumber==0) {break()}
+		sub(actNumber,1)
+		index(@class,actNumber,@class)
+		routine(ObjectiveautoCCmod_classchoicesetroutine)
+
+		if (actNumber==0) {addv(@class,butler)}
+		else if (actNumber==1) {addv(@class,provisioner)}
+		else if (actNumber==2) {addv(@class,nanashi001)}
+		else if (actNumber==3) {addv(@class,studentf)}
+		else if (actNumber==5) {addv(@class,tekiya)}
+		else if (actNumber==6) {addv(@class,teacher)}
+		else if (actNumber==11) {addv(@class,spy)}
+
+		setv(@unit,ObjectiveautoCCmod_EachTalent)
+		routine(ObjectiveautoCCmod_classchoice_main)
+
+		if (actNumber == 0) {
+			routine(ObjectiveautoCCmod_hozon2)
+			addunit(@sikibetusihozonresults,nekoerasespot)
+			continue()
+		}
+
+		routine(ObjectiveautoCCmod_classchoicesetroutine2)
+
+		routine(ObjectiveautoCCmod_hozon2)
+		//前回のが残っている可能性があるので消してからaddskill
+		addunit(@sikibetusihozonresults,nekoerasespot)
+		routine(ObjectiveautoCCmod_hozon2)
+		addskill(@sikibetusihozonresults,@targetClass)
+		setstatus(@sikibetusihozonresults,attack,LevelPrerequisite)
+		set(classChangeActive, 0)
+		
+		
+		//処理の関係上おまかせにしているクラスの保存ユニットも作成されるので削除
+		storeunitofspot(ObjectiveautoCCmod_cache_class,@ObjectiveautoCCmod1)
+		while (@ObjectiveautoCCmod1!=0) {
+			index(@ObjectiveautoCCmod1,0,@ObjectiveautoCCmod2) subv(@ObjectiveautoCCmod,@ObjectiveautoCCmod2)
+			pushstatus(@ObjectiveautoCCmod2,attack,ObjectiveautoCCmodnum)
+			if (ObjectiveautoCCmodnum==0) {
+				addunit(@ObjectiveautoCCmod2,nekoerasespot)
+			}
+		}
+		routine(autoCC_save)
+	}
+	clear(@ObjectiveautoCCmodtemp) clear(@ObjectiveautoCCmodtemp2) clear(@ObjectiveautoCCmod1)
+	clear(@ObjectiveautoCCmod2) clear(@ObjectiveautoCCmod3) clear(@ObjectiveautoCCmod4)
+	clear(@ObjectiveautoCCmod5) clear(@ObjectiveautoCCmod6) clear(@ObjectiveautoCCmod7)
+	clear(@ObjectiveautoCCmod8) clear(@ObjectiveautoCCmod9) clear(@ObjectiveautoCCmod10)
+	clear(@ObjectiveautoCCmod11) clear(@ObjectiveautoCCmod12) clear(@ObjectiveautoCCmod0)
+	routine(autoCC_save)
+}

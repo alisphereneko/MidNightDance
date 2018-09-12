@@ -1,0 +1,214 @@
+//本体のスクリプト書き換えを可能な限り少なくするため、eventは別ファイルに書いてevent関数で呼び出しています
+//本体の書換えの増加>modスクリプトの肥大化　という方針なので多少の無駄があるのはご容赦ください
+event filtermod_trigger
+{
+	//内政トリガー
+	if (ptest(politics1, droplevel1)){set(sortOutPurpose, 1001) event(sortOutAction)}
+	else if (ptest(politics1, droplevel2)){set(sortOutPurpose, 1011) event(sortOutAction)}
+	else if (ptest(politics1, droplevel3)){set(sortOutPurpose, 1021) event(sortOutAction)}
+	else if (ptest(politics1, droplevel4)){set(sortOutPurpose, 1031) event(sortOutAction)}
+	else if (ptest(politics1, dropEcard1)){set(sortOutPurpose, 1101) event(sortOutAction)}
+	else if (ptest(politics1, dropEcard2)){set(sortOutPurpose, 1100) event(sortOutAction)}
+	else if (ptest(politics1, dropCCpass1)){set(sortOutPurpose, 1103) event(sortOutAction)}
+	else if (ptest(politics1, dropCCpass2)){set(sortOutPurpose, 1102) event(sortOutAction)}
+	else if (ptest(politics1, dropreset)){set(sortOutPurpose, 1050) event(sortOutAction)}
+}
+
+event filtermod_unitchange_main
+{
+	//内政領地の空白用ユニットを消して代わりにこのmodのユニットを入れる処理
+	eraseunit(004drop99empty1) eraseunit(004drop99empty2) eraseunit(004drop99empty3)
+	addunit(003wwwdroplevel,politics1) addunit(003wwwdropEcard,politics1) addunit(003wwwdropreset,politics1)
+}
+
+event sortOutAction_kaihen
+{
+	//展開コマンドのイベント
+	routine(filtermod_main)
+	
+	while (count(@allPowerTalent) >= 1 && count(@politicsUnitCount) < 127) {
+		index(@allPowerTalent, 0, @unit)
+		subv(@allPowerTalent, @unit)
+
+		set(purpose, 6)
+		routine(privateData)
+		addUnit(@politicsUnit, politics1)
+		storeUnitOfSpot(politics1, @politicsUnitCount)
+	}
+	
+	if (count(@politicsUnitCount) == 127) {
+		msg(※人材が多すぎるため、すべてを展開出来ませんでした。$より条件の狭い展開方法を選択してください。)
+		erase()
+	}
+}
+
+event filtermod_main_nochange
+{
+	//前回のフィルター設定から変更を加えずにフィルターする処理
+	set(sortOutPurpose,-1)//条件に引っかからなければ何でも良い
+	routine(filtermod_main)
+}
+
+event filtermod_main
+{
+	//フィルター処理
+	//今まで共通でsortOutPurpose変数を起動フラグにしていたのを
+	//フィルター毎に変数に分けて格納することで上書き可能になった
+
+	set(filtermodnum,0) set(filtermodnum2,0) set(filtermodnum3,0) set(filtermodnum4,0)
+	clear(@allSortOutClass) clear(@allAutoClassChangeUnit)
+
+	//フラグ書き換え処理
+	//コマンドごとの指定系統のフラグを上書きする
+	if (sortOutPurpose == 1050 || sortOutPurpose == 0) {
+		routine(filtermod_reset)
+		if (sortOutPurpose == 1050) {clear(@allPowerTalent)}
+		return()
+	}
+	else if (1<=sortOutPurpose && sortOutPurpose<=99) {set(filtermod_filtered_class,sortOutPurpose)}
+	else if (sortOutPurpose >= 1100) {set(filtermod_filtered_Ecard,sortOutPurpose)}
+	else if (sortOutPurpose >= 1000){
+		set(filtermod_filtered_level,sortOutPurpose)
+		sub(filtermod_filtered_level,1000)
+	}
+	else if (sortOutPurpose >= 100) {set(filtermod_filtered_autoCC,sortOutPurpose)}
+
+	//フィルター条件設定処理
+	//フラグに応じてフィルター設定
+	if (filtermod_filtered_class!=0) {
+		if (filtermod_filtered_class == 1) {storeud(SAVEguideLineage,@allSortOutClass)}
+		else  if (filtermod_filtered_class == 2){storeud(SAVEarmyLineage, @allSortOutClass)}
+		else  if (filtermod_filtered_class == 3){storeud(SAVEmachineLineage,@allSortOutClass)}
+		else  if (filtermod_filtered_class == 4){storeud(SAVEstudentLineage,@allSortOutClass)}
+		else  if (filtermod_filtered_class == 5){storeud(SAVEspiritLineage, @allSortOutClass)}
+		else  if (filtermod_filtered_class == 6){storeud(SAVEgokudouLineage,@allSortOutClass)}
+		else  if (filtermod_filtered_class == 7){storeud(SAVEpublicservantLineage,@allSortOutClass)}
+		else  if (filtermod_filtered_class == 8){storeud(SAVEgroupLineage,@allSortOutClass)}
+		else  if (filtermod_filtered_class == 9){storeud(SAVEworkerLineage,@allSortOutClass)}
+		else  if (filtermod_filtered_class == 10){storeud(SAVEpriestLineage,@allSortOutClass)}
+		else  if (filtermod_filtered_class == 11){storeud(SAVEoutlawLineage,@allSortOutClass)}
+		else  if (filtermod_filtered_class == 21){storeud(SAVEtempworkerLineage,@allSortOutClass)}
+		else  if (filtermod_filtered_class == 22){storeud(SAVEassassinLineage,@allSortOutClass)}
+		else  if (filtermod_filtered_class == 23){storeud(SAVEvipLineage,@allSortOutClass)}
+		else  if (filtermod_filtered_class == 24){storeud(SAVErevolutionaryLineage,@allSortOutClass)}
+		else  if (filtermod_filtered_class == 25){storeud(SAVEzombieLineage,@allSortOutClass)}
+		else  if (filtermod_filtered_class == 99){storeud(SAVEfelLineage,@allSortOutClass)}
+	}
+	if (filtermod_filtered_Ecard!=0) {
+		set(filtermodnum,filtermod_filtered_Ecard)
+		if (filtermodnum<1102) {sub(filtermodnum,1100)}
+		else {sub(filtermodnum,1102)}
+	}
+	if (filtermod_filtered_level!=0){
+		set(filtermodnum2,filtermod_filtered_level)
+		add(filtermodnum2,9)
+		if (filtermodnum2==40) {set(filtermodnum2,100)}
+	}
+	if (filtermod_filtered_autoCC!=0) {
+		storeud(SAVEallAutoClassChangeUnit, @allAutoClassChangeUnit)
+		set(filtermodnum3,filtermod_filtered_autoCC) sub(filtermodnum3,101)
+	}
+
+	//実際のフィルター処理
+	//起動しているフィルターを通して全てパスしたものだけ残す
+	clear(@filtermod)
+	while (count(@allPowerTalent) >= 1) {
+		index(@allPowerTalent, 0, @unit)
+		subv(@allPowerTalent, @unit)
+
+		if (filtermod_filtered_class!=0) {
+			storeBaseClassOfUnit(@unit,@filtermod2)
+			if (has(@allSortOutClass,@filtermod2) == 0) {continue()}
+		}
+		
+		storeskillofunit(@unit,@filtermod2)
+		if (filtermod_filtered_Ecard>=1102) {
+			if (has(@filtermod2,ccpass)!=filtermodnum) {continue()}
+		}
+		else if (filtermod_filtered_Ecard!=0) {
+			if (has(@filtermod2,energycard)!=filtermodnum) {continue()}
+		}
+		
+		if (filtermod_filtered_level!=0){
+			pushlevel(@unit,filtermodnum4)
+			if (filtermodnum4<filtermod_filtered_level || filtermodnum2<filtermodnum4) {continue()}
+		}
+		
+		if (filtermod_filtered_autoCC!=0) {
+			if (has(@allAutoClassChangeUnit, @unit) != filtermodnum3) {continue()}
+		}
+		addv(@filtermod,@unit)
+	}
+	setv(@allPowerTalent,@filtermod)
+	clear(@filtermod) clear(@filtermod2) set(sortOutPurpose,0)
+	routine(filtermod_count)
+}
+
+event filtermod_count
+{
+	//掛かっているフィルターの種類数をカウントし、変数に格納する処理
+	//現在は掛かっているかいないかの判断にしか使っていないので種類数は意味がない
+	set(filtermod_filteredcount,0)
+	if (filtermod_filtered_class!=0) {add(filtermod_filteredcount,1)}
+	if (filtermod_filtered_Ecard!=0) {add(filtermod_filteredcount,1)}
+	if (filtermod_filtered_autoCC!=0) {add(filtermod_filteredcount,1)}
+	if (filtermod_filtered_level!=0) {add(filtermod_filteredcount,1)}
+}
+
+event filtermod_reset
+{
+	//フィルターを全てOFFにするルーティン
+	set(filtermod_filtered_class,0)
+	set(filtermod_filtered_Ecard,0)
+	set(filtermod_filtered_level,0)
+	set(filtermod_filtered_autoCC,0)
+}
+
+event allAutoChangeGimmickAction_filtered
+{
+	//フィルターが適用されている場合の処理
+	//フェルの喋る内容変えるだけだから本体にif式で書き込めば2行で済むんですが
+	while (1==1) {
+		if (allAutoChangePurpose == 1) {
+			talk(felclone, fel_tu.png, フィルターされている人材をオートクラスチェンジ実行状態に出来るよ！$実行する？)
+			choice(choiceNumber, やめる, 【実行する】, オートクラスチェンジを実行すると？)
+			if (choiceNumber == 0) {
+				break()
+			}else if (choiceNumber == 1) {
+				storeud(SAVEallAutoClassChangeUnit, @allAutoClassChangeUnit)
+				subv(@allAutoClassChangeUnit, @allPowerTalent)
+				addv(@allAutoClassChangeUnit, @allPowerTalent)
+				setud(SAVEallAutoClassChangeUnit, @allAutoClassChangeUnit)
+				talk(felclone, fel_emi.png, 実行したよ～！)
+				if (autoClassChangeSortONOFF == 1) {
+					msg(※…メニュー欄は更新されないため、設定前の人材メニューは引き続き表示されます。$最新情報に更新する場合はもう一度ソート機能を実行して下さい。)
+				}
+				break()
+			}else if (choiceNumber == 2) {
+				talk(felclone, fel_tu.png, オートクラスチェンジを実行させた場合、人材は独自の判断で勝手にクラスチェンジするようになるんだよ。)
+				talk(felclone, fel_emi.png, 管理が手間な時は試してみてね。)
+				erase()
+			}
+		}else  if (allAutoChangePurpose == 2) {
+			talk(felclone, fel_tu.png, フィルターされている人材をオートクラスチェンジ実行状態から解除するよ。$実行する？)
+			choice(choiceNumber, やめる, 【実行する】, オートクラスチェンジを解除すると？)
+			if (choiceNumber == 0) {
+				break()
+			}else if (choiceNumber == 1) {
+				storeud(SAVEallAutoClassChangeUnit, @allAutoClassChangeUnit)
+				subv(@allAutoClassChangeUnit, @allPowerTalent)
+				setud(SAVEallAutoClassChangeUnit, @allAutoClassChangeUnit)
+				talk(felclone, fel_emi.png, 解除したよ～！)
+				if (autoClassChangeSortONOFF == 2) {
+					msg(※…メニュー欄は更新されないため、設定前の人材メニューは引き続き表示されます。$最新情報に更新する場合はもう一度ソート機能を実行して下さい。)
+				}
+				break()
+			}else if (choiceNumber == 2) {
+				talk(felclone, fel_tu.png, メニューから直接クラスチェンジ操作を行わない限りクラスチェンジはしなくなるよ（※ＣＰＵ所属時を除く）)
+				talk(felclone, fel_emi.png, 全体を細かく管理したくなった時はここで解除してね。)
+				erase()
+			}
+		}
+	}
+	routine(autoCC_save)
+}

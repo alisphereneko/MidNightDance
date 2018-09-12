@@ -1,0 +1,29 @@
+//verup対応と複数modのすり合わせを簡単にするため、modの内政トリガーをまとめたもの
+//上からマスターのみ、マスター以外のみ、誰でも
+
+event mod_trigger
+{
+	if (isMaster(@playerUnit) == 1) {
+		event(mod_trigger_master)
+	}else {
+		event(mod_trigger_nomaster)
+	}
+	event(mod_trigger_other)
+}
+
+event mod_trigger_master
+{
+	event(filtermod_trigger)
+	event(subEVmod_trigger)
+	event(ObjectiveautoCCmod_trigger)
+	event(LoyaldownONOFF_trigger_master)
+}
+
+event mod_trigger_nomaster
+{
+	event(LoyaldownONOFF_trigger_other)
+}
+
+event mod_trigger_other
+{
+}

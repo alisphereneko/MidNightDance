@@ -1,0 +1,83 @@
+unit z11SUBEVON1_kaihen : z11SUBEVON1
+{
+	merce=SUBEV1replayunit
+}
+
+unit z12SUBEVON2_kaihen : z12SUBEVON2
+{
+	merce=SUBEV2replayunit
+}
+
+unit z13SUBEVON3_kaihen : z13SUBEVON3
+{
+	merce=SUBEV3replayunit
+}
+
+unit z14SUBEVON4_kaihen : z14SUBEVON4
+{
+	merce=SUBEV4replayunit
+}
+
+unit z15SUBEVON5_kaihen : z15SUBEVON5
+{
+	merce=SUBEV5replayunit
+}
+
+unit z16SUBEVON6_kaihen : z16SUBEVON6
+{
+	merce=SUBEV6replayunit
+}
+
+unit z17SUBEVON7_kaihen : z17SUBEVON7
+{
+	merce=SUBEV7replayunit
+}
+
+class SUBEV1replayunit
+{
+	politics = erase
+	name = サブイベント１リプレイ
+	image = systemicon_subevON
+	merce=@
+}
+
+class SUBEV2replayunit : SUBEV1replayunit
+{
+	name = サブイベント2リプレイ
+}
+
+class SUBEV3replayunit : SUBEV1replayunit
+{
+	name = サブイベント3リプレイ
+}
+
+class SUBEV4replayunit : SUBEV1replayunit
+{
+	name = サブイベント4リプレイ
+}
+
+class SUBEV5replayunit : SUBEV1replayunit
+{
+	name = サブイベント5リプレイ
+}
+
+class SUBEV6replayunit : SUBEV1replayunit
+{
+	name = サブイベント6リプレイ
+}
+
+class SUBEV7replayunit : SUBEV1replayunit
+{
+	name = サブイベント7リプレイ
+}
+
+detail
+{
+z11SUBEVON1_kaihen = このサブイベントは達成済です。;
+z12SUBEVON2_kaihen = このサブイベントは達成済です。;
+z13SUBEVON3_kaihen = このサブイベントは達成済です。;
+z14SUBEVON4_kaihen = このサブイベントは達成済です。;
+z15SUBEVON5_kaihen = このサブイベントは達成済です。;
+z16SUBEVON6_kaihen = このサブイベントは達成済です。;
+z17SUBEVON7_kaihen = このサブイベントは達成済です。;
+}

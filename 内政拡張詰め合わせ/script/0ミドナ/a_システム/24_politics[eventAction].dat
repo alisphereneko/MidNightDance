@@ -1,0 +1,1143 @@
+//■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■
+//▼▼(内政ギミックイベント「ソート関連」)▼▼★
+event sortOutAction
+{
+	storePlayerPower(@power)
+	storeAllTalent(@allOtherTalent)
+	storeUnitOfPower(@power, @allPowerUnit)
+	subv(@allOtherTalent, @allPowerUnit)
+	storeAllTalent(@allPowerTalent)
+	subv(@allPowerTalent, @allOtherTalent)
+
+	storeUnitOfSpot(politics1, @allPoliticsUnit)
+	storeud(SAVEallGimmickUnit, @allGimmickUnit)
+	subv(@allPoliticsUnit, @allGimmickUnit)
+	eraseUnit(@allPoliticsUnit)
+	storeUnitOfSpot(politics1, @politicsUnitCount)
+	set(autoClassChangeSortONOFF, 0)
+	event(sortOutAction_kaihen) return()//mod変更行
+	if (sortOutPurpose == 0) {
+		while (count(@allPowerTalent) >= 1 && count(@politicsUnitCount) < 127) {
+			index(@allPowerTalent, 0, @unit)
+			subv(@allPowerTalent, @unit)
+
+			set(purpose, 6)
+			routine(privateData)
+			addUnit(@politicsUnit, politics1)
+			storeUnitOfSpot(politics1, @politicsUnitCount)
+		}
+	}else  if (sortOutPurpose >= 1 && sortOutPurpose <= 99) {
+		clear(@allSortOutClass)
+		if (sortOutPurpose == 1) {
+			storeud(SAVEguideLineage, @guideLineage)
+			setv(@allSortOutClass, @guideLineage)
+		}else  if (sortOutPurpose == 2){
+			storeud(SAVEarmyLineage, @armyLineage)
+			setv(@allSortOutClass, @armyLineage)
+		}else  if (sortOutPurpose == 3){
+			storeud(SAVEmachineLineage, @machineLineage)
+			setv(@allSortOutClass, @machineLineage)
+		}else  if (sortOutPurpose == 4){
+			storeud(SAVEstudentLineage, @studentLineage)
+			setv(@allSortOutClass, @studentLineage)
+		}else  if (sortOutPurpose == 5){
+			storeud(SAVEspiritLineage, @spiritLineage)
+			setv(@allSortOutClass, @spiritLineage)
+		}else  if (sortOutPurpose == 6){
+			storeud(SAVEgokudouLineage, @gokudouLineage)
+			setv(@allSortOutClass, @gokudouLineage)
+		}else  if (sortOutPurpose == 7){
+			storeud(SAVEpublicservantLineage, @publicservantLineage)
+			setv(@allSortOutClass, @publicservantLineage)
+		}else  if (sortOutPurpose == 8){
+			storeud(SAVEgroupLineage, @groupLineage)
+			setv(@allSortOutClass, @groupLineage)
+		}else  if (sortOutPurpose == 9){
+			storeud(SAVEworkerLineage, @workerLineage)
+			setv(@allSortOutClass, @workerLineage)
+		}else  if (sortOutPurpose == 10){
+			storeud(SAVEpriestLineage, @priestLineage)
+			setv(@allSortOutClass, @priestLineage)
+		}else  if (sortOutPurpose == 11){
+			storeud(SAVEoutlawLineage, @outlawLineage)
+			setv(@allSortOutClass, @outlawLineage)
+		}else  if (sortOutPurpose == 21){
+			storeud(SAVEtempworkerLineage, @tempworkerLineage)
+			setv(@allSortOutClass, @tempworkerLineage)
+		}else  if (sortOutPurpose == 22){
+			storeud(SAVEassassinLineage, @assassinLineage)
+			setv(@allSortOutClass, @assassinLineage)
+		}else  if (sortOutPurpose == 23){
+			storeud(SAVEvipLineage, @vipLineage)
+			setv(@allSortOutClass, @vipLineage)
+		}else  if (sortOutPurpose == 24){
+			storeud(SAVErevolutionaryLineage, @revolutionaryLineage)
+			setv(@allSortOutClass, @revolutionaryLineage)
+		}else  if (sortOutPurpose == 25){
+			storeud(SAVEzombieLineage, @zombieLineage)
+			setv(@allSortOutClass, @zombieLineage)
+		}else  if (sortOutPurpose == 99){
+			storeud(SAVEfelLineage, @felLineage)
+			setv(@allSortOutClass, @felLineage)
+		}
+		while (count(@allPowerTalent) >= 1 && count(@politicsUnitCount) < 127) {
+			index(@allPowerTalent, 0, @unit)
+			subv(@allPowerTalent, @unit)
+
+			storeBaseClassOfUnit(@unit, @class)
+			if (has(@allSortOutClass, @class) == 1) {
+				set(purpose, 6)
+				routine(privateData)
+				addUnit(@politicsUnit, politics1)
+				storeUnitOfSpot(politics1, @politicsUnitCount)
+			}
+		}
+	}else  if (sortOutPurpose >= 100) {
+		storeud(SAVEallAutoClassChangeUnit, @allAutoClassChangeUnit)
+		while (count(@allPowerTalent) >= 1 && count(@politicsUnitCount) < 127) {
+			index(@allPowerTalent, 0, @unit)
+			subv(@allPowerTalent, @unit)
+
+			if (has(@allAutoClassChangeUnit, @unit) == 0 && sortOutPurpose == 101) {
+				set(purpose, 6)
+				routine(privateData)
+				addUnit(@politicsUnit, politics1)
+				set(autoClassChangeSortONOFF, 1)
+			}else  if (has(@allAutoClassChangeUnit, @unit) == 1 && sortOutPurpose == 102){
+				set(purpose, 6)
+				routine(privateData)
+				addUnit(@politicsUnit, politics1)
+				set(autoClassChangeSortONOFF, 2)
+			}
+			storeUnitOfSpot(politics1, @politicsUnitCount)
+		}
+	}
+	if (count(@politicsUnitCount) == 127) {
+		msg(※人材が多すぎるため、すべてを展開出来ませんでした。$より条件の狭い展開方法を選択してください。)
+		erase()
+	}
+}
+//■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■
+
+//■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■
+//▼▼(一括オートクラスチェンジ実行)▼▼★
+event allAutoChangeGimmickAction
+{
+	storePlayerPower(@power)
+	storeAllTalent(@allOtherTalent)
+	storeUnitOfPower(@power, @allPowerUnit)
+	subv(@allOtherTalent, @allPowerUnit)
+	storeAllTalent(@allPowerTalent)
+	subv(@allPowerTalent, @allOtherTalent)
+
+	event(filtermod_main_nochange) if (allAutoChangePurpose<=2 && filtermod_filteredcount!=0) {event(allAutoChangeGimmickAction_filtered) return()} //mod変更行
+	while (SWITCHwhile == 0) {
+		if (allAutoChangePurpose == 1) {
+			talk(felclone, fel_tu.png, この勢力に所属する全人材をオートクラスチェンジ実行状態に出来るよ！$実行する？)
+			choice(choiceNumber, やめる, 【実行する】, オートクラスチェンジを実行すると？)
+			if (choiceNumber == 0) {
+				break()
+			}else if (choiceNumber == 1) {
+				storeud(SAVEallAutoClassChangeUnit, @allAutoClassChangeUnit)
+				subv(@allAutoClassChangeUnit, @allPowerTalent)
+				addv(@allAutoClassChangeUnit, @allPowerTalent)
+				setud(SAVEallAutoClassChangeUnit, @allAutoClassChangeUnit)
+				talk(felclone, fel_emi.png, 実行したよ～！)
+				if (autoClassChangeSortONOFF == 1) {
+					msg(※…メニュー欄は更新されないため、設定前の人材メニューは引き続き表示されます。$最新情報に更新する場合はもう一度ソート機能を実行して下さい。)
+				}
+				break()
+			}else if (choiceNumber == 2) {
+				talk(felclone, fel_tu.png, オートクラスチェンジを実行させた場合、人材は独自の判断で勝手にクラスチェンジするようになるんだよ。)
+				talk(felclone, fel_emi.png, 管理が手間な時は試してみてね。)
+				erase()
+			}
+		}else  if (allAutoChangePurpose == 2) {
+			talk(felclone, fel_tu.png, この勢力に所属する全人材をオートクラスチェンジ実行状態から解除するよ。$実行する？)
+			choice(choiceNumber, やめる, 【実行する】, オートクラスチェンジを解除すると？)
+			if (choiceNumber == 0) {
+				break()
+			}else if (choiceNumber == 1) {
+				storeud(SAVEallAutoClassChangeUnit, @allAutoClassChangeUnit)
+				subv(@allAutoClassChangeUnit, @allPowerTalent)
+				setud(SAVEallAutoClassChangeUnit, @allAutoClassChangeUnit)
+				talk(felclone, fel_emi.png, 解除したよ～！)
+				if (autoClassChangeSortONOFF == 2) {
+					msg(※…メニュー欄は更新されないため、設定前の人材メニューは引き続き表示されます。$最新情報に更新する場合はもう一度ソート機能を実行して下さい。)
+				}
+				break()
+			}else if (choiceNumber == 2) {
+				talk(felclone, fel_tu.png, メニューから直接クラスチェンジ操作を行わない限りクラスチェンジはしなくなるよ（※ＣＰＵ所属時を除く）)
+				talk(felclone, fel_emi.png, 全体を細かく管理したくなった時はここで解除してね。)
+				erase()
+			}
+		}else  if (allAutoChangePurpose == 3) {
+			talk(felclone, fel_tu.png, 今後この勢力に加入する人材全てを、オートクラスチェンジ実行状態にするよ！$実行する？)
+			choice(choiceNumber, やめる, 【実行する】, オートクラスチェンジを実行すると？)
+			if (choiceNumber == 0) {
+				break()
+			}else if (choiceNumber == 1) {
+				storeud(SAVEallAutoClassChangeUnit, @allAutoClassChangeUnit)
+				subv(@allAutoClassChangeUnit, @allOtherTalent)
+				addv(@allAutoClassChangeUnit, @allOtherTalent)
+				setud(SAVEallAutoClassChangeUnit, @allAutoClassChangeUnit)
+				talk(felclone, fel_emi.png, 実行したよ～！)
+				break()
+			}else if (choiceNumber == 2) {
+				talk(felclone, fel_tu.png, オートクラスチェンジを実行させた場合、人材は独自の判断で勝手にクラスチェンジするようになるんだよ。)
+				talk(felclone, fel_emi.png, 管理が手間な時は試してみてね。)
+				erase()
+			}
+		}else  if (allAutoChangePurpose == 4) {
+			talk(felclone, fel_tu.png, 今後この勢力に加入する人材全てが、手動でのクラスチェンジが必要な状態になるよ。$実行する？)
+			choice(choiceNumber, やめる, 【実行する】, 手動クラスチェンジにすると？)
+			if (choiceNumber == 0) {
+				break()
+			}else if (choiceNumber == 1) {
+				storeud(SAVEallAutoClassChangeUnit, @allAutoClassChangeUnit)
+				subv(@allAutoClassChangeUnit, @allOtherTalent)
+				setud(SAVEallAutoClassChangeUnit, @allAutoClassChangeUnit)
+				talk(felclone, fel_emi.png, 解除したよ～！)
+				break()
+			}else if (choiceNumber == 2) {
+				talk(felclone, fel_tu.png, メニューから直接クラスチェンジ操作を行わない限りクラスチェンジはしなくなるよ（※ＣＰＵ所属時を除く）)
+				talk(felclone, fel_emi.png, 全体を細かく管理したくなった時はここで解除してね。)
+				erase()
+			}
+		}
+	}
+	routine(autoCC_save)//mod変更行
+	erase()
+}
+//■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■
+
+//■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■
+//▼▼(クラスチェンジ実行)▼▼★
+event classChangeAction
+{
+	set(classChangeActive, 0)
+	set(ccHelpTalkSkip, 0)
+	clear(@allSpChangeClass)
+	storeBaseClassOfUnit(@unit, @class)
+	pushLevel(@unit, level)
+	pushSex(@unit, unitSex)
+	storeSkillOfUnit(@unit, @skill)
+	storePowerOfUnit(@unit, @power)
+	storeMasterOfPower(@power, @master)
+	storeud(SAVEallAutoClassChangeUnit, @allAutoClassChangeUnit)
+	if (has(@allAutoClassChangeUnit, @unit) == 0) {
+		set(autoClassChangeCheck, 0)
+	}else  if (has(@allAutoClassChangeUnit, @unit) == 1){
+		set(autoClassChangeCheck, 1)
+	}
+
+	routine(allLineageLoad)
+	if (has(@guideLineage, @class) == 1) {
+		set(numberOfChoices, 11)
+		setv(@choice1, guidestaff)
+		set(LevelPrerequisite1, 1)
+		setv(@choice2, butler)
+		set(LevelPrerequisite2, 1)
+		setv(@choice3, sage)
+		set(LevelPrerequisite3, 11)
+		setv(@choice4, patrician)
+		set(LevelPrerequisite4, 11)
+		setv(@choice5, artist)
+		set(LevelPrerequisite5, 11)
+		setv(@choice6, chevalier)
+		set(LevelPrerequisite6, 21)
+		setv(@choice7, seer)
+		set(LevelPrerequisite7, 21)
+		setv(@choice8, divine)
+		set(LevelPrerequisite8, 31)
+		addv(@allSpChangeClass, guidestaff)
+		addv(@allSpChangeClass, butler)
+	}else if (has(@armyLineage, @class) == 1) {
+		set(numberOfChoices, 11)
+		setv(@choice1, army)
+		set(LevelPrerequisite1, 1)
+		setv(@choice2, provisioner)
+		set(LevelPrerequisite2, 1)
+		setv(@choice3, hinfantry)
+		set(LevelPrerequisite3, 11)
+		setv(@choice4, sniper)
+		set(LevelPrerequisite4, 11)
+		setv(@choice5, magicsoldier)
+		set(LevelPrerequisite5, 11)
+		setv(@choice6, tank)
+		set(LevelPrerequisite6, 21)
+		setv(@choice7, helicopter)
+		set(LevelPrerequisite7, 21)
+		setv(@choice8, battleship)
+		set(LevelPrerequisite8, 21)
+		addv(@allSpChangeClass, army)
+		addv(@allSpChangeClass, provisioner)
+	}else if (has(@machineLineage, @class) == 1) {
+		set(numberOfChoices, 13)
+		setv(@choice1, nanashi001)
+		set(LevelPrerequisite1, 1)
+		setv(@choice2, nanashi000)
+		set(LevelPrerequisite2, 1)
+		setv(@choice3, nanashi002)
+		set(LevelPrerequisite3, 11)
+		setv(@choice4, nanashi003)
+		set(LevelPrerequisite4, 11)
+		setv(@choice5, nanashi004)
+		set(LevelPrerequisite5, 11)
+		setv(@choice6, nanashi005)
+		set(LevelPrerequisite6, 11)
+		setv(@choice7, nanashi006)
+		set(LevelPrerequisite7, 11)
+		setv(@choice8, nanashi007)
+		set(LevelPrerequisite8, 21)
+		setv(@choice9, nanashi008)
+		set(LevelPrerequisite9, 21)
+		setv(@choice10, nanashi009)
+		set(LevelPrerequisite10, 31)
+		addv(@allSpChangeClass, nanashi001)
+		addv(@allSpChangeClass, nanashi000)
+	}else if (has(@studentLineage, @class) == 1) {
+		set(numberOfChoices, 11)
+		if (unitSex == 1) {
+			setv(@choice1, studentm)
+			addv(@allSpChangeClass, studentm)
+		}else  {
+			setv(@choice1, studentf)
+			addv(@allSpChangeClass, studentf)
+		}
+		set(LevelPrerequisite1, 1)
+		setv(@choice2, scouncil)
+		set(LevelPrerequisite2, 11)
+		setv(@choice3, shotputter)
+		set(LevelPrerequisite3, 11)
+		setv(@choice4, occultclub)
+		set(LevelPrerequisite4, 11)
+		setv(@choice5, biologyclub)
+		set(LevelPrerequisite5, 11)
+		setv(@choice6, kendoclub)
+		set(LevelPrerequisite6, 11)
+		setv(@choice7, cheerteam)
+		set(LevelPrerequisite7, 11)
+		setv(@choice8, swimmingclub)
+		set(LevelPrerequisite8, 11)
+	}else if (has(@spiritLineage, @class) == 1) {
+		set(numberOfChoices, 10)
+		setv(@choice1, slime)
+		set(LevelPrerequisite1, 1)
+		setv(@choice2, reslime)
+		set(LevelPrerequisite2, 11)
+		setv(@choice3, salamanber)
+		set(LevelPrerequisite3, 21)
+		setv(@choice4, undine)
+		set(LevelPrerequisite4, 21)
+		setv(@choice5, sylph)
+		set(LevelPrerequisite5, 21)
+		setv(@choice6, gnome)
+		set(LevelPrerequisite6, 21)
+		setv(@choice7, dragon)
+		set(LevelPrerequisite7, 31)
+		addv(@allSpChangeClass, slime)
+	}else if (has(@gokudouLineage, @class) == 1) {
+		set(numberOfChoices, 10)
+		setv(@choice1, toseinin)
+		set(LevelPrerequisite1, 1)
+		setv(@choice2, tekiya)
+		set(LevelPrerequisite2, 1)
+		setv(@choice3, kibamusya)
+		set(LevelPrerequisite3, 11)
+		setv(@choice4, oni)
+		set(LevelPrerequisite4, 21)
+		setv(@choice5, ninga)
+		set(LevelPrerequisite5, 21)
+		setv(@choice6, bakuto)
+		set(LevelPrerequisite6, 21)
+		setv(@choice7, ayakasi)
+		set(LevelPrerequisite7, 31)
+		addv(@allSpChangeClass, toseinin)
+		addv(@allSpChangeClass, tekiya)
+	}else if (has(@publicservantLineage, @class) == 1) {
+		set(numberOfChoices, 13)
+		setv(@choice1, police)
+		set(LevelPrerequisite1, 1)
+		setv(@choice2, teacher)
+		set(LevelPrerequisite2, 1)
+		setv(@choice3, spteam)
+		set(LevelPrerequisite3, 11)
+		setv(@choice4, hakase)
+		set(LevelPrerequisite4, 11)
+		setv(@choice5, doctor)
+		set(LevelPrerequisite5, 11)
+		setv(@choice6, fireman)
+		set(LevelPrerequisite6, 11)
+		setv(@choice7, guardarmor)
+		set(LevelPrerequisite7, 21)
+		setv(@choice8, patrolcar)
+		set(LevelPrerequisite8, 21)
+		setv(@choice9, hero)
+		set(LevelPrerequisite9, 31)
+		setv(@choice10, armoredcar)
+		set(LevelPrerequisite10, 31)
+		addv(@allSpChangeClass, police)
+		addv(@allSpChangeClass, teacher)
+	}else if (has(@groupLineage, @class) == 1) {
+		set(numberOfChoices, 9)
+		setv(@choice1, member)
+		set(LevelPrerequisite1, 1)
+		setv(@choice2, activist)
+		set(LevelPrerequisite2, 11)
+		setv(@choice3, bouncer)
+		set(LevelPrerequisite3, 11)
+		setv(@choice4, researcher)
+		set(LevelPrerequisite4, 11)
+		setv(@choice5, intellectual)
+		set(LevelPrerequisite5, 21)
+		setv(@choice6, charisma)
+		set(LevelPrerequisite6, 31)
+		addv(@allSpChangeClass, member)
+	}else if (has(@workerLineage, @class) == 1) {
+		set(numberOfChoices, 14)
+		setv(@choice1, salaryman)
+		set(LevelPrerequisite1, 1)
+		setv(@choice2, maid)
+		set(LevelPrerequisite2, 11)
+		setv(@choice3, cook)
+		set(LevelPrerequisite3, 11)
+		setv(@choice4, securityguard)
+		set(LevelPrerequisite4, 11)
+		setv(@choice5, carpenter)
+		set(LevelPrerequisite5, 11)
+		if (unitSex == 1) {
+			setv(@choice6, mizusyoubaim)
+		}else  {
+			setv(@choice6, mizusyoubaiw)
+		}
+		set(LevelPrerequisite6, 11)
+		setv(@choice7, middlemanager)
+		set(LevelPrerequisite7, 21)
+		setv(@choice8, idol)
+		set(LevelPrerequisite8, 21)
+		setv(@choice9, athlete)
+		set(LevelPrerequisite9, 21)
+		setv(@choice10, elite)
+		set(LevelPrerequisite10, 31)
+		setv(@choice11, champion)
+		set(LevelPrerequisite11, 31)
+		addv(@allSpChangeClass, salaryman)
+	}else if (has(@priestLineage, @class) == 1) {
+		set(numberOfChoices, 8)
+		setv(@choice1, priest)
+		set(LevelPrerequisite1, 1)
+		setv(@choice2, monk)
+		set(LevelPrerequisite2, 11)
+		setv(@choice3, shaman)
+		set(LevelPrerequisite3, 11)
+		setv(@choice4, highpriest)
+		set(LevelPrerequisite4, 21)
+		setv(@choice5, yorishiro)
+		set(LevelPrerequisite5, 31)
+		addv(@allSpChangeClass, priest)
+	}else if (has(@outlawLineage, @class) == 1) {
+		set(numberOfChoices, 9)
+		setv(@choice1, tinpira)
+		set(LevelPrerequisite1, 1)
+		setv(@choice2, kenkaya)
+		set(LevelPrerequisite2, 11)
+		setv(@choice3, thief)
+		set(LevelPrerequisite3, 11)
+		setv(@choice4, bike)
+		set(LevelPrerequisite4, 21)
+		setv(@choice5, dealer)
+		set(LevelPrerequisite5, 21)
+		setv(@choice6, bantyou)
+		set(LevelPrerequisite6, 31)
+		addv(@allSpChangeClass, tinpira)
+	}else if (has(@tempworkerLineage, @class) == 1) {
+		set(numberOfChoices, 0)
+		if (unitSex == 1) {
+			addv(@allSpChangeClass, tempworkerm)
+		}else  {
+			addv(@allSpChangeClass, tempworkerw)
+		}
+	}else if (has(@assassinLineage, @class) == 1) {
+		set(numberOfChoices, 7)
+		setv(@choice1, investigator)
+		set(LevelPrerequisite1, 1)
+		setv(@choice2, spy)
+		set(LevelPrerequisite2, 1)
+		setv(@choice3, assassin)
+		set(LevelPrerequisite3, 11)
+		setv(@choice4, umbra)
+		set(LevelPrerequisite4, 31)
+		addv(@allSpChangeClass, investigator)
+		addv(@allSpChangeClass, spy)
+	}else if (has(@vipLineage, @class) == 1) {
+		set(numberOfChoices, 0)
+		addv(@allSpChangeClass, vip)
+	}else if (has(@revolutionaryLineage, @class) == 1) {
+		set(numberOfChoices, 6)
+		setv(@choice1, resistance)
+		set(LevelPrerequisite1, 1)
+		setv(@choice2, revolutionary)
+		set(LevelPrerequisite2, 11)
+		setv(@choice3, evil)
+		set(LevelPrerequisite3, 31)
+		addv(@allSpChangeClass, resistance)
+	}else if (has(@zombieLineage, @class) == 1) {
+		set(numberOfChoices, 0)
+		if (has(@class, zombie) == 1) {
+			addv(@allSpChangeClass, zombie)
+		}else if (has(@class, kaomozi030) == 1) {
+			addv(@allSpChangeClass, kaomozi030)
+		}
+	}else if (has(@felLineage, @class) == 1) {
+		set(numberOfChoices, 0)
+		addv(@allSpChangeClass, clonefel)
+	}
+
+	while (SWITCHwhile == 0) {
+		if (has(@skill, picky) == 1 && has(@skill, seal1) == 0 && has(@skill, seal2) == 0 && has(@skill, seal3) == 0 && has(@skill, seal4) == 0 && has(@skill, seal5) == 0 && has(@skill, seal6) == 0 && has(@skill, seal7) == 0 && has(@skill, seal8) == 0 && has(@skill, seal9) == 0 && has(@skill, seal10) == 0) {
+			talk(felclone, fel_comari.png, じゃあクラスチェンジを…って余計なお世話？$そんなあ…。$（※「矜持」スキル所持ユニットはクラスチェンジ不可）)
+			break()
+		}else if (has(@skill, metamorphosis) == 1 && has(@skill, metamorphosistime10) == 0 && has(@skill, metamorphosistime9) == 0 && has(@skill, metamorphosistime8) == 0 && has(@skill, metamorphosistime7) == 0 && has(@skill, metamorphosistime6) == 0 && has(@skill, metamorphosistime5) == 0 && has(@skill, metamorphosistime4) == 0 && has(@skill, metamorphosistime3) == 0 && has(@skill, metamorphosistime2) == 0 && has(@skill, metamorphosistime1) == 0) {
+			talk(felclone, fel_tu.png, じゃあクラスチェンジを…って、んん？$ヒーローさんはクラスチェンジなんていらないよね？$（※「変身中」所持中はクラスチェンジ不可）)
+			break()
+		}else if (has(@skill, energycard) == 1 && numberOfChoices >= 4) {
+			if (autoClassChangeCheck == 0) {
+				talk(felclone, fel_tu.png, どれにクラスチェンジする？$「&unit&」ＬＶ&level&$クラス・&class&　Ｅカード所持$オートクラスチェンジＯＦＦ)
+			}else if (autoClassChangeCheck == 1) {
+				talk(felclone, fel_tu.png, どれにクラスチェンジする？$「&unit&」ＬＶ&level&$クラス・&class&　Ｅカード所持$オートクラスチェンジＯＮ)
+			}
+			if (numberOfChoices == 14) {
+				choice(actNumber, やめる, 「&choice1&」必要ＬＶ&LevelPrerequisite1&以上, 「&choice2&」必要ＬＶ&LevelPrerequisite2&以上, 「&choice3&」必要ＬＶ&LevelPrerequisite3&以上, 「&choice4&」必要ＬＶ&LevelPrerequisite4&以上, 「&choice5&」必要ＬＶ&LevelPrerequisite5&以上, 「&choice6&」必要ＬＶ&LevelPrerequisite6&以上, 「&choice7&」必要ＬＶ&LevelPrerequisite7&以上, 「&choice8&」必要ＬＶ&LevelPrerequisite8&以上, 「&choice9&」必要ＬＶ&LevelPrerequisite9&以上, 「&choice10&」必要ＬＶ&LevelPrerequisite10&以上, 「&choice11&」必要ＬＶ&LevelPrerequisite11&以上, 特殊クラスチェンジ, オートクラスチェンジ設定)
+			}else if (numberOfChoices == 13) {
+				choice(actNumber, やめる, 「&choice1&」必要ＬＶ&LevelPrerequisite1&以上, 「&choice2&」必要ＬＶ&LevelPrerequisite2&以上, 「&choice3&」必要ＬＶ&LevelPrerequisite3&以上, 「&choice4&」必要ＬＶ&LevelPrerequisite4&以上, 「&choice5&」必要ＬＶ&LevelPrerequisite5&以上, 「&choice6&」必要ＬＶ&LevelPrerequisite6&以上, 「&choice7&」必要ＬＶ&LevelPrerequisite7&以上, 「&choice8&」必要ＬＶ&LevelPrerequisite8&以上, 「&choice9&」必要ＬＶ&LevelPrerequisite9&以上, 「&choice10&」必要ＬＶ&LevelPrerequisite10&以上, 特殊クラスチェンジ, オートクラスチェンジ設定)
+			}else if (numberOfChoices == 12) {
+				choice(actNumber, やめる, 「&choice1&」必要ＬＶ&LevelPrerequisite1&以上, 「&choice2&」必要ＬＶ&LevelPrerequisite2&以上, 「&choice3&」必要ＬＶ&LevelPrerequisite3&以上, 「&choice4&」必要ＬＶ&LevelPrerequisite4&以上, 「&choice5&」必要ＬＶ&LevelPrerequisite5&以上, 「&choice6&」必要ＬＶ&LevelPrerequisite6&以上, 「&choice7&」必要ＬＶ&LevelPrerequisite7&以上, 「&choice8&」必要ＬＶ&LevelPrerequisite8&以上, 「&choice9&」必要ＬＶ&LevelPrerequisite9&以上, 特殊クラスチェンジ, オートクラスチェンジ設定)
+			}else if (numberOfChoices == 11) {
+				choice(actNumber, やめる, 「&choice1&」必要ＬＶ&LevelPrerequisite1&以上, 「&choice2&」必要ＬＶ&LevelPrerequisite2&以上, 「&choice3&」必要ＬＶ&LevelPrerequisite3&以上, 「&choice4&」必要ＬＶ&LevelPrerequisite4&以上, 「&choice5&」必要ＬＶ&LevelPrerequisite5&以上, 「&choice6&」必要ＬＶ&LevelPrerequisite6&以上, 「&choice7&」必要ＬＶ&LevelPrerequisite7&以上, 「&choice8&」必要ＬＶ&LevelPrerequisite8&以上, 特殊クラスチェンジ, オートクラスチェンジ設定)
+			}else if (numberOfChoices == 10) {
+				choice(actNumber, やめる, 「&choice1&」必要ＬＶ&LevelPrerequisite1&以上, 「&choice2&」必要ＬＶ&LevelPrerequisite2&以上, 「&choice3&」必要ＬＶ&LevelPrerequisite3&以上, 「&choice4&」必要ＬＶ&LevelPrerequisite4&以上, 「&choice5&」必要ＬＶ&LevelPrerequisite5&以上, 「&choice6&」必要ＬＶ&LevelPrerequisite6&以上, 「&choice7&」必要ＬＶ&LevelPrerequisite7&以上, 特殊クラスチェンジ, オートクラスチェンジ設定)
+			}else if (numberOfChoices == 9) {
+				choice(actNumber, やめる, 「&choice1&」必要ＬＶ&LevelPrerequisite1&以上, 「&choice2&」必要ＬＶ&LevelPrerequisite2&以上, 「&choice3&」必要ＬＶ&LevelPrerequisite3&以上, 「&choice4&」必要ＬＶ&LevelPrerequisite4&以上, 「&choice5&」必要ＬＶ&LevelPrerequisite5&以上, 「&choice6&」必要ＬＶ&LevelPrerequisite6&以上, 特殊クラスチェンジ, オートクラスチェンジ設定)
+			}else if (numberOfChoices == 8) {
+				choice(actNumber, やめる, 「&choice1&」必要ＬＶ&LevelPrerequisite1&以上, 「&choice2&」必要ＬＶ&LevelPrerequisite2&以上, 「&choice3&」必要ＬＶ&LevelPrerequisite3&以上, 「&choice4&」必要ＬＶ&LevelPrerequisite4&以上, 「&choice5&」必要ＬＶ&LevelPrerequisite5&以上, 特殊クラスチェンジ, オートクラスチェンジ設定)
+			}else if (numberOfChoices == 7) {
+				choice(actNumber, やめる, 「&choice1&」必要ＬＶ&LevelPrerequisite1&以上, 「&choice2&」必要ＬＶ&LevelPrerequisite2&以上, 「&choice3&」必要ＬＶ&LevelPrerequisite3&以上, 「&choice4&」必要ＬＶ&LevelPrerequisite4&以上, 特殊クラスチェンジ, オートクラスチェンジ設定)
+			}else if (numberOfChoices == 6) {
+				choice(actNumber, やめる, 「&choice1&」必要ＬＶ&LevelPrerequisite1&以上, 「&choice2&」必要ＬＶ&LevelPrerequisite2&以上, 「&choice3&」必要ＬＶ&LevelPrerequisite3&以上, 特殊クラスチェンジ, オートクラスチェンジ設定)
+			}
+		}else if (has(@skill, energycard) == 1 && numberOfChoices <= 3) {
+			if (ccHelpTalkSkip == 0) {
+				set(ccHelpTalkSkip, 1)
+				talk(felclone, fel_comari.png, …おや？$あなたにはクラスチェンジ出来るクラスがないみたいだね。)
+				if (has(@skill, ccpass) == 1) {
+					talk(felclone, fel_tu.png, でもそのパス（※スキル「特殊クラスチェンジパス」）があるなら、特殊クラスチェンジで他系統のクラスになれるよ！)
+				}
+			}
+			if (autoClassChangeCheck == 0) {
+				talk(felclone, fel_tu.png, どうする？$「&unit&」ＬＶ&level&$クラス・&class&　Ｅカードなし$オートクラスチェンジＯＦＦ)
+			}else if (autoClassChangeCheck == 1) {
+				talk(felclone, fel_tu.png, どうする？$「&unit&」ＬＶ&level&$クラス・&class&　Ｅカードなし$オートクラスチェンジＯＮ)
+			}
+			choice(actNumber, やめる, 特殊クラスチェンジ, オートクラスチェンジ設定)
+			set(numberOfChoices, 3)
+		}else if (has(@skill, energycard) == 0) {
+			if (ccHelpTalkSkip == 0) {
+				set(ccHelpTalkSkip, 1)
+				talk(felclone, fel_tu.png, エネルギーカードがないとクラスチェンジは出来ないよ。$一応特殊クラスチェンジで入手は出来るけど、代償も大きいから注意してね。)
+			}
+			if (autoClassChangeCheck == 0) {
+				talk(felclone, fel_tu.png, どうする？$「&unit&」ＬＶ&level&$クラス・&class&　Ｅカードなし$オートクラスチェンジＯＦＦ)
+			}else if (autoClassChangeCheck == 1) {
+				talk(felclone, fel_tu.png, どうする？$「&unit&」ＬＶ&level&$クラス・&class&　Ｅカードなし$オートクラスチェンジＯＮ)
+			}
+			choice(actNumber, やめる, 特殊クラスチェンジ, オートクラスチェンジ設定)
+			set(numberOfChoices, 3)
+		}
+		erase()
+
+		set(spClassChange, numberOfChoices)
+		sub(spClassChange, 2)
+		set(autoClassChangeONOFF, numberOfChoices)
+		sub(autoClassChangeONOFF, 1)
+		if (actNumber == 0) {
+			break()
+		}else if (actNumber == 1 && numberOfChoices >= 4) {
+			setv(@targetClass, @choice1)
+			set(LevelPrerequisite, LevelPrerequisite1)
+			set(classChangeActive, 1)
+		}else if (actNumber == 2 && numberOfChoices >= 5) {
+			setv(@targetClass, @choice2)
+			set(LevelPrerequisite, LevelPrerequisite2)
+			set(classChangeActive, 1)
+		}else if (actNumber == 3 && numberOfChoices >= 6) {
+			setv(@targetClass, @choice3)
+			set(LevelPrerequisite, LevelPrerequisite3)
+			set(classChangeActive, 1)
+		}else if (actNumber == 4 && numberOfChoices >= 7) {
+			setv(@targetClass, @choice4)
+			set(LevelPrerequisite, LevelPrerequisite4)
+			set(classChangeActive, 1)
+		}else if (actNumber == 5 && numberOfChoices >= 8) {
+			setv(@targetClass, @choice5)
+			set(LevelPrerequisite, LevelPrerequisite5)
+			set(classChangeActive, 1)
+		}else if (actNumber == 6 && numberOfChoices >= 9) {
+			setv(@targetClass, @choice6)
+			set(LevelPrerequisite, LevelPrerequisite6)
+			set(classChangeActive, 1)
+		}else if (actNumber == 7 && numberOfChoices >= 10) {
+			setv(@targetClass, @choice7)
+			set(LevelPrerequisite, LevelPrerequisite7)
+			set(classChangeActive, 1)
+		}else if (actNumber == 8 && numberOfChoices >= 11) {
+			setv(@targetClass, @choice8)
+			set(LevelPrerequisite, LevelPrerequisite8)
+			set(classChangeActive, 1)
+		}else if (actNumber == 9 && numberOfChoices >= 12) {
+			setv(@targetClass, @choice9)
+			set(LevelPrerequisite, LevelPrerequisite9)
+			set(classChangeActive, 1)
+		}else if (actNumber == 10 && numberOfChoices >= 13) {
+			setv(@targetClass, @choice10)
+			set(LevelPrerequisite, LevelPrerequisite10)
+			set(classChangeActive, 1)
+		}else if (actNumber == 11 && numberOfChoices >= 14) {
+			setv(@targetClass, @choice11)
+			set(LevelPrerequisite, LevelPrerequisite11)
+			set(classChangeActive, 1)
+		}else if  (actNumber == spClassChange) {
+			talk(felclone, fel_tu.png, 特殊なクラスチェンジを行えるよ。$どれもエネルギーカードを消費しないけど、特殊な条件やデメリットがあるから気を付けてね。)
+			choice(actNumber_SP, やめる, エネルギーカード生成（ベーシッククラス化）, 他系統クラスチェンジ（所属勢力系）, 他系統クラスチェンジ（マシン系）, 他系統クラスチェンジ（ワーカー系）, 他系統クラスチェンジ（アサシン系）, フリークラスチェンジ（四属性精霊限定）, クラスリセット)
+			if (actNumber_SP == 1 && has(@skill, energycard) == 0 && has(@allSpChangeClass, vip) == 0) {
+				talk(felclone, fel_tu.png, ここでエネルギカードを入手出来るよ！$ただし…代償として他クラスの「同系統★なし基本クラス」への変化が必要で、レベルも１に戻っちゃうからね。)
+				if (count(@allSpChangeClass) == 1) {
+					index(@allSpChangeClass, 0, @spChangeClass1)
+					choice(actNumber_EcardGet, やめる, 【実行する「&spChangeClass1&ＬＶ１変化」】)
+				}else if (count(@allSpChangeClass) >= 2) {
+					index(@allSpChangeClass, 0, @spChangeClass1)
+					index(@allSpChangeClass, 1, @spChangeClass2)
+					choice(actNumber_EcardGet, やめる, 【実行する「&spChangeClass1&ＬＶ１変化」】, 【実行する「&spChangeClass2&ＬＶ１変化」】)
+				}
+				if (actNumber_EcardGet == 1) {
+					setv(@targetClass, @spChangeClass1)
+					set(classChangeActive, 2)
+				}else if (actNumber_EcardGet == 2) {
+					setv(@targetClass, @spChangeClass2)
+					set(classChangeActive, 2)
+				}
+			}else if (actNumber_SP == 1 && has(@skill, energycard) == 1) {
+				talk(felclone, fel_comari.png, ここでエネルギカードを入手出来るんだけど…あなたは既に持ってるみたいだし、必要ないかな。)
+			}else if (actNumber_SP == 1 && has(@allSpChangeClass, vip) == 1) {
+				talk(felclone, fel_tu.png, ここでエネルギカードを入手出来るんだけど、代償として★のない基本クラスへの変化が必要なの。)
+				talk(felclone, fel_comari.png, …それであなたのクラスはその「★なし基本クラス」がないみたいだからエネルギーカードの入手は出来ないんだ。$ごめんね。)
+			}else if (actNumber_SP == 2) {
+				if (has(@skill, ccpass) == 0) {
+					talk(felclone, fel_tu.png, これを実行するには「特殊クラスチェンジパス」の所持が必要だよ。)
+				}else if (has(@skill, ccpass) == 1) {
+					clear(@allMasterBasicClass)
+					storeBaseClassOfUnit(@master, @masterClass)
+					if (has(@guideLineage, @masterClass) == 1) {
+						setv(@allMasterBasicClass, guidestaff)
+						addv(@allMasterBasicClass, butler)
+						set(spmasterClassChangeActive, 1)
+					}else if (has(@armyLineage, @masterClass) == 1) {
+						setv(@allMasterBasicClass, army)
+						addv(@allMasterBasicClass, provisioner)
+						set(spmasterClassChangeActive, 1)
+					}else if (has(@machineLineage, @masterClass) == 1) {
+						setv(@allMasterBasicClass, nanashi001)
+						addv(@allMasterBasicClass, nanashi000)
+						set(spmasterClassChangeActive, 1)
+					}else if (has(@studentLineage, @masterClass) == 1) {
+						pushSex(@unit, unitSex)
+						if (unitSex == 1) {
+							setv(@allMasterBasicClass, studentm)
+						}else  {
+							setv(@allMasterBasicClass, studentf)
+						}
+						set(spmasterClassChangeActive, 1)
+					}else if (has(@spiritLineage, @masterClass) == 1) {
+						setv(@allMasterBasicClass, slime)
+						set(spmasterClassChangeActive, 1)
+					}else if (has(@gokudouLineage, @masterClass) == 1) {
+						setv(@allMasterBasicClass, toseinin)
+						addv(@allMasterBasicClass, tekiya)
+						set(spmasterClassChangeActive, 1)
+					}else if (has(@publicservantLineage, @masterClass) == 1) {
+						setv(@allMasterBasicClass, police)
+						addv(@allMasterBasicClass, teacher)
+						set(spmasterClassChangeActive, 1)
+					}else if (has(@groupLineage, @masterClass) == 1) {
+						setv(@allMasterBasicClass, member)
+						set(spmasterClassChangeActive, 1)
+					}else if (has(@workerLineage, @masterClass) == 1) {
+						setv(@allMasterBasicClass, salaryman)
+						set(spmasterClassChangeActive, 1)
+					}else if (has(@priestLineage, @masterClass) == 1) {
+						setv(@allMasterBasicClass, priest)
+						set(spmasterClassChangeActive, 1)
+					}else if (has(@outlawLineage, @masterClass) == 1) {
+						setv(@allMasterBasicClass, tinpira)
+						set(spmasterClassChangeActive, 1)
+					}else if (has(@tempworkerLineage, @masterClass) == 1) {
+					}else if (has(@assassinLineage, @masterClass) == 1) {
+						setv(@allMasterBasicClass, investigator)
+						addv(@allMasterBasicClass, spy)
+						set(spmasterClassChangeActive, 1)
+					}else if (has(@vipLineage, @masterClass) == 1) {
+					}else if (has(@revolutionaryLineage, @masterClass) == 1) {
+						setv(@allMasterBasicClass, resistance)
+						set(spmasterClassChangeActive, 1)
+					}else if (has(@zombieLineage, @masterClass) == 1) {
+					}else if (has(@felLineage, @masterClass) == 1) {
+					}
+					talk(felclone, fel_tu.png, ここでは「あなたの所属勢力マスターと同系統のクラス」…その「基本クラス」へとクラスチェンジ出来るよ！)
+					if (isRoamer(@unit) == 1) {
+						talk(felclone, fel_comari.png, ってあれ？あなたは何処の勢力にも所属してないみたいだけど…？)
+					}else if (count(@allMasterBasicClass) == 0) {
+						talk(felclone, fel_comari.png, …ただあなたの勢力マスターのクラス系統だと、クラスチェンジ可能な対象はないみたいだね…。)
+						talk(felclone, fel_tu.png, また別の勢力に所属した時にやってみてね！)
+					}else if (count(@allMasterBasicClass) == 1) {
+						index(@allMasterBasicClass, 0, @masterBasicClass1)
+						talk(felclone, fel_tu.png, つまりあなたの場合「&masterBasicClass1&」になれるってことだね。$しかもエネルギーカードのおまけ付き！)
+						talk(felclone, fel_tu.png, …ただし、レベルは１になっちゃうから計画的にね。$実行する？)
+						choice(actNumber_masterBasic, やめる, 【実行する「&masterBasicClass1&LV1変化」】)
+						if (actNumber_masterBasic == 1) {
+							setv(@targetClass, @masterBasicClass1)
+							set(classChangeActive, 3)
+						}
+					}else if (count(@allMasterBasicClass) >= 2) {
+						index(@allMasterBasicClass, 0, @masterBasicClass1)
+						index(@allMasterBasicClass, 1, @masterBasicClass2)
+						talk(felclone, fel_tu.png, つまりあなたの場合「&masterBasicClass1&」$「&masterBasicClass2&」になれるってことだね。$しかもエネルギーカードのおまけ付き！)
+						talk(felclone, fel_tu.png, …ただし、レベルは１になっちゃうから計画的にね。$実行する？)
+						choice(actNumber_masterBasic, やめる, 【実行する「&masterBasicClass1&LV1変化」, 【実行する「&masterBasicClass2&LV1変化」】)
+						if (actNumber_masterBasic == 1) {
+							setv(@targetClass, @masterBasicClass1)
+							set(classChangeActive, 3)
+						}else if (actNumber_masterBasic == 2) {
+							setv(@targetClass, @masterBasicClass2)
+							set(classChangeActive, 3)
+						}
+					}
+				}
+			}else if (actNumber_SP == 3) {
+				if (SWITCHdifferentClassChange_machine == 0 || has(@skill, ccpass) == 0) {
+					talk(felclone, fel_comari.png, これを実行するには「特殊クラスチェンジパス」の所持と、勢力戦略「他系統クラスチェンジ」の稼働が必要だよ。)
+					if (has(@skill, ccpass) == 1) {
+						talk(felclone, fel_tu.png, 「特殊クラスチェンジパス」は持ってるみたいだし、勢力戦略が不要な「他系統クラスチェンジ（所属勢力系）」を実行してみてね！)
+					}
+				}else if (SWITCHdifferentClassChange_machine == 1 && has(@skill, ccpass) == 1) {
+					talk(felclone, fel_tu.png, ここでは「マシン系クラス・ＮＡＮＡＳＨＩ－００１」へとクラスチェンジ出来るよ！$しかもエネルギーカードのおまけ付き！)
+					talk(felclone, fel_tu.png, …ただし、レベルは１になっちゃうから計画的にね。$実行する？)
+					choice(actNumber_machine, やめる, 【実行する「ＮＡＮＡＳＨＩ－００１ＬＶ１変化」】)
+					if (actNumber_machine == 1) {
+						setv(@targetClass, nanashi001)
+						set(classChangeActive, 3)
+					}
+				}
+			}else if (actNumber_SP == 4) {
+				if (SWITCHdifferentClassChange_worker == 0 || has(@skill, ccpass) == 0) {
+					talk(felclone, fel_comari.png, これを実行するには「特殊クラスチェンジパス」の所持と、勢力戦略「他系統クラスチェンジ」の稼働が必要だよ。)
+					if (has(@skill, ccpass) == 1) {
+						talk(felclone, fel_tu.png, 「特殊クラスチェンジパス」は持ってるみたいだし、勢力戦略が不要な「他系統クラスチェンジ（所属勢力系）」を実行してみてね！)
+					}
+				}else if (SWITCHdifferentClassChange_worker == 1 && has(@skill, ccpass) == 1) {
+					talk(felclone, fel_tu.png, ここでは「ワーカー系クラス・会社員」へとクラスチェンジ出来るよ！$しかもエネルギーカードのおまけ付き！)
+					talk(felclone, fel_tu.png, …ただし、レベルは１になっちゃうから計画的にね。$実行する？)
+					choice(actNumber_worker, やめる, 【実行する「会社員ＬＶ１変化」】)
+					if (actNumber_worker == 1) {
+						setv(@targetClass, salaryman)
+						set(classChangeActive, 3)
+					}
+				}
+			}else if (actNumber_SP == 5) {
+				if (SWITCHdifferentClassChange_assassin == 0 || has(@skill, ccpass) == 0) {
+					talk(felclone, fel_comari.png, これを実行するには「特殊クラスチェンジパス」の所持と、勢力戦略「他系統クラスチェンジ」の稼働が必要だよ。)
+					if (has(@skill, ccpass) == 1) {
+						talk(felclone, fel_tu.png, 「特殊クラスチェンジパス」は持ってるみたいだし、勢力戦略が不要な「他系統クラスチェンジ（所属勢力系）」を実行してみてね！)
+					}
+				}else if (SWITCHdifferentClassChange_assassin == 1 && has(@skill, ccpass) == 1) {
+					talk(felclone, fel_tu.png, ここでは「アサシン系クラス・調査員」へとクラスチェンジ出来るよ！$しかもエネルギーカードのおまけ付き！)
+					talk(felclone, fel_tu.png, …ただし、レベルは１になっちゃうから計画的にね。$実行する？)
+					choice(actNumber_assassin, やめる, 【実行する「調査員ＬＶ１変化」】)
+					if (actNumber_assassin == 1) {
+						setv(@targetClass, investigator)
+						set(classChangeActive, 3)
+					}
+				}
+			}else if (actNumber_SP == 6) {
+				if (has(@class, salamanber) == 1 || has(@class, undine) == 1 || has(@class, sylph) == 1 || has(@class, gnome) == 1) {
+					talk(felclone, fel_tu.png, 「スピリット系統クラス」の「火精霊」「水精霊」「風精霊」「土精霊」のいずれかにクラスチェンジ出来るよ！$レベルも維持されるから安心してね！)
+					choice(actNumber_spirit, やめる, 【実行する「火精霊変化」】, 【実行する「水精霊変化」】, 【実行する「風精霊変化」】, 【実行する「土精霊変化」】)
+					if (actNumber_spirit == 1) {
+						setv(@targetClass, salamanber)
+						set(classChangeActive, 4)
+					}else if (actNumber_spirit == 2) {
+						setv(@targetClass, undine)
+						set(classChangeActive, 4)
+					}else if (actNumber_spirit == 3) {
+						setv(@targetClass, sylph)
+						set(classChangeActive, 4)
+					}else if (actNumber_spirit == 4) {
+						setv(@targetClass, gnome)
+						set(classChangeActive, 4)
+					}
+				}else {
+					talk(felclone, fel_comari.png, これを実行するには「スピリット系統クラス」の「火精霊」「水精霊」「風精霊」「土精霊」のいずれかである必要があるよ。)
+				}
+			}else if (actNumber_SP == 7) {
+				set(purpose, 7)
+				routine(privateData)
+				if (@startClass == guidestaff || @startClass == butler || @startClass == army || @startClass == provisioner || @startClass == nanashi001 || @startClass == nanashi000 || @startClass == studentm || @startClass == studentf || @startClass == slime || @startClass == toseinin || @startClass == tekiya || @startClass == police || @startClass == teacher || @startClass == member || @startClass == salaryman || @startClass == priest || @startClass == tinpira || @startClass == tempworkerm || @startClass == tempworkerw || @startClass == investigator || @startClass == spy || @startClass == resistance || @startClass == zombie || @startClass == kaomozi030 || @startClass == clonefel) {
+					talk(felclone, fel_tu.png, ここでは最初のクラス（※ゲーム開始時のクラス）へあなたのクラスを戻せるけど…レベルも初期時に戻っちゃうんだ。$あ、Ｅカードは取得するからね。)
+					talk(felclone, fel_tu.png, どうする？リセットする？)
+					choice(actNumber_reset, やめる, 【実行する「&startClass&LV&startLv&変化＋Eｶｰﾄﾞ取得」】)
+					if (actNumber_reset == 1) {
+						setv(@targetClass, @startClass)
+						set(classChangeActive, 5)
+						set(EcardGetAct, 1)
+					}
+				}else {
+					talk(felclone, fel_tu.png, ここでは最初のクラス（※ゲーム開始時のクラス）へあなたのクラスを戻せるけど…レベルも初期時に戻っちゃうんだ。)
+					talk(felclone, fel_tu.png, どうする？リセットする？)
+					choice(actNumber_reset, やめる, 【実行する「&startClass&LV&startLv&変化」】)
+					if (actNumber_reset == 1) {
+						setv(@targetClass, @startClass)
+						set(classChangeActive, 5)
+						set(EcardGetAct, 0)
+					}
+				}
+			}
+		}else if  (actNumber == autoClassChangeONOFF) {
+			routine(ObjectiveautoCCmod_main2) return()//mod変更行
+			if (autoClassChangeCheck == 0) {
+				talk(felclone, fel_tu.png, 今はオートクラスチェンジをＯＦＦにしてるよ。$ＯＮにするとあなた（※&unit&）は独自の判断で勝手にクラスチェンジするようになるからね。)
+				choice(actNumber_autoClassChange, やめる, 【ＯＮにする】)
+				if (actNumber_autoClassChange == 1) {
+					addv(@allAutoClassChangeUnit, @unit)
+					setud(SAVEallAutoClassChangeUnit, @allAutoClassChangeUnit)
+					set(autoClassChangeCheck, 1)
+					if (autoClassChangeSortONOFF == 1) {
+						msg(※オートクラスチェンジ設定を変更しました。$なおメニュー欄は更新されないため、このユニットのメニューは引き続き表示されます。最新情報に更新する場合はもう一度ソート機能を実行して下さい。)
+					}
+				}
+			}else if (autoClassChangeCheck == 1) {
+				talk(felclone, fel_tu.png, 今はオートクラスチェンジをＯＮにしてるよ。$ＯＦＦにするとこのメニューからのクラスチェンジ以外でクラスチェンジはしなくなるからね（※ＣＰＵ所属時を除く）)
+				choice(actNumber_autoClassChange, やめる, 【ＯＦＦにする】)
+				if (actNumber_autoClassChange == 1) {
+					subv(@allAutoClassChangeUnit, @unit)
+					setud(SAVEallAutoClassChangeUnit, @allAutoClassChangeUnit)
+					set(autoClassChangeCheck, 0)
+					if (autoClassChangeSortONOFF == 2) {
+						msg(※オートクラスチェンジ設定を変更しました。$なおメニュー欄は更新されないため、このユニットのメニューは引き続き表示されます。最新情報に更新する場合はもう一度ソート機能を実行して下さい。)
+					}
+				}
+			}
+		}else {
+msg(■【デバックメッセージ】■$ミスが発生…確認必要。)
+			break()
+		}
+
+		if (@class == @targetClass && classChangeActive == 1) {
+			talk(felclone, fel_comari.png, …ん？$そのクラスは現在のあなたのクラスと同じだよ？)
+		}else if (level < LevelPrerequisite && classChangeActive == 1) {
+			talk(felclone, fel_comari.png, あれ？$必要レベルが足りないみたい…。)
+		}else if (level >= LevelPrerequisite && classChangeActive == 1) {
+			talk(felclone, fel_tu.png, 「&targetClass&」のクラスだね？$コストとしてあなたの所持してるエネルギーカードを貰うけど、再入手が大変だから慎重にね。)
+			choice(check, やめる, 【実行する】)
+			if (check == 1) {
+				changeClass(@unit, @targetClass)
+				setLevel(@unit, 1)
+				sub(level, 1)
+				addLevel(@unit, level)
+				if (level == 0) {
+					addLevel(@unit, 1)
+					setLevel(@unit, 1)
+				}
+				eraseSkill(@unit, energycard)
+
+				storeMemberOfUnit(@unit, @allMember)
+				storeAllTalent(@allTalent)
+				subv(@allMember, @allTalent)
+				while (count(@allMember) >= 1) {
+					index(@allMember, 0, @member)
+					subv(@allMember, @member)
+					changeClass(@member, @targetClass)
+					pushLevel(@member, level)
+//					if (LevelPrerequisite > level) {
+//						set(level, LevelPrerequisite)
+//					}
+					setLevel(@member, 1)
+					sub(level, 1)
+					addLevel(@member, level)
+					if (level == 0) {
+						addLevel(@member, 1)
+						setLevel(@member, 1)
+					}
+				}
+				playSE(se_maoudamashii_onepoint16)
+				talk(felclone, fel_emi.png, クラスチェンジ完了したよ！)
+				set(classChangeActive, 0)
+				break()
+			}
+		}else if (@class == @targetClass && classChangeActive == 2) {
+			talk(felclone, fel_comari.png, あ、そのクラスは現在のあなたのクラスと同じだから変更は出来ないし、カードも得られないよ！)
+		}else if (classChangeActive == 2) {
+			addSkill(@unit, energycard)
+			changeClass(@unit, @targetClass)
+			setLevel(@unit, 1)
+			addLevel(@unit, 1)
+			setLevel(@unit, 1)
+
+			storeMemberOfUnit(@unit, @allMember)
+			storeAllTalent(@allTalent)
+			subv(@allMember, @allTalent)
+			changeClass(@allMember, @targetClass)
+			setLevel(@allMember, 1)
+			addLevel(@allMember, 1)
+			setLevel(@allMember, 1)
+			playSE(se_maoudamashii_onepoint16)
+			talk(felclone, fel_emi.png, エネルギーカードを入手したよ！)
+			set(classChangeActive, 0)
+			break()
+		}else if (@class == @targetClass && classChangeActive == 3) {
+			talk(felclone, fel_comari.png, ん？今あなたはそのクラスに既になってるよ？)
+		}else if (classChangeActive == 3) {
+			addSkill(@unit, energycard)
+			changeClass(@unit, @targetClass)
+			setLevel(@unit, 1)
+			addLevel(@unit, 1)
+			setLevel(@unit, 1)
+			storeud(SAVEspChangeUnit, @spChangeUnit)
+			addv(@spChangeUnit, @unit)
+			setud(SAVEspChangeUnit, @spChangeUnit)
+			routine(friendData)
+
+			storeMemberOfUnit(@unit, @allMember)
+			storeAllTalent(@allTalent)
+			subv(@allMember, @allTalent)
+			changeClass(@allMember, @targetClass)
+			setLevel(@allMember, 1)
+			addLevel(@allMember, 1)
+			setLevel(@allMember, 1)
+			playSE(se_maoudamashii_onepoint16)
+			talk(felclone, fel_emi.png, クラスチェンジ完了＆エネルギーカード取得したよ！)
+			set(classChangeActive, 0)
+			break()
+		}else if (@class == @targetClass && classChangeActive == 4) {
+			talk(felclone, fel_comari.png, 今なっているクラス以外の精霊を選んでね。)
+		}else if (classChangeActive == 4) {
+			changeClass(@unit, @targetClass)
+			addLevel(@unit, 1)
+			setLevel(@unit, level)
+
+			storeMemberOfUnit(@unit, @allMember)
+			storeAllTalent(@allTalent)
+			subv(@allMember, @allTalent)
+			while (count(@allMember) >= 1) {
+				index(@allMember, 0, @member)
+				subv(@allMember, @member)
+				changeClass(@member, @targetClass)
+				pushLevel(@member, level)
+				addLevel(@member, 1)
+				setLevel(@member, level)
+			}
+			playSE(se_maoudamashii_onepoint16)
+			talk(felclone, fel_emi.png, クラスチェンジ完了したよ！)
+			set(classChangeActive, 0)
+			break()
+		}else if (@class == @targetClass && classChangeActive == 5) {
+			talk(felclone, fel_comari.png, あれ？現在のクラスはリセット後の初期クラスと同じみたいだよ？)
+		}else if (classChangeActive == 5) {
+			changeClass(@unit, @targetClass)
+			setLevel(@unit, startLv)
+			addLevel(@unit, 1)
+			setLevel(@unit, startLv)
+			if (EcardGetAct == 1) {
+				addSkill(@unit, energycard)
+			}
+			set(EcardGetAct, 0)
+			storeud(SAVEspChangeUnit, @spChangeUnit)
+			subv(@spChangeUnit, @unit)
+			setud(SAVEspChangeUnit, @spChangeUnit)
+			routine(friendData)
+
+			storeMemberOfUnit(@unit, @allMember)
+			storeAllTalent(@allTalent)
+			subv(@allMember, @allTalent)
+			while (count(@allMember) >= 1) {
+				index(@allMember, 0, @member)
+				subv(@allMember, @member)
+				changeClass(@member, @targetClass)
+				pushLevel(@member, level)
+				if (startLv < level) {
+					setLevel(@member, startLv)
+					addLevel(@member, 1)
+					setLevel(@member, startLv)
+				}else {
+					addLevel(@member, 1)
+					setLevel(@member, level)
+				}
+			}
+			playSE(se_maoudamashii_onepoint16)
+			talk(felclone, fel_emi.png, クラスリセット完了…だよ！)
+			set(classChangeActive, 0)
+			break()
+		}
+		set(classChangeActive, 0)
+		erase()
+	}
+	erase()
+}
+//■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■
+
+//■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■
+//▼▼(勢力戦略「人材探索」による探索クラスの変更実行)▼▼★
+event searchChangeGimmickAction
+{
+	talk(felclone, fel_tu.png, 勢力戦略「人材探索」で探索する人材の種類をある程度絞ることが出来るよ。$…ただし成功率が半分になっちゃうけどね。)
+	while (SWITCHwhile == 0) {
+		if (searchType == 0) {
+			talk(felclone, fel_tu.png, 変更する？$・現探索人材「ランダム【成功率通常】」)
+		}else if (searchType == 1) {
+			talk(felclone, fel_tu.png, 変更する？$・現探索人材「案内人（ｶﾞｲﾄﾞ）系統【成功率半減】」)
+		}else if (searchType == 2) {
+			talk(felclone, fel_tu.png, 変更する？$・現探索人材「軍人（ｱｰﾐｰ）系統【成功率半減】」)
+		}else if (searchType == 3) {
+			talk(felclone, fel_tu.png, 変更する？$・現探索人材「無人機（ﾏｼﾝ）系統【成功率半減】」)
+		}else if (searchType == 4) {
+			talk(felclone, fel_tu.png, 変更する？$・現探索人材「学生（ｽﾁｭｰﾃﾞﾝﾄ）系統【成功率半減】」)
+		}else if (searchType == 5) {
+			talk(felclone, fel_tu.png, 変更する？$・現探索人材「精霊（ｽﾋﾟﾘｯﾄ）系統【成功率半減】」)
+		}else if (searchType == 6) {
+			talk(felclone, fel_tu.png, 変更する？$・現探索人材「極道（ｺﾞｸﾄﾞｳ）系統【成功率半減】」)
+		}else if (searchType == 7) {
+			talk(felclone, fel_tu.png, 変更する？$・現探索人材「公務員（Pｻｰｳﾞｧﾝﾄ）系統【成功率半減】」)
+		}else if (searchType == 8) {
+			talk(felclone, fel_tu.png, 変更する？$・現探索人材「構成員（ｸﾞﾙｰﾌﾟ）系統【成功率半減】」)
+		}else if (searchType == 9) {
+			talk(felclone, fel_tu.png, 変更する？$・現探索人材「会社員（ﾜｰｶｰ）系統【成功率半減】」)
+		}else if (searchType == 10) {
+			talk(felclone, fel_tu.png, 変更する？$・現探索人材「神官（ﾌﾟﾘｰｽﾄ）系統【成功率半減】」)
+		}else if (searchType == 11) {
+			talk(felclone, fel_tu.png, 変更する？$・現探索人材「不良（ｱｳﾄﾛｰ）系統【成功率半減】」)
+		}else if (searchType == 21) {
+			talk(felclone, fel_tu.png, 変更する？$・現探索人材「非正規（Tﾜｰｶｰ）系統【成功率半減】」)
+		}else if (searchType == 22) {
+			talk(felclone, fel_tu.png, 変更する？$・現探索人材「裏組織（ｱｻｼﾝ）系統【成功率半減】」)
+		}else if (searchType == 23) {
+			talk(felclone, fel_tu.png, 変更する？$・現探索人材「要人（VIP）系統【成功率半減】」)
+		}
+		choice(choiceNumber, やめる, ランダム【成功率通常】, 案内人（ｶﾞｲﾄﾞ）系統【成功率半減】, 軍人（ｱｰﾐｰ）系統【成功率半減】, 無人機（ﾏｼﾝ）系統【成功率半減】, 学生（ｽﾁｭｰﾃﾞﾝﾄ）系統【成功率半減】, 精霊（ｽﾋﾟﾘｯﾄ）系統【成功率半減】, 極道（ｺﾞｸﾄﾞｳ）系統【成功率半減】, 公務員（Pｻｰｳﾞｧﾝﾄ）系統【成功率半減】, 構成員（ｸﾞﾙｰﾌﾟ）系統【成功率半減】, 会社員（ﾜｰｶｰ）系統【成功率半減】, 神官（ﾌﾟﾘｰｽﾄ）系統【成功率半減】, 不良（ｱｳﾄﾛｰ）系統【成功率半減】, 非正規（Tﾜｰｶｰ）系統【成功率半減】, 裏組織（ｱｻｼﾝ）系統【成功率半減】, 要人（VIP）系統【成功率半減】)
+		if (choiceNumber == 0) {
+			break()
+		}else if (choiceNumber == 1) {
+			set(searchTarget, 0)
+		}else if (choiceNumber == 2) {
+			set(searchTarget, 1)
+		}else if (choiceNumber == 3) {
+			set(searchTarget, 2)
+		}else if (choiceNumber == 4) {
+			set(searchTarget, 3)
+		}else if (choiceNumber == 5) {
+			set(searchTarget, 4)
+		}else if (choiceNumber == 6) {
+			set(searchTarget, 5)
+		}else if (choiceNumber == 7) {
+			set(searchTarget, 6)
+		}else if (choiceNumber == 8) {
+			set(searchTarget, 7)
+		}else if (choiceNumber == 9) {
+			set(searchTarget, 8)
+		}else if (choiceNumber == 10) {
+			set(searchTarget, 9)
+		}else if (choiceNumber == 11) {
+			set(searchTarget, 10)
+		}else if (choiceNumber == 12) {
+			set(searchTarget, 11)
+		}else if (choiceNumber == 13) {
+			set(searchTarget, 21)
+		}else if (choiceNumber == 14) {
+			set(searchTarget, 22)
+		}else if (choiceNumber == 15) {
+			set(searchTarget, 23)
+		}
+		if (searchTarget == searchType) {
+			talk(felclone, fel_tu.png, おや…？現在その設定になってるよ。)
+		}else  {
+			set(searchType, searchTarget)
+			talk(felclone, fel_emi.png, 探索傾向を変更したよ！)
+		}
+		erase()
+	}
+	erase()
+}
+//■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■
+
+//■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■
+//▼▼(東署専用ギミック「特殊同盟破棄」)▼▼★
+event eastpoliceADGimmickAction
+{
+	msg(プレイヤー勢力が東署の場合に起動出来る、特定勢力との特殊同盟破棄機能です。$（※なお特定勢力相手なら通常の同盟も破棄可能です）)
+	choice(choiceNumber, キャンセル, ガイドポストとの同盟破棄, 国共室軍との同盟破棄, 木崎組との同盟破棄)
+	if (choiceNumber == 1) {
+		if (isLeague(eastpolice, guide) == 1) {
+			resetLeague(eastpolice, guide)
+			scroll(congou)
+			spotmark(eastpolice)
+			spotmark(guide)
+			msg(ガイドポストと同盟を破棄しました。)
+			spotmark()
+		}else {
+			msg(この勢力と現在同盟は結ばれていないようです。)
+		}
+	}else if (choiceNumber == 2) {
+		if (isLeague(eastpolice, icrf) == 1) {
+			resetLeague(eastpolice, icrf)
+			scroll(congou)
+			spotmark(eastpolice)
+			spotmark(icrf)
+			msg(国共室軍と同盟を破棄しました。)
+			spotmark()
+		}else {
+			msg(この勢力と現在同盟は結ばれていないようです。)
+		}
+	}else if (choiceNumber == 3) {
+		if (isLeague(eastpolice, kizakigumi) == 1) {
+			resetLeague(eastpolice, kizakigumi)
+			scroll(congou)
+			spotmark(eastpolice)
+			spotmark(kizakigumi)
+			msg(木崎組と同盟を破棄しました。)
+			spotmark()
+		}else {
+			msg(この勢力と現在同盟は結ばれていないようです。)
+		}
+	}
+	erase()
+}
+//■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■
+
+//■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■
+//▼▼(設定「会話イベントスキップ変更」)▼▼★
+event settingAction1
+{
+	if (SWITCHskip == 0){
+		msg(会話イベント発生時にスキップを行うよう設定出来ます。$また発生都度確認を行うように設定することも可能です。$$・現在の設定「スキップなし」)
+	}else if (SWITCHskip == 1) {
+		msg(会話イベント発生時にスキップを行うよう設定出来ます。$また発生都度確認を行うように設定することも可能です。$$・現在の設定「スキップあり」)
+	}else if (SWITCHskip == 10 || SWITCHskip == 11) {
+		msg(会話イベント発生時にスキップを行うよう設定出来ます。$また発生都度確認を行うように設定することも可能です。$$・現在の設定「都度確認」)
+	}
+	choice(choiceNumber, スキップなし, スキップあり, 都度確認)
+	if (choiceNumber == 0){
+		set(SWITCHskip, 0)
+	}else if (choiceNumber == 1) {
+		set(SWITCHskip, 1)
+	}else if (choiceNumber == 2) {
+		set(SWITCHskip, 10)
+	}
+}
+//■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■

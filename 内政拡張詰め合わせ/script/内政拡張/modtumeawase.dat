@@ -1,0 +1,113 @@
+//思ったより初期処理とかstoryが多くなったのでまとめたやつ
+//これに伴って各modのstoryが消滅したのでそれらのファイルは削除して大丈夫です(上書き用に残してあるだけ)
+story modtumeawase_story
+{
+	if (yet(modtumeawase_syokisyori_ver1.03) && SWITCHop!=0) {event(modtumeawase_syokisyori_ver1.03)}
+	if (isnewturn()) {
+		//キャッシュの最適化処理　数が少ないからあまり意味がないかもしれない
+		setv(@sikibetusiidxunit,ObjectiveautoCCmod_cache_class)
+		addv(@sikibetusiidxunit,ObjectiveautoCCmod_cache_unit)
+		routine(sikibetusi_hozon_index_main)
+		//ターンを跨ぐとフィルターリセット
+		routine(filtermod_reset)
+	}
+	if (yet(addclasslistmodspotantiguide) && ismaster(hikari)) {event(addclasslistmodspotantiguide)}
+
+	//サブイベのやつみたいな常に監視して置き換えしなきゃいけない内政ユニットの置き換え処理
+	//以下置き換えのルール
+	//1.置き換え先のユニット識別子は「元ユニット名+_kaihen」の形をとること
+	//2.上から順にpolitics1,politics2,camp1の処理
+	//modchangeunit_memory_(スポット名)のスキルセットに対象ユニットを入れておくこと
+	//3.detailは継承されないので説明文があるやつはちゃんと書き写すこと
+
+	setv(@modchangetargetspot,politics1)
+	routine(modtumeawase_changeunit)
+
+	setv(@modchangetargetspot,politics2)
+	routine(modtumeawase_changeunit)
+
+	setv(@modchangetargetspot,camp1)
+	routine(modtumeawase_changeunit)
+
+	clear(@modchangetargetspot) clear(@modtumeawase) clear(@modtumeawase2)
+	clear(@modtumeawase3) clear(@modtumeawase4)
+	
+	routine(LoyaldownONOFF_addunit)
+}
+
+event modtumeawase_syokisyori_ver1.03
+{
+	if (yet(addclasslistmodspot_main_ver1.03)) {event(addclasslistmodspot_main_ver1.03)}
+	if (ismaster(@nekoplay)) {
+		if (yet(filtermod_unitchange_main)) {event(filtermod_unitchange_main)}
+		if (yet(objectiveautoCCmod_addunit)) {event(objectiveautoCCmod_addunit)}
+		if (yet(modtumeawase_addallGimmickUnit)) {event(modtumeawase_addallGimmickUnit)}
+	}
+}
+
+event modtumeawase_addallGimmickUnit
+{
+	//各種処理で削除しない内政ユニットへの追加と削除の処理(削除は別にしなくても動く)
+	//politics1にユニットを追加する場合に必須
+	storeud(SAVEallGimmickUnit,@modtumeawase)
+
+	subv(@modtumeawase,004drop99empty1) subv(@modtumeawase,004drop99empty2) subv(@modtumeawase,004drop99empty3)
+	subv(@modtumeawase,011autoChange)
+
+	addv(@modtumeawase,003wwwdroplevel) addv(@modtumeawase,003wwwdropEcard) addv(@modtumeawase,003wwwdropreset)
+	addv(@modtumeawase,011autoChange_kaihen)
+
+	setud(SAVEallGimmickUnit,@modtumeawase)
+
+	clear(@modtumeawase)
+}
+
+event modtumeawase_changeunit
+{
+	//addstrで対象内政領地の対象ユニットの入ったスキルセットを取得
+	setv(@modtumeawase,modchangeunit_memory_)
+	addstr(@modtumeawase,@modchangetargetspot)
+	storeskillset(@modtumeawase,@modtumeawase)
+
+	clear(@modtumeawase3) clear(@modtumeawase4)
+
+	while (@modtumeawase!=0) {
+		index(@modtumeawase,0,@modtumeawase2) subv(@modtumeawase,@modtumeawase2)
+		if (inspot(@modchangetargetspot,@modtumeawase2)!=0) {
+			//対象ユニットがいればeraseunitし、その後_kaihenをaddstrしてaddunit
+			//削除したユニットを@modtumeawase3,追加ユニットを@modtumeawase4に格納
+			eraseunit2(@modchangetargetspot,@modtumeawase2)
+			eraseunit(@modtumeawase2)
+			addv(@modtumeawase3,@modtumeawase2)
+			addstr(@modtumeawase2,_kaihen)
+			addunit(@modtumeawase2,@modchangetargetspot)
+			addv(@modtumeawase4,@modtumeawase2)
+		}
+	}
+
+	if (@modtumeawase3!=0 && @modchangetargetspot==politics1) {
+		//politics1への追加である場合はSAVEallGimmickUnitの書き換えを行う
+		storeud(SAVEallGimmickUnit,@modtumeawase)
+
+		subv(@modtumeawase,@modtumeawase3)
+		addv(@modtumeawase,@modtumeawase4)
+
+		setud(SAVEallGimmickUnit, @modtumeawase)
+		clear(@modtumeawase3) clear(@modtumeawase4)
+	}
+}
+
+skillset modchangeunit_memory_politics1
+{
+	member=@
+}
+
+skillset modchangeunit_memory_politics2
+{
+	member=z11SUBEVON1,z12SUBEVON2,z13SUBEVON3,z14SUBEVON4,z15SUBEVON5,z16SUBEVON6,z17SUBEVON7
+}
+
+skillset modchangeunit_memory_camp1
+{
+	member=@
+}

@@ -1,0 +1,297 @@
+//手を抜いてそこら中本体の処理を流用しまくってたらeventスクリプトが縦長になりすぎて読みづらくなったので、
+//複数箇所で使う部分があった処理をルーティン化
+//あと元からあったルーティンもこっちへ
+
+event ObjectiveautoCCmod_hozon
+{
+	//@unitのクラスチェンジ先保存用のユニットを呼び出すルーティン
+	setv(@sikibetusihozontarget,@unit)
+	setv(@sikibetusihozonspot,autoCCmodspot)
+	setv(@sikibetusihozoncache,ObjectiveautoCCmod_cache_unit)
+	set(sikibetusi_hozon_indexoption,1)
+	routine(sikibetusi_hozon_main)
+}
+
+event ObjectiveautoCCmod_hozon2
+{
+	//@classの優先クラスチェンジ先保存用のユニットを呼び出すルーティン
+	setv(@sikibetusihozontarget,@class)
+	setv(@sikibetusihozonspot,autoCCmodspot2)
+	setv(@sikibetusihozoncache,ObjectiveautoCCmod_cache_class)
+	set(sikibetusi_hozon_indexoption,1)
+	routine(sikibetusi_hozon_main)
+}
+
+event ObjectiveautoCCmod_classchoicesetroutine
+{
+	//@classに入っているクラスに合わせたクラスチェンジ選択肢のセットルーティン
+	routine(allLineageLoad)
+	if (has(@guideLineage, @class) == 1) {
+		set(numberOfChoices, 9)
+		setv(@choice1, sage)
+		set(LevelPrerequisite1, 11)
+		setv(@choice2, patrician)
+		set(LevelPrerequisite2, 11)
+		setv(@choice3, artist)
+		set(LevelPrerequisite3, 11)
+		setv(@choice4, chevalier)
+		set(LevelPrerequisite4, 21)
+		setv(@choice5, seer)
+		set(LevelPrerequisite5, 21)
+		setv(@choice6, divine)
+		set(LevelPrerequisite6, 31)
+		addv(@allSpChangeClass, guidestaff)
+		addv(@allSpChangeClass, butler)
+	}else if (has(@armyLineage, @class) == 1) {
+		set(numberOfChoices, 9)
+		setv(@choice1, hinfantry)
+		set(LevelPrerequisite1, 11)
+		setv(@choice2, sniper)
+		set(LevelPrerequisite2, 11)
+		setv(@choice3, magicsoldier)
+		set(LevelPrerequisite3, 11)
+		setv(@choice4, tank)
+		set(LevelPrerequisite4, 21)
+		setv(@choice5, helicopter)
+		set(LevelPrerequisite5, 21)
+		setv(@choice6, battleship)
+		set(LevelPrerequisite6, 21)
+		addv(@allSpChangeClass, army)
+		addv(@allSpChangeClass, provisioner)
+	}else if (has(@machineLineage, @class) == 1) {
+		set(numberOfChoices, 11)
+		setv(@choice1, nanashi002)
+		set(LevelPrerequisite1, 11)
+		setv(@choice2, nanashi003)
+		set(LevelPrerequisite2, 11)
+		setv(@choice3, nanashi004)
+		set(LevelPrerequisite3, 11)
+		setv(@choice4, nanashi005)
+		set(LevelPrerequisite4, 11)
+		setv(@choice5, nanashi006)
+		set(LevelPrerequisite5, 11)
+		setv(@choice6, nanashi007)
+		set(LevelPrerequisite6, 21)
+		setv(@choice7, nanashi008)
+		set(LevelPrerequisite7, 21)
+		setv(@choice8, nanashi009)
+		set(LevelPrerequisite8, 31)
+		addv(@allSpChangeClass, nanashi001)
+		addv(@allSpChangeClass, nanashi000)
+	}else if (has(@studentLineage, @class) == 1) {
+		set(numberOfChoices, 10)
+		setv(@choice1, scouncil)
+		set(LevelPrerequisite1, 11)
+		setv(@choice2, shotputter)
+		set(LevelPrerequisite2, 11)
+		setv(@choice3, occultclub)
+		set(LevelPrerequisite3, 11)
+		setv(@choice4, biologyclub)
+		set(LevelPrerequisite4, 11)
+		setv(@choice5, kendoclub)
+		set(LevelPrerequisite5, 11)
+		setv(@choice6, cheerteam)
+		set(LevelPrerequisite6, 11)
+		setv(@choice7, swimmingclub)
+		set(LevelPrerequisite7, 11)
+	}else if (has(@spiritLineage, @class) == 1) {
+		set(numberOfChoices, 9)
+		setv(@choice1, reslime)
+		set(LevelPrerequisite1, 11)
+		setv(@choice2, salamanber)
+		set(LevelPrerequisite2, 21)
+		setv(@choice3, undine)
+		set(LevelPrerequisite3, 21)
+		setv(@choice4, sylph)
+		set(LevelPrerequisite4, 21)
+		setv(@choice5, gnome)
+		set(LevelPrerequisite5, 21)
+		setv(@choice6, dragon)
+		set(LevelPrerequisite6, 31)
+		addv(@allSpChangeClass, slime)
+	}else if (has(@gokudouLineage, @class) == 1) {
+		set(numberOfChoices, 8)
+		setv(@choice1, kibamusya)
+		set(LevelPrerequisite1, 11)
+		setv(@choice2, oni)
+		set(LevelPrerequisite2, 21)
+		setv(@choice3, ninga)
+		set(LevelPrerequisite3, 21)
+		setv(@choice4, bakuto)
+		set(LevelPrerequisite4, 21)
+		setv(@choice5, ayakasi)
+		set(LevelPrerequisite5, 31)
+		addv(@allSpChangeClass, toseinin)
+		addv(@allSpChangeClass, tekiya)
+	}else if (has(@publicservantLineage, @class) == 1) {
+		set(numberOfChoices, 11)
+		setv(@choice1, spteam)
+		set(LevelPrerequisite1, 11)
+		setv(@choice2, hakase)
+		set(LevelPrerequisite2, 11)
+		setv(@choice3, doctor)
+		set(LevelPrerequisite3, 11)
+		setv(@choice4, fireman)
+		set(LevelPrerequisite4, 11)
+		setv(@choice5, guardarmor)
+		set(LevelPrerequisite5, 21)
+		setv(@choice6, patrolcar)
+		set(LevelPrerequisite6, 21)
+		setv(@choice7, hero)
+		set(LevelPrerequisite7, 31)
+		setv(@choice8, armoredcar)
+		set(LevelPrerequisite8, 31)
+		addv(@allSpChangeClass, police)
+		addv(@allSpChangeClass, teacher)
+	}else if (has(@groupLineage, @class) == 1) {
+		set(numberOfChoices, 8)
+		setv(@choice1, activist)
+		set(LevelPrerequisite1, 11)
+		setv(@choice2, bouncer)
+		set(LevelPrerequisite2, 11)
+		setv(@choice3, researcher)
+		set(LevelPrerequisite3, 11)
+		setv(@choice4, intellectual)
+		set(LevelPrerequisite4, 21)
+		setv(@choice5, charisma)
+		set(LevelPrerequisite5, 31)
+		addv(@allSpChangeClass, member)
+	}else if (has(@workerLineage, @class) == 1) {
+		set(numberOfChoices, 13)
+		setv(@choice1, maid)
+		set(LevelPrerequisite1, 11)
+		setv(@choice2, cook)
+		set(LevelPrerequisite2, 11)
+		setv(@choice3, securityguard)
+		set(LevelPrerequisite3, 11)
+		setv(@choice4, carpenter)
+		set(LevelPrerequisite4, 11)
+		setv(@choice5, mizusyoubaiw)
+		set(LevelPrerequisite5, 11)
+		setv(@choice6, middlemanager)
+		set(LevelPrerequisite6, 21)
+		setv(@choice7, idol)
+		set(LevelPrerequisite7, 21)
+		setv(@choice8, athlete)
+		set(LevelPrerequisite8, 21)
+		setv(@choice9, elite)
+		set(LevelPrerequisite9, 31)
+		setv(@choice10, champion)
+		set(LevelPrerequisite10, 31)
+		addv(@allSpChangeClass, salaryman)
+	}else if (has(@priestLineage, @class) == 1) {
+		set(numberOfChoices, 7)
+		setv(@choice1, monk)
+		set(LevelPrerequisite1, 11)
+		setv(@choice2, shaman)
+		set(LevelPrerequisite2, 11)
+		setv(@choice3, highpriest)
+		set(LevelPrerequisite3, 21)
+		setv(@choice4, yorishiro)
+		set(LevelPrerequisite4, 31)
+		addv(@allSpChangeClass, priest)
+	}else if (has(@outlawLineage, @class) == 1) {
+		set(numberOfChoices, 8)
+		setv(@choice1, kenkaya)
+		set(LevelPrerequisite1, 11)
+		setv(@choice2, thief)
+		set(LevelPrerequisite2, 11)
+		setv(@choice3, bike)
+		set(LevelPrerequisite3, 21)
+		setv(@choice4, dealer)
+		set(LevelPrerequisite4, 21)
+		setv(@choice5, bantyou)
+		set(LevelPrerequisite5, 31)
+		addv(@allSpChangeClass, tinpira)
+	}else if (has(@assassinLineage, @class) == 1) {
+		set(numberOfChoices, 5)
+		setv(@choice1, assassin)
+		set(LevelPrerequisite1, 11)
+		setv(@choice2, umbra)
+		set(LevelPrerequisite2, 31)
+		addv(@allSpChangeClass, investigator)
+		addv(@allSpChangeClass, spy)
+	}else if (has(@revolutionaryLineage, @class) == 1) {
+		set(numberOfChoices, 5)
+		setv(@choice1, revolutionary)
+		set(LevelPrerequisite1, 11)
+		setv(@choice2, evil)
+		set(LevelPrerequisite2, 31)
+		addv(@allSpChangeClass, resistance)
+	}
+	else {set(numberOfChoices, 0)}
+}
+event ObjectiveautoCCmod_classchoicesetroutine2
+{
+	//ObjectiveautoCCmod_classchoicesetroutineで用意したchoiceの戻り値から
+	//@targetClass、LevelPrerequisiteへの代入値を割り出すルーティン
+	//一部使わない変数は除去してある
+	if (actNumber == 1) {
+		setv(@targetClass, @choice1)
+		set(LevelPrerequisite, LevelPrerequisite1)
+	}else if (actNumber == 2) {
+		setv(@targetClass, @choice2)
+		set(LevelPrerequisite, LevelPrerequisite2)
+	}else if (actNumber == 3) {
+		setv(@targetClass, @choice3)
+		set(LevelPrerequisite, LevelPrerequisite3)
+	}else if (actNumber == 4) {
+		setv(@targetClass, @choice4)
+		set(LevelPrerequisite, LevelPrerequisite4)
+	}else if (actNumber == 5) {
+		setv(@targetClass, @choice5)
+		set(LevelPrerequisite, LevelPrerequisite5)
+	}else if (actNumber == 6) {
+		setv(@targetClass, @choice6)
+		set(LevelPrerequisite, LevelPrerequisite6)
+	}else if (actNumber == 7) {
+		setv(@targetClass, @choice7)
+		set(LevelPrerequisite, LevelPrerequisite7)
+	}else if (actNumber == 8) {
+		setv(@targetClass, @choice8)
+		set(LevelPrerequisite, LevelPrerequisite8)
+	}else if (actNumber == 9) {
+		setv(@targetClass, @choice9)
+		set(LevelPrerequisite, LevelPrerequisite9)
+	}else if (actNumber == 10) {
+		setv(@targetClass, @choice10)
+		set(LevelPrerequisite, LevelPrerequisite10)
+	}else if (actNumber == 11) {
+		setv(@targetClass, @choice11)
+		set(LevelPrerequisite, LevelPrerequisite11)
+	}
+}
+
+event ObjectiveautoCCmod_classchoice_main
+{
+	//choice本体　やめるを&unit&におまかせに置き換えたもの
+	if (numberOfChoices == 14) {
+		choice(actNumber, &unit&におまかせ, 「&choice1&」必要ＬＶ&LevelPrerequisite1&以上, 「&choice2&」必要ＬＶ&LevelPrerequisite2&以上, 「&choice3&」必要ＬＶ&LevelPrerequisite3&以上, 「&choice4&」必要ＬＶ&LevelPrerequisite4&以上, 「&choice5&」必要ＬＶ&LevelPrerequisite5&以上, 「&choice6&」必要ＬＶ&LevelPrerequisite6&以上, 「&choice7&」必要ＬＶ&LevelPrerequisite7&以上, 「&choice8&」必要ＬＶ&LevelPrerequisite8&以上, 「&choice9&」必要ＬＶ&LevelPrerequisite9&以上, 「&choice10&」必要ＬＶ&LevelPrerequisite10&以上, 「&choice11&」必要ＬＶ&LevelPrerequisite11&以上)
+	}else if (numberOfChoices == 13) {
+		choice(actNumber, &unit&におまかせ, 「&choice1&」必要ＬＶ&LevelPrerequisite1&以上, 「&choice2&」必要ＬＶ&LevelPrerequisite2&以上, 「&choice3&」必要ＬＶ&LevelPrerequisite3&以上, 「&choice4&」必要ＬＶ&LevelPrerequisite4&以上, 「&choice5&」必要ＬＶ&LevelPrerequisite5&以上, 「&choice6&」必要ＬＶ&LevelPrerequisite6&以上, 「&choice7&」必要ＬＶ&LevelPrerequisite7&以上, 「&choice8&」必要ＬＶ&LevelPrerequisite8&以上, 「&choice9&」必要ＬＶ&LevelPrerequisite9&以上, 「&choice10&」必要ＬＶ&LevelPrerequisite10&以上)
+	}else if (numberOfChoices == 12) {
+		choice(actNumber, &unit&におまかせ, 「&choice1&」必要ＬＶ&LevelPrerequisite1&以上, 「&choice2&」必要ＬＶ&LevelPrerequisite2&以上, 「&choice3&」必要ＬＶ&LevelPrerequisite3&以上, 「&choice4&」必要ＬＶ&LevelPrerequisite4&以上, 「&choice5&」必要ＬＶ&LevelPrerequisite5&以上, 「&choice6&」必要ＬＶ&LevelPrerequisite6&以上, 「&choice7&」必要ＬＶ&LevelPrerequisite7&以上, 「&choice8&」必要ＬＶ&LevelPrerequisite8&以上, 「&choice9&」必要ＬＶ&LevelPrerequisite9&以上)
+	}else if (numberOfChoices == 11) {
+		choice(actNumber, &unit&におまかせ, 「&choice1&」必要ＬＶ&LevelPrerequisite1&以上, 「&choice2&」必要ＬＶ&LevelPrerequisite2&以上, 「&choice3&」必要ＬＶ&LevelPrerequisite3&以上, 「&choice4&」必要ＬＶ&LevelPrerequisite4&以上, 「&choice5&」必要ＬＶ&LevelPrerequisite5&以上, 「&choice6&」必要ＬＶ&LevelPrerequisite6&以上, 「&choice7&」必要ＬＶ&LevelPrerequisite7&以上, 「&choice8&」必要ＬＶ&LevelPrerequisite8&以上)
+	}else if (numberOfChoices == 10) {
+		choice(actNumber, &unit&におまかせ, 「&choice1&」必要ＬＶ&LevelPrerequisite1&以上, 「&choice2&」必要ＬＶ&LevelPrerequisite2&以上, 「&choice3&」必要ＬＶ&LevelPrerequisite3&以上, 「&choice4&」必要ＬＶ&LevelPrerequisite4&以上, 「&choice5&」必要ＬＶ&LevelPrerequisite5&以上, 「&choice6&」必要ＬＶ&LevelPrerequisite6&以上, 「&choice7&」必要ＬＶ&LevelPrerequisite7&以上)
+	}else if (numberOfChoices == 9) {
+		choice(actNumber, &unit&におまかせ, 「&choice1&」必要ＬＶ&LevelPrerequisite1&以上, 「&choice2&」必要ＬＶ&LevelPrerequisite2&以上, 「&choice3&」必要ＬＶ&LevelPrerequisite3&以上, 「&choice4&」必要ＬＶ&LevelPrerequisite4&以上, 「&choice5&」必要ＬＶ&LevelPrerequisite5&以上, 「&choice6&」必要ＬＶ&LevelPrerequisite6&以上)
+	}else if (numberOfChoices == 8) {
+		choice(actNumber, &unit&におまかせ, 「&choice1&」必要ＬＶ&LevelPrerequisite1&以上, 「&choice2&」必要ＬＶ&LevelPrerequisite2&以上, 「&choice3&」必要ＬＶ&LevelPrerequisite3&以上, 「&choice4&」必要ＬＶ&LevelPrerequisite4&以上, 「&choice5&」必要ＬＶ&LevelPrerequisite5&以上)
+	}else if (numberOfChoices == 7) {
+		choice(actNumber, &unit&におまかせ, 「&choice1&」必要ＬＶ&LevelPrerequisite1&以上, 「&choice2&」必要ＬＶ&LevelPrerequisite2&以上, 「&choice3&」必要ＬＶ&LevelPrerequisite3&以上, 「&choice4&」必要ＬＶ&LevelPrerequisite4&以上)
+	}else if (numberOfChoices == 6) {
+		choice(actNumber, &unit&におまかせ, 「&choice1&」必要ＬＶ&LevelPrerequisite1&以上, 「&choice2&」必要ＬＶ&LevelPrerequisite2&以上, 「&choice3&」必要ＬＶ&LevelPrerequisite3&以上)
+	}else if (numberOfChoices == 5) {
+		choice(actNumber, &unit&におまかせ, 「&choice1&」必要ＬＶ&LevelPrerequisite1&以上, 「&choice2&」必要ＬＶ&LevelPrerequisite2&以上)
+	}
+}
+
+event autoCC_save
+{
+	//セーブ処理　内政トリガーのユニットを消す処理を含む
+	eraseunit2(politics1,@classchangepoliticsunit,autoChange1,autoChange2,autoChange3,autoChange4,Objectiveautoclasschangeclass)
+	eraseunit2(camp1,@classchangepoliticsunit)
+	save()
+}

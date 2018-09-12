@@ -1,0 +1,75 @@
+unit 003wwwdroplevel
+{
+	politics = fix
+	name = 指定レベルのみ展開
+	image = systemicon_spacebox3
+	merce = droplevel1,droplevel2,droplevel3,droplevel4
+}
+class droplevel1
+{
+	politics = erase
+	name = 「レベル10以下」展開
+	image = dt_kaomozi3
+}
+class droplevel2
+{
+	politics = erase
+	name = 「レベル11～20」展開
+	image = dt_kaomozi1
+}
+class droplevel3
+{
+	politics = erase
+	name = 「レベル21～30」展開
+	image = dt_kaomozi4
+}
+class droplevel4
+{
+	politics = erase
+	name = 「レベル31以上」展開
+	image = dt_kaomozi2
+}
+unit 003wwwdropEcard
+{
+	politics = fix
+	name = クラスチェンジ用カード所持OR非所持のみ展開
+	image = systemicon_spacebox3
+	merce = dropEcard1,dropEcard2,dropCCpass1,dropCCpass2
+}
+class dropEcard1
+{
+	politics = erase
+	name = 「エネルギーカード所持」展開
+	image = systemicon_discreditON
+}
+class dropEcard2
+{
+	politics = erase
+	name = 「エネルギーカード非所持」展開
+	image = systemicon_discreditOFF
+}
+class dropCCpass1
+{
+	politics = erase
+	name = 「特殊クラスチェンジパス所持」展開
+	image = systemicon_discreditON
+}
+class dropCCpass2
+{
+	politics = erase
+	name = 「特殊クラスチェンジパス非所持」展開
+	image = systemicon_discreditOFF
+}
+unit 003wwwdropreset
+{
+	politics = fix
+	name = 条件リセット
+	image = systemicon_spacebox2
+	merce = dropreset
+}
+class dropreset
+{
+	politics = erase
+	name = 条件リセット
+	image = siro
+}
