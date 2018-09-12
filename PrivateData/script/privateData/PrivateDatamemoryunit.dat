@@ -1,4 +1,4 @@
-//各種データをスキルとステータスに保存するユニット
+//人材の各種データをスキルと種族とクラスとステータスに保存するユニット
 //デフォルトでは内政ユニットとクラスリセット用データを保存してあり、startCreationで指向クラスが追加される
 //案内人系____________________________________________________________________________________________________
 spot memoryunitspot
@@ -8,10 +8,10 @@ spot memoryunitspot
 
 unit memoryunit_kodaizin
 {
-	//attack：初期レベル
-	//defense：objectiveNumber
-	//magic：numberOfMember
-	//race：初期クラス(classに入れるとスキルが増えてしまうので)
+	//attack：初期レベル(クラスリセット用)
+	//defense：objectiveNumber 他系統クラスチェンジしたユニットのクラスチェンジ指向の決定に使用される
+	//magic：numberOfMember あまり確認してないが忠誠低下の計算に使ってるんだと思う
+	//race：初期クラス(クラスリセット用。class構造体なのでclassに入れるとスキルが増えてしまうのでraceに)
 	//class：内政ユニット
 	//skill：目指すクラス
 	attack=11
