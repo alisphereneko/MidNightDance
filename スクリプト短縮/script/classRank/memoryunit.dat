@@ -1,0 +1,531 @@
+//attack：戦闘ランク defense：経済ランク
+
+//ガイド系______________________________________________________________________________________________________
+unit memoryunit_guidestaff)
+{
+	attack=2
+	defense=1
+}
+unit memoryunit_butler
+{
+	attack=1
+	defense=2
+}
+unit memoryunit_sage
+{
+	attack=4
+	defense=2
+}
+unit memoryunit_patrician
+{
+	attack=3
+	defense=3
+}
+unit memoryunit_artist
+{
+	attack=0
+	defense=5
+}
+unit memoryunit_chevalier
+{
+	attack=7
+	defense=0
+}
+unit memoryunit_seer
+{
+	attack=3
+	defense=5
+}
+unit memoryunit_divine
+{
+	attack=7
+	defense=7
+}
+//アーミー系____________________________________________________________________________________________________
+unit memoryunit_army
+{
+	attack=3
+	defense=0
+}
+unit memoryunit_provisioner
+{
+	attack=0
+	defense=2
+}
+unit memoryunit_hinfantry
+{
+	attack=5
+	defense=0
+}
+unit memoryunit_sniper
+{
+	attack=4
+	defense=0
+}
+unit memoryunit_magicsoldier
+{
+	attack=4
+	defense=0
+}
+unit memoryunit_tank
+{
+	attack=7
+	defense=0
+}
+unit memoryunit_helicopter
+{
+	attack=7
+	defense=0
+}
+unit memoryunit_battleship
+{
+	attack=5
+	defense=2
+}
+//マシン系______________________________________________________________________________________________________
+unit memoryunit_nanashi001
+{
+	attack=1
+	defense=0
+}
+unit memoryunit_nanashi000
+{
+	attack=0
+	defense=1
+}
+unit memoryunit_nanashi002
+{
+	attack=2
+	defense=1
+}
+unit memoryunit_nanashi003
+{
+	attack=3
+	defense=0
+}
+unit memoryunit_nanashi004
+{
+	attack=3
+	defense=0
+}
+unit memoryunit_nanashi005
+{
+	attack=3
+	defense=0
+}
+unit memoryunit_nanashi006
+{
+	attack=0
+	defense=3
+}
+unit memoryunit_nanashi007
+{
+	attack=5
+	defense=0
+}
+unit memoryunit_nanashi008
+{
+	attack=4
+	defense=2
+}
+unit memoryunit_nanashi009
+{
+	attack=7
+	defense=0
+}
+//スチューデント系____________________________________________________________________________________________________
+unit memoryunit_studentm
+{
+	attack=1
+	defense=0
+}
+unit memoryunit_studentf
+{
+	attack=1
+	defense=0
+}
+unit memoryunit_scouncil
+{
+	attack=1
+	defense=2
+}
+unit memoryunit_shotputter
+{
+	attack=3
+	defense=0
+}
+unit memoryunit_occultclub
+{
+	attack=3
+	defense=0
+}
+unit memoryunit_biologyclub
+{
+	attack=1
+	defense=2
+}
+unit memoryunit_kendoclub
+{
+	attack=3
+	defense=0
+}
+unit memoryunit_cheerteam
+{
+	attack=0
+	defense=3
+}
+unit memoryunit_swimmingclub
+{
+	attack=3
+	defense=0
+}
+//スピリット系____________________________________________________________________________________________________
+unit memoryunit_slime
+{
+	attack=0
+	defense=0
+}
+unit memoryunit_reslime
+{
+	attack=3
+	defense=0
+}
+unit memoryunit_salamanber
+{
+	attack=6
+	defense=0
+}
+unit memoryunit_undine
+{
+	attack=2
+	defense=4
+}
+unit memoryunit_sylph
+{
+	attack=0
+	defense=6
+}
+unit memoryunit_gnome
+{
+	attack=4
+	defense=2
+}
+unit memoryunit_dragon
+{
+	attack=10
+	defense=0
+}
+//ゴクドウ系____________________________________________________________________________________________________
+unit memoryunit_toseinin
+{
+	attack=2
+	defense=0
+}
+unit memoryunit_tekiya
+{
+	attack=0
+	defense=2
+}
+unit memoryunit_kibamusya
+{
+	attack=4
+	defense=0
+}
+unit memoryunit_oni
+{
+	attack=6
+	defense=0
+}
+unit memoryunit_ninga
+{
+	attack=6
+	defense=0
+}
+unit memoryunit_bakuto
+{
+	attack=0
+	defense=6
+}
+unit memoryunit_ayakasi
+{
+	attack=8
+	defense=0
+}
+//Ｐサーヴァント系______________________________________________________________________________________________________
+unit memoryunit_police
+{
+	attack=1
+	defense=1
+}
+unit memoryunit_teacher
+{
+	attack=0
+	defense=2
+}
+unit memoryunit_spteam
+{
+	attack=4
+	defense=0
+}
+unit memoryunit_hakase
+{
+	attack=0
+	defense=4
+}
+unit memoryunit_doctor
+{
+	attack=2
+	defense=3
+}
+unit memoryunit_fireman
+{
+	attack=3
+	defense=2
+}
+unit memoryunit_guardarmor
+{
+	attack=6
+	defense=0
+}
+unit memoryunit_patrolcar
+{
+	attack=4
+	defense=3
+}
+unit memoryunit_hero
+{
+	attack=6
+	defense=4
+}
+unit memoryunit_armoredcar
+{
+	attack=5
+	defense=5
+}
+//グループ系______________________________________________________________________________________________________
+unit memoryunit_member
+{
+	attack=0
+	defense=2
+}
+unit memoryunit_activist
+{
+	attack=2
+	defense=3
+}
+unit memoryunit_bouncer
+{
+	attack=4
+	defense=0
+}
+unit memoryunit_researcher
+{
+	attack=0
+	defense=4
+}
+unit memoryunit_intellectual
+{
+	attack=0
+	defense=6
+}
+unit memoryunit_charisma
+{
+	attack=3
+	defense=7
+}
+//ワーカー系______________________________________________________________________________________________________
+unit memoryunit_salaryman
+{
+	attack=0
+	defense=1
+}
+unit memoryunit_maid
+{
+	attack=0
+	defense=3
+}
+unit memoryunit_cook
+{
+	attack=1
+	defense=2
+}
+unit memoryunit_securityguard
+{
+	attack=2
+	defense=1
+}
+unit memoryunit_carpenter
+{
+	attack=2
+	defense=1
+}
+unit memoryunit_mizusyoubaim
+{
+	attack=0
+	defense=3
+}
+unit memoryunit_mizusyoubaiw
+{
+	attack=0
+	defense=3
+}
+unit memoryunit_middlemanager
+{
+	attack=2
+	defense=4
+}
+unit memoryunit_idol
+{
+	attack=0
+	defense=5
+}
+unit memoryunit_athlete
+{
+	attack=4
+	defense=2
+}
+unit memoryunit_elite
+{
+	attack=0
+	defense=7
+}
+unit memoryunit_champion
+{
+	attack=5
+	defense=4
+}
+//プリースト系____________________________________________________________________________________________________
+unit memoryunit_priest
+{
+	attack=0
+	defense=1
+}
+unit memoryunit_monk
+{
+	attack=3
+	defense=0
+}
+unit memoryunit_shaman
+{
+	attack=0
+	defense=3
+}
+unit memoryunit_highpriest
+{
+	attack=3
+	defense=3
+}
+unit memoryunit_yorishiro
+{
+	attack=4
+	defense=5
+}
+//アウトロー系____________________________________________________________________________________________________
+unit memoryunit_tinpira
+{
+	attack=1
+	defense=0
+}
+unit memoryunit_kenkaya
+{
+	attack=3
+	defense=0
+}
+unit memoryunit_thief
+{
+	attack=1
+	defense=2
+}
+		add(SWITCHallFurosikiUnit, 1)
+unit memoryunit_bike
+{
+	attack=5
+	defense=0
+}
+unit memoryunit_dealer
+{
+	attack=0
+	defense=5
+}
+unit memoryunit_bantyou
+{
+	attack=7
+	defense=0
+}
+//Ｐワーカー系____________________________________________________________________________________________________
+unit memoryunit_tempworkerm
+{
+	attack=0
+	defense=1
+}
+unit memoryunit_tempworkerw
+{
+	attack=0
+	defense=1
+}
+//アサシン系____________________________________________________________________________________________________
+unit memoryunit_investigator
+{
+	attack=0
+	defense=2
+}
+unit memoryunit_spy
+{
+	attack=0
+	defense=2
+}
+unit memoryunit_assassin
+{
+	attack=4
+	defense=0
+}
+unit memoryunit_umbra
+{
+	attack=8
+	defense=0
+}
+//ＶＩＰ系____________________________________________________________________________________________________
+unit memoryunit_vip
+{
+	attack=0
+	defense=4
+}
+//レボリューショナリー系____________________________________________________________________________________________________
+unit memoryunit_resistance
+{
+	attack=2
+	defense=1
+}
+unit memoryunit_revolutionary
+{
+	attack=4
+	defense=5
+}
+unit memoryunit_evil
+{
+	attack=7
+	defense=7
+}
+//ゾンビ系____________________________________________________________________________________________________
+unit memoryunit_zombie
+{
+	attack=2
+	defense=0
+}
+unit memoryunit_kaomozi030
+{
+	attack=0
+	defense=0
+}
+//フェル系____________________________________________________________________________________________________
+unit memoryunit_hifel
+{
+	attack=10
+	defense=10
+}
+unit memoryunit_clonefel
+{
+	attack=0
+	defense=0
+}
+	}

@@ -1,0 +1,19 @@
+skillset invisiblespot
+{
+	member=invisible1,invisible2,invisible3,invisible4,invisible5,invisible6,invisible7,invisible8,invisible9,invisible10,invisible11,invisible12,invisible13,invisible14,invisible15,invisible16,invisible17,invisible18,invisible19,invisible20
+}
+
+skillset sealskillset
+{
+	member=seal1,seal2,seal3,seal4,seal5,seal6,seal7,seal8,seal9,seal10
+}
+
+skillset elationskillset
+{
+	member=elation1,elation2,elation3,elation4,elation5,elation6,elation7,elation8,elation9,elation10
+}
+
+skillset metamorphosistimeskillset
+{
+	member=metamorphosistime1,metamorphosistime2,metamorphosistime3,metamorphosistime4,metamorphosistime5,metamorphosistime6,metamorphosistime7,metamorphosistime8,metamorphosistime9,metamorphosistime10
+}

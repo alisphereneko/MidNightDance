@@ -199,1115 +199,1001 @@ event eraseAction
 //▼▼※呼び出し前、各固有能力発動者リスト(@all??????Unit)に中身が必要。
 event traitAction
 {
+}
+event traitskillevent_assistant
+{
 //[補佐]〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓
 //※同領地内の最高ＬＶリーダーに一時スキル［固有能力倍化］を付与※____________________________________________________________________________________________________
-	while (count(@allAssistantUnit) >= 1) {
-		index(@allAssistantUnit, 0, @unit)
-		subv(@allAssistantUnit, @unit)
-		storeSpotOfUnit(@unit, @spot)
-		storeLeaderOfSpot(@spot, @allSpotLeader)
-		subv(@allSpotLeader, @allEccentricUnit)
-		subv(@allSpotLeader, @unit)
+	subv(@allSpotLeader, @allEccentricUnit)
+	subv(@allSpotLeader, @unit)
 
-		if (count(@allSpotLeader) == 1) {
-			index(@allSpotLeader, 0, @unit2)
-			pushLevel(@unit2, unitLevel2)
-			set(unitLevel3, 0)
-			set(unitLevel4, 0)
-		}else if (count(@allSpotLeader) == 2) {
-			index(@allSpotLeader, 0, @unit2)
-			pushLevel(@unit2, unitLevel2)
-			index(@allSpotLeader, 1, @unit3)
-			pushLevel(@unit3, unitLevel3)
-			set(unitLevel4, 0)
-		}else if (count(@allSpotLeader) == 3) {
-			index(@allSpotLeader, 0, @unit2)
-			pushLevel(@unit2, unitLevel2)
-			index(@allSpotLeader, 1, @unit3)
-			pushLevel(@unit3, unitLevel3)
-			index(@allSpotLeader, 2, @unit4)
-			pushLevel(@unit4, unitLevel4)
-		}
-		if (unitLevel2 < unitLevel3 || unitLevel2 < unitLevel4) {
-			subv(@allSpotLeader, @unit2)
-		}
-		if (unitLevel3 < unitLevel2 || unitLevel3 < unitLevel4) {
-			subv(@allSpotLeader, @unit3)
-		}
-		if (unitLevel4 < unitLevel2 || unitLevel4 < unitLevel3) {
-			subv(@allSpotLeader, @unit4)
-		}
-		if (count(@allSpotLeader) >= 1) {
-			shuffle(@allSpotLeader)
-			index(@allSpotLeader, 0, @targetUnit)
-			addv(@allDoubleGetUnit, @targetUnit)
-		}
-		clear(@unit2)
-		clear(@unit3)
-		clear(@unit4)
+	if (count(@allSpotLeader) == 1) {
+		index(@allSpotLeader, 0, @unit2)
+		pushLevel(@unit2, unitLevel2)
+		set(unitLevel3, 0)
+		set(unitLevel4, 0)
+	}else if (count(@allSpotLeader) == 2) {
+		index(@allSpotLeader, 0, @unit2)
+		pushLevel(@unit2, unitLevel2)
+		index(@allSpotLeader, 1, @unit3)
+		pushLevel(@unit3, unitLevel3)
+		set(unitLevel4, 0)
+	}else if (count(@allSpotLeader) == 3) {
+		index(@allSpotLeader, 0, @unit2)
+		pushLevel(@unit2, unitLevel2)
+		index(@allSpotLeader, 1, @unit3)
+		pushLevel(@unit3, unitLevel3)
+		index(@allSpotLeader, 2, @unit4)
+		pushLevel(@unit4, unitLevel4)
 	}
+	if (unitLevel2 < unitLevel3 || unitLevel2 < unitLevel4) {
+		subv(@allSpotLeader, @unit2)
+	}
+	if (unitLevel3 < unitLevel2 || unitLevel3 < unitLevel4) {
+		subv(@allSpotLeader, @unit3)
+	}
+	if (unitLevel4 < unitLevel2 || unitLevel4 < unitLevel3) {
+		subv(@allSpotLeader, @unit4)
+	}
+	if (count(@allSpotLeader) >= 1) {
+		shuffle(@allSpotLeader)
+		index(@allSpotLeader, 0, @targetUnit)
+		addv(@allDoubleGetUnit, @targetUnit)
+	}
+	clear(@unit2)
+	clear(@unit3)
+	clear(@unit4)
+}
+
+event traitskillevent_rational
+{
 //[合理的思考(１)]〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓
 //※一時能力スキル「固有能力倍化」を付与※____________________________________________________________________________________________________
-	while (count(@allRationalUnit) >= 1) {
-		index(@allRationalUnit, 0, @unit)
-		subv(@allRationalUnit, @unit)
-		storeSkillOfUnit(@unit, @skill)
-
-		pushLevel(@unit, unitLevel)
-		if (unitLevel >= 21 && rand() <= 49) {
-			addv(@allDoubleGetUnit, @unit)
-		}
+	if (unitLevel >= 21 && rand() <= 49) {
+		addv(@allDoubleGetUnit, @unit)
 	}
+}
+
+event traitskillevent_sensualist_male
+{
+	set(sensualistsex,1)
+	routine(traitskillevent_sensualist)
+}
+
+event traitskillevent_sensualist_female
+{
+	set(sensualistsex,2)
+	routine(traitskillevent_sensualist)
+}
+event traitskillevent_sensualist
+{
 //[男好き＆女好き(１)]〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓
 //※一時能力スキル「固有能力倍化」を付与※____________________________________________________________________________________________________
-	while (count(@allSensualistUnit) >= 1) {
-		index(@allSensualistUnit, 0, @unit)
-		subv(@allSensualistUnit, @unit)
-		storeSkillOfUnit(@unit, @skill)
-		storeSpotOfUnit(@unit, @spot)
-		storeLeaderOfSpot(@spot, @allSpotLeader)
-		subv(@allSpotLeader, @allEccentricUnit)
-		subv(@allSpotLeader, @unit)
-		setv(@allSpotLeader2, @allSpotLeader)
+	subv(@allSpotLeader, @allEccentricUnit)
+	subv(@allSpotLeader, @unit)
 
-		set(sensualistCount_male, 0)
-		set(sensualistCount_female, 0)
-		if (has(@allSensualistUnit_male, @unit) == 1) {
-			subv(@allSensualistUnit_male, @unit)
-			while (count(@allSpotLeader) >= 1) {
-				index(@allSpotLeader, 0, @targetUnit)
-				subv(@allSpotLeader, @targetUnit)
-				pushSex(@targetUnit, targetUnitSex)
-				if (targetUnitSex == 1 || targetUnitSex == 0) {
-					add(sensualistCount_male, 1)
-				}
-			}
+	while (count(@allSpotLeader) >= 1) {
+		index(@allSpotLeader, 0, @targetUnit)
+		subv(@allSpotLeader, @targetUnit)
+		pushSex(@targetUnit, targetUnitSex)
+		if (targetUnitSex != sensualistsex) {
+			add(sensualistCount, 1)
 		}
-		if (has(@allSensualistUnit_female, @unit) == 1) {
-			subv(@allSensualistUnit_female, @unit)
-			while (count(@allSpotLeader2) >= 1) {
-				index(@allSpotLeader2, 0, @targetUnit)
-				subv(@allSpotLeader2, @targetUnit)
-				pushSex(@targetUnit, targetUnitSex)
-				if (targetUnitSex == 2 || targetUnitSex == 0) {
-					add(sensualistCount_female, 1)
-				}
-			}
-		}
-		if (sensualistCount_male >= 2 || sensualistCount_female >= 2) {
-			addv(@allSensualistUnit2, @unit)
-		}else if (sensualistCount_male >= 3 || sensualistCount_female >= 3) {
-			addv(@allDoubleGetUnit, @unit)
-		}
-		set(sensualistCount_male, 0)
-		set(sensualistCount_female, 0)
 	}
+
+	if (sensualistCount >= 2) {
+		addv(@allSensualistUnit2, @unit)
+	}else if (sensualistCount>= 3) {
+		addv(@allDoubleGetUnit, @unit)
+	}
+	set(sensualistCount, 0)
+}
+
+event traitskillevent_twosides
+{
 //[二面性]〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓
 //※「社交的」＆「慈愛」無効化※____________________________________________________________________________________________________
-	while (count(@allTwosidesUnit) >= 1) {
-		index(@allTwosidesUnit, 0, @unit)
-		subv(@allTwosidesUnit, @unit)
-		storeSkillOfUnit(@unit, @skill)
-
-		pushLoyal(@unit, unitLoyal)
-		if (unitLoyal <= 50) {
-			subv(@allSociableUnit, @unit)
-			subv(@allAffectionateUnit, @unit)
-		}
+	if (unitLoyal <= 50) {
+		subv(@allSociableUnit, @unit)
+		subv(@allAffectionateUnit, @unit)
 	}
+}
+
+event traitskillevent_loyalsubject_nini
+{
+	setv(@LoyalsubjectTarget,nini)
+	routine(traitskillevent_loyalsubject)
+}
+
+event traitskillevent_loyalsubject_honoka
+{
+	setv(@LoyalsubjectTarget,honoka)
+	routine(traitskillevent_loyalsubject)
+}
+
+event traitskillevent_loyalsubject_ouen
+{
+	setv(@LoyalsubjectTarget,ouen)
+	routine(traitskillevent_loyalsubject)
+}
+
+event traitskillevent_loyalsubject_kamiya
+{
+	setv(@LoyalsubjectTarget,kamiya)
+	routine(traitskillevent_loyalsubject)
+}
+
+event traitskillevent_loyalsubject_daiya
+{
+	setv(@LoyalsubjectTarget,daiya)
+	routine(traitskillevent_loyalsubject)
+}
+
+event traitskillevent_loyalsubject_himesiro
+{
+	setv(@LoyalsubjectTarget,himesiro)
+	routine(traitskillevent_loyalsubject)
+}
+
+event traitskillevent_loyalsubject_riferi
+{
+	setv(@LoyalsubjectTarget,riferi)
+	routine(traitskillevent_loyalsubject)
+}
+
+event traitskillevent_loyalsubject_rifon
+{
+	setv(@LoyalsubjectTarget,rifon)
+	routine(traitskillevent_loyalsubject)
+}
+
+event traitskillevent_loyalsubject_gaagoriusu
+{
+	setv(@LoyalsubjectTarget,gaagoriusu)
+	routine(traitskillevent_loyalsubject)
+}
+
+event traitskillevent_loyalsubject_suiren
+{
+	setv(@LoyalsubjectTarget,suiren)
+	routine(traitskillevent_loyalsubject)
+}
+
+event traitskillevent_loyalsubject_kizaki
+{
+	setv(@LoyalsubjectTarget,kizaki)
+	routine(traitskillevent_loyalsubject)
+}
+
+event traitskillevent_loyalsubject_veiral
+{
+	setv(@LoyalsubjectTarget,veiral)
+	routine(traitskillevent_loyalsubject)
+}
+
+event traitskillevent_loyalsubject_isikawa
+{
+	setv(@LoyalsubjectTarget,isikawa)
+	routine(traitskillevent_loyalsubject)
+}
+
+event traitskillevent_loyalsubject_ryudou
+{
+	setv(@LoyalsubjectTarget,ryudo)
+	routine(traitskillevent_loyalsubject)
+}
+
+event traitskillevent_loyalsubject_fel
+{
+	setv(@LoyalsubjectTarget,fel)
+	routine(traitskillevent_loyalsubject)
+}
+
+event traitskillevent_loyalsubject
+{
 //[忠臣(１)]〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓
 //※条件を審査※____________________________________________________________________________________________________
-	while (count(@allLoyalsubjectUnit) >= 1) {
-		index(@allLoyalsubjectUnit, 0, @unit)
-		subv(@allLoyalsubjectUnit, @unit)
-		storeSkillOfUnit(@unit, @skill)
-		storeSpotOfUnit(@unit, @spot)
-		storeLeaderOfSpot(@spot, @allSpotLeader)
-		subv(@allSpotLeader, @unit)
-
-		if (has(@allLoyalsubjectUnit_nini, @unit) == 1) {
-			subv(@allLoyalsubjectUnit_nini, @unit)
-			if (nini == @master || has(@allSpotLeader, nini) == 1) {
-				addv(@allLoyalsubjectUnit2, @unit)
-			}
-		}
-		if (has(@allLoyalsubjectUnit_honoka, @unit) == 1) {
-			subv(@allLoyalsubjectUnit_honoka, @unit)
-			if (honoka == @master || has(@allSpotLeader, honoka) == 1) {
-				addv(@allLoyalsubjectUnit2, @unit)
-			}
-		}
-		if (has(@allLoyalsubjectUnit_ouen, @unit) == 1) {
-			subv(@allLoyalsubjectUnit_ouen, @unit)
-			if (ouen == @master || has(@allSpotLeader, ouen) == 1) {
-				addv(@allLoyalsubjectUnit2, @unit)
-			}
-		}
-		if (has(@allLoyalsubjectUnit_kamiya, @unit) == 1) {
-			subv(@allLoyalsubjectUnit_kamiya, @unit)
-			if (kamiya == @master || has(@allSpotLeader, kamiya) == 1) {
-				addv(@allLoyalsubjectUnit2, @unit)
-			}
-		}
-		if (has(@allLoyalsubjectUnit_daiya, @unit) == 1) {
-			subv(@allLoyalsubjectUnit_daiya, @unit)
-			if (daiya == @master || has(@allSpotLeader, daiya) == 1) {
-				addv(@allLoyalsubjectUnit2, @unit)
-			}
-		}
-		if (has(@allLoyalsubjectUnit_himesiro, @unit) == 1) {
-			subv(@allLoyalsubjectUnit_himesiro, @unit)
-			if (himesiro == @master || has(@allSpotLeader, himesiro) == 1) {
-				addv(@allLoyalsubjectUnit2, @unit)
-			}
-		}
-		if (has(@allLoyalsubjectUnit_riferi, @unit) == 1) {
-			subv(@allLoyalsubjectUnit_riferi, @unit)
-			if (riferi == @master || has(@allSpotLeader, riferi) == 1) {
-				addv(@allLoyalsubjectUnit2, @unit)
-			}
-		}
-		if (has(@allLoyalsubjectUnit_rifon, @unit) == 1) {
-			subv(@allLoyalsubjectUnit_rifon, @unit)
-			if (rifon == @master || has(@allSpotLeader, rifon) == 1) {
-				addv(@allLoyalsubjectUnit2, @unit)
-			}
-		}
-		if (has(@allLoyalsubjectUnit_gaagoriusu, @unit) == 1) {
-			subv(@allLoyalsubjectUnit_gaagoriusu, @unit)
-			if (gaagoriusu == @master || has(@allSpotLeader, gaagoriusu) == 1) {
-				addv(@allLoyalsubjectUnit2, @unit)
-			}
-		}
-		if (has(@allLoyalsubjectUnit_suiren, @unit) == 1) {
-			subv(@allLoyalsubjectUnit_suiren, @unit)
-			if (suiren == @master || has(@allSpotLeader, suiren) == 1) {
-				addv(@allLoyalsubjectUnit2, @unit)
-			}
-		}
-		if (has(@allLoyalsubjectUnit_kizaki, @unit) == 1) {
-			subv(@allLoyalsubjectUnit_kizaki, @unit)
-			if (kizaki == @master || has(@allSpotLeader, kizaki) == 1) {
-				addv(@allLoyalsubjectUnit2, @unit)
-			}
-		}
-		if (has(@allLoyalsubjectUnit_veiraru, @unit) == 1) {
-			subv(@allLoyalsubjectUnit_veiraru, @unit)
-			if (veiraru == @master || has(@allSpotLeader, veiraru) == 1) {
-				addv(@allLoyalsubjectUnit2, @unit)
-			}
-		}
-		if (has(@allLoyalsubjectUnit_isikawa, @unit) == 1) {
-			subv(@allLoyalsubjectUnit_isikawa, @unit)
-			if (isikawa == @master || has(@allSpotLeader, isikawa) == 1) {
-				addv(@allLoyalsubjectUnit2, @unit)
-			}
-		}
-		if (has(@allLoyalsubjectUnit_ryudou, @unit) == 1) {
-			subv(@allLoyalsubjectUnit_ryudou, @unit)
-			if (ryudou == @master || has(@allSpotLeader, ryudou) == 1) {
-				addv(@allLoyalsubjectUnit2, @unit)
-			}
-		}
-		if (has(@allLoyalsubjectUnit_fel, @unit) == 1) {
-			subv(@allLoyalsubjectUnit_fel, @unit)
-			if (fel == @master || has(@allSpotLeader, fel) == 1) {
-				addv(@allLoyalsubjectUnit2, @unit)
-			}
-		}
+	subv(@allSpotLeader, @unit)
+	if (@LoyalsubjectTarget == @master || has(@allSpotLeader, @LoyalsubjectTarget) == 1) {
+		addv(@allLoyalsubjectUnit2, @unit)
 	}
+}
+event traitskillevent_educate
+{
 //[教育]〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓
 //※一時能力スキル［ＬＶ上昇］を付与※____________________________________________________________________________________________________
-	while (count(@allEducateUnit) >= 1) {
-		index(@allEducateUnit, 0, @unit)
-		subv(@allEducateUnit, @unit)
-		storeSkillOfUnit(@unit, @skill)
-		storeSpotOfUnit(@unit, @spot)
-		storeLeaderOfSpot(@spot, @allSpotLeader)
-		subv(@allSpotLeader, @allEccentricUnit)
-		subv(@allSpotLeader, @unit)
+	subv(@allSpotLeader, @allEccentricUnit)
+	subv(@allSpotLeader, @unit)
 
-		pushLevel(@unit, unitLevel)
-		sub(unitLevel, 1)
-		if (count(@allSpotLeader) == 0) {
-			set(unitLevel2, 999)
-			set(unitLevel3, 999)
-			set(unitLevel4, 999)
-		}else if (count(@allSpotLeader) == 1) {
-			index(@allSpotLeader, 0, @unit2)
-			pushLevel(@unit2, unitLevel2)
-			set(unitLevel3, 999)
-			set(unitLevel4, 999)
-		}else if (count(@allSpotLeader) == 2) {
-			index(@allSpotLeader, 0, @unit2)
-			pushLevel(@unit2, unitLevel2)
-			index(@allSpotLeader, 1, @unit3)
-			pushLevel(@unit3, unitLevel3)
-			set(unitLevel4, 999)
-		}else if (count(@allSpotLeader) >= 3) {
-			index(@allSpotLeader, 0, @unit2)
-			pushLevel(@unit2, unitLevel2)
-			index(@allSpotLeader, 1, @unit3)
-			pushLevel(@unit3, unitLevel3)
-			index(@allSpotLeader, 2, @unit4)
-			pushLevel(@unit4, unitLevel4)
-		}
-		if (unitLevel2 > unitLevel || unitLevel2 > unitLevel3 || unitLevel2 > unitLevel4) {
-			subv(@allSpotLeader, @unit2)
-		}
-		if (unitLevel3 > unitLevel || unitLevel3 > unitLevel2 || unitLevel3 > unitLevel4) {
-			subv(@allSpotLeader, @unit3)
-		}
-		if (unitLevel4 > unitLevel || unitLevel4 > unitLevel2 || unitLevel4 > unitLevel3) {
-			subv(@allSpotLeader, @unit4)
-		}
-		if (count(@allSpotLeader) >= 1) {
-			shuffle(@allSpotLeader)
-			index(@allSpotLeader, 0, @targetUnit)
-			if (has(@allDoubleGetUnit, @unit) == 0) {
-				addv(@allLevelupGetUnit, @targetUnit)
-			}else if (has(@allDoubleGetUnit, @unit) == 1) {
-				addv(@allHighlevelupGetUnit, @targetUnit)
-			}
-		}
-		clear(@unit2)
-		clear(@unit3)
-		clear(@unit4)
+	sub(unitLevel, 1)
+	if (count(@allSpotLeader) == 0) {
+		set(unitLevel2, 999)
+		set(unitLevel3, 999)
+		set(unitLevel4, 999)
+	}else if (count(@allSpotLeader) == 1) {
+		index(@allSpotLeader, 0, @unit2)
+		pushLevel(@unit2, unitLevel2)
+		set(unitLevel3, 999)
+		set(unitLevel4, 999)
+	}else if (count(@allSpotLeader) == 2) {
+		index(@allSpotLeader, 0, @unit2)
+		pushLevel(@unit2, unitLevel2)
+		index(@allSpotLeader, 1, @unit3)
+		pushLevel(@unit3, unitLevel3)
+		set(unitLevel4, 999)
+	}else if (count(@allSpotLeader) >= 3) {
+		index(@allSpotLeader, 0, @unit2)
+		pushLevel(@unit2, unitLevel2)
+		index(@allSpotLeader, 1, @unit3)
+		pushLevel(@unit3, unitLevel3)
+		index(@allSpotLeader, 2, @unit4)
+		pushLevel(@unit4, unitLevel4)
 	}
+	if (unitLevel2 > unitLevel || unitLevel2 > unitLevel3 || unitLevel2 > unitLevel4) {
+		subv(@allSpotLeader, @unit2)
+	}
+	if (unitLevel3 > unitLevel || unitLevel3 > unitLevel2 || unitLevel3 > unitLevel4) {
+		subv(@allSpotLeader, @unit3)
+	}
+	if (unitLevel4 > unitLevel || unitLevel4 > unitLevel2 || unitLevel4 > unitLevel3) {
+		subv(@allSpotLeader, @unit4)
+	}
+	if (count(@allSpotLeader) >= 1) {
+		shuffle(@allSpotLeader)
+		index(@allSpotLeader, 0, @targetUnit)
+		if (has(@allDoubleGetUnit, @unit) == 0) {
+			addv(@allLevelupGetUnit, @targetUnit)
+		}else if (has(@allDoubleGetUnit, @unit) == 1) {
+			addv(@allHighlevelupGetUnit, @targetUnit)
+		}
+	}
+	clear(@unit2)
+	clear(@unit3)
+	clear(@unit4)
+}
+
+event traitskillevent_innovation
+{
 //[改革]〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓
 //※一時能力スキル［ＬＶ上昇］［忠誠低下］を付与※____________________________________________________________________________________________________
-	while (count(@allInnovationUnit) >= 1) {
-		index(@allInnovationUnit, 0, @unit)
-		subv(@allInnovationUnit, @unit)
-		storeSkillOfUnit(@unit, @skill)
-		storeSpotOfUnit(@unit, @spot)
-		storeLeaderOfSpot(@spot, @allSpotLeader)
-		subv(@allSpotLeader, @allEccentricUnit)
-		subv(@allSpotLeader, @unit)
+	subv(@allSpotLeader, @allEccentricUnit)
+	subv(@allSpotLeader, @unit)
 
-		pushLevel(@unit, unitLevel)
-		while (count(@allSpotLeader) >= 1) {
-			index(@allSpotLeader, 0, @targetUnit)
-			subv(@allSpotLeader, @targetUnit)
-			pushLevel(@targetUnit, targetLevel)
-			if (has(@allDoubleGetUnit, @unit) == 0 && has(@allLoyalsubjectUnit2, @targetUnit) == 0 && unitLevel > targetLevel) {
-				addv(@allLevelupGetUnit, @targetUnit)
-				addv(@allLoyaltydownGetUnit, @targetUnit)
-			}else if (has(@allDoubleGetUnit, @unit) == 1 && has(@allLoyalsubjectUnit2, @targetUnit) == 0 && unitLevel > targetLevel) {
-				addv(@allHighlevelupGetUnit, @targetUnit)
-				addv(@allHighloyaltydownGetUnit, @targetUnit)
-			}
+	while (count(@allSpotLeader) >= 1) {
+		index(@allSpotLeader, 0, @targetUnit)
+		subv(@allSpotLeader, @targetUnit)
+		pushLevel(@targetUnit, targetLevel)
+		if (has(@allDoubleGetUnit, @unit) == 0 && has(@allLoyalsubjectUnit2, @targetUnit) == 0 && unitLevel > targetLevel) {
+			addv(@allLevelupGetUnit, @targetUnit)
+			addv(@allLoyaltydownGetUnit, @targetUnit)
+		}else if (has(@allDoubleGetUnit, @unit) == 1 && has(@allLoyalsubjectUnit2, @targetUnit) == 0 && unitLevel > targetLevel) {
+			addv(@allHighlevelupGetUnit, @targetUnit)
+			addv(@allHighloyaltydownGetUnit, @targetUnit)
 		}
 	}
+}
+
+event traitskillevent_treatment
+{
 //[医療]〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓
 //※一時能力スキル［状態異常耐性上昇］を付与※____________________________________________________________________________________________________
-	while (count(@allTreatmentUnit) >= 1) {
-		index(@allTreatmentUnit, 0, @unit)
-		subv(@allTreatmentUnit, @unit)
-		storeSkillOfUnit(@unit, @skill)
-		storeSpotOfUnit(@unit, @spot)
-		storeLeaderOfSpot(@spot, @allSpotLeader)
-		subv(@allSpotLeader, @allEccentricUnit)
-		if (has(@allSpotLeader, @unit) == 0) {
-			addv(@allSpotLeader, @unit)
-		}
-
-		if (has(@allDoubleGetUnit, @unit) == 0) {
-			addv(@allMedicineGetUnit, @allSpotLeader)
-		}else if (has(@allDoubleGetUnit, @unit) == 1) {
-			addv(@allHighmedicineGetUnit, @allSpotLeader)
-		}
+	subv(@allSpotLeader, @allEccentricUnit)
+	if (has(@allSpotLeader, @unit) == 0) {
+		addv(@allSpotLeader, @unit)
 	}
+
+	if (has(@allDoubleGetUnit, @unit) == 0) {
+		addv(@allMedicineGetUnit, @allSpotLeader)
+	}else if (has(@allDoubleGetUnit, @unit) == 1) {
+		addv(@allHighmedicineGetUnit, @allSpotLeader)
+	}
+}
+
+event traitskillevent_glibtalker
+{
 //[話術]〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓
 //※一時能力スキル［忠誠低下抑制］を付与※____________________________________________________________________________________________________
-	while (count(@allGlibtalkerUnit) >= 1) {
-		index(@allGlibtalkerUnit, 0, @unit)
-		subv(@allGlibtalkerUnit, @unit)
-		storeSkillOfUnit(@unit, @skill)
-		storeSpotOfUnit(@unit, @spot)
-		storeLeaderOfSpot(@spot, @allSpotLeader)
-		subv(@allSpotLeader, @allEccentricUnit)
-		subv(@allSpotLeader, @unit)
+	subv(@allSpotLeader, @allEccentricUnit)
+	subv(@allSpotLeader, @unit)
 
-		pushLevel(@unit, unitLevel)
-		if (has(@allDoubleGetUnit, @unit) == 0 && has(@skill, sociable) == 1 && unitLevel >= 21) {
-			addv(@allLoyaltybufferGetUnit, @allSpotLeader)
-		}else if (has(@allDoubleGetUnit, @unit) == 1 && unitLevel >= 21) {
-			addv(@allLoyaltykeepGetUnit, @allSpotLeader)
-		}
+	if (has(@allDoubleGetUnit, @unit) == 0 && has(@skill, sociable) == 1 && unitLevel >= 21) {
+		addv(@allLoyaltybufferGetUnit, @allSpotLeader)
+	}else if (has(@allDoubleGetUnit, @unit) == 1 && unitLevel >= 21) {
+		addv(@allLoyaltykeepGetUnit, @allSpotLeader)
 	}
+}
+
+event traitskillevent_invent
+{
 //[発明]〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓
 //※経済ランクに２０加算※____________________________________________________________________________________________________
 //※一時能力スキル［ＬＶ上昇］［全主要能力上昇］を付与※____________________________________________________________________________________________________
-	while (count(@allInventUnit) >= 1) {
-		index(@allInventUnit, 0, @unit)
-		subv(@allInventUnit, @unit)
-		storeSkillOfUnit(@unit, @skill)
-		storeSpotOfUnit(@unit, @spot)
-		storeLeaderOfSpot(@spot, @allSpotLeader)
-		subv(@allSpotLeader, @allEccentricUnit)
-		if (has(@allSpotLeader, @unit) == 0) {
-			addv(@allSpotLeader, @unit)
-		}
-
-		set(requiredPoint, 19)
-		if (has(@skill, double) == 0 && has(@skill, artistictaste) == 1) {
-			set(requiredPoint, 39)
-		}else if (has(@skill, double, artistictaste) == 1) {
-			set(requiredPoint, 79)
-		}
-		pushRand(randPoint)
-		if (has(@allDoubleGetUnit, @unit) == 0 && randPoint <= requiredPoint) {
-			add(totalEconomyRank, 20)
-			addv(@allLevelupGetUnit, @allSpotLeader)
-			addv(@allAllaidGetUnit, @allSpotLeader)
-		}else if (has(@allDoubleGetUnit, @unit) == 1 && randPoint <= requiredPoint) {
-			add(totalEconomyRank, 40)
-			addv(@allHighlevelupGetUnit, @allSpotLeader)
-			addv(@allHighallaidGetUnit, @allSpotLeader)
-		}
+	subv(@allSpotLeader, @allEccentricUnit)
+	if (has(@allSpotLeader, @unit) == 0) {
+		addv(@allSpotLeader, @unit)
 	}
+
+	set(requiredPoint, 19)
+	if (has(@skill, double) == 0 && has(@skill, artistictaste) == 1) {
+		set(requiredPoint, 39)
+	}else if (has(@skill, double, artistictaste) == 1) {
+		set(requiredPoint, 79)
+	}
+	pushRand(randPoint)
+	if (has(@allDoubleGetUnit, @unit) == 0 && randPoint <= requiredPoint) {
+		add(totalEconomyRank, 20)
+		addv(@allLevelupGetUnit, @allSpotLeader)
+		addv(@allAllaidGetUnit, @allSpotLeader)
+	}else if (has(@allDoubleGetUnit, @unit) == 1 && randPoint <= requiredPoint) {
+		add(totalEconomyRank, 40)
+		addv(@allHighlevelupGetUnit, @allSpotLeader)
+		addv(@allHighallaidGetUnit, @allSpotLeader)
+	}
+}
+
+event traitskillevent_rich
+{
 //[大富豪]〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓
 //※資金増加[固定量]※____________________________________________________________________________________________________
-	while (count(@allRichUnit) >= 1) {
-		index(@allRichUnit, 0, @unit)
-		subv(@allRichUnit, @unit)
-		storeSkillOfUnit(@unit, @skill)
-
-		set(richPoint, 0)
-		if (getTurn() >= 1 && getTurn() <= 5) {
-			add(richPoint, 2500)
-		}else if (getTurn() >= 6 && getTurn() <= 10) {
-			add(richPoint, 2000)
-		}else if (getTurn() >= 11 && getTurn() <= 15) {
-			add(richPoint, 1500)
-		}else if (getTurn() >= 21 && getTurn() <= 25) {
-			add(richPoint, 1000)
-		}else if (getTurn() >= 26 && getTurn() <= 30) {
-			add(richPoint, 500)
-		}else {
-			add(richPoint, 50)
-		}
-		if (has(@allDoubleGetUnit, @unit) == 1) {
-			mul(richPoint, 2)
-		}
-		addMoney(@power, richPoint)
+	set(richPoint, 0)
+	if (getTurn() >= 1 && getTurn() <= 5) {
+		add(richPoint, 2500)
+	}else if (getTurn() >= 6 && getTurn() <= 10) {
+		add(richPoint, 2000)
+	}else if (getTurn() >= 11 && getTurn() <= 15) {
+		add(richPoint, 1500)
+	}else if (getTurn() >= 21 && getTurn() <= 25) {
+		add(richPoint, 1000)
+	}else if (getTurn() >= 26 && getTurn() <= 30) {
+		add(richPoint, 500)
+	}else {
+		add(richPoint, 50)
 	}
+	if (has(@allDoubleGetUnit, @unit) == 1) {
+		mul(richPoint, 2)
+	}
+	addMoney(@power, richPoint)
+}
+
 //[リクルーター]〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓
 //※勢力戦略「別系統クラスチェンジ」発動条件※____________________________________________________________________________________________________
-	while (count(@allRecruiterUnit) >= 1) {
-		index(@allRecruiterUnit, 0, @unit)
-		subv(@allRecruiterUnit, @unit)
+event traitskillevent_recruiter_machine
+{
+	set(SWITCHdifferentClassChange_machine, 1)
+}
 
-		if (count(@allRecruiterUnit_machine) >= 1) {
-			clear(@allRecruiterUnit_machine)
-			set(SWITCHdifferentClassChange_machine, 1)
-		}
-		if(count(@allRecruiterUnit_worker) >= 1) {
-			clear(@allRecruiterUnit_worker)
-			set(SWITCHdifferentClassChange_worker, 1)
-		}
-		if (count(@allRecruiterUnit_assassin) >= 1) {
-			clear(@allRecruiterUnit_assassin)
-			set(SWITCHdifferentClassChange_assassin, 1)
-		}
-	}
+event traitskillevent_recruiter_worker
+{
+	set(SWITCHdifferentClassChange_worker, 1)
+}
+
+event traitskillevent_recruiter_assassin
+{
+	set(SWITCHdifferentClassChange_assassin, 1)
+}
+
+event traitskillevent_desiretoprotect
+{
 //[庇護欲]〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓
 //※一時能力スキル［ＨＰ＆防御＆魔抵抗上昇］を付与※____________________________________________________________________________________________________
-	while (count(@allDesiretoprotectUnit) >= 1) {
-		index(@allDesiretoprotectUnit, 0, @unit)
-		subv(@allDesiretoprotectUnit, @unit)
-		storeSkillOfUnit(@unit, @skill)
-		storeSpotOfUnit(@unit, @spot)
-		storeLeaderOfSpot(@spot, @allSpotLeader)
-		subv(@allSpotLeader, @allEccentricUnit)
-		subv(@allSpotLeader, @unit)
+	subv(@allSpotLeader, @allEccentricUnit)
+	subv(@allSpotLeader, @unit)
 
-		while (count(@allSpotLeader) >= 1) {
-			index(@allSpotLeader, 0, @targetUnit)
-			subv(@allSpotLeader, @targetUnit)
-			storeSkillOfUnit(@targetUnit, @targetUnitSkill)
-			if (has(@targetUnitSkill, affectionate) == 1 || has(@targetUnitSkill, hardworker) == 1 || has(@targetUnitSkill, weakling) == 1) {
-				if (has(@allDoubleGetUnit, @unit) == 0) {
-					addv(@allHpdefmdfaidGetUnit, @targetUnit)
-				}else if (has(@allDoubleGetUnit, @unit) == 1) {
-					addv(@allHighhpdefmdfaidGetUnit, @targetUnit)
-				}
+	while (count(@allSpotLeader) >= 1) {
+		index(@allSpotLeader, 0, @targetUnit)
+		subv(@allSpotLeader, @targetUnit)
+		storeSkillOfUnit(@targetUnit, @targetUnitSkill)
+		if (has(@targetUnitSkill, affectionate) == 1 || has(@targetUnitSkill, hardworker) == 1 || has(@targetUnitSkill, weakling) == 1) {
+			if (has(@allDoubleGetUnit, @unit) == 0) {
+				addv(@allHpdefmdfaidGetUnit, @targetUnit)
+			}else if (has(@allDoubleGetUnit, @unit) == 1) {
+				addv(@allHighhpdefmdfaidGetUnit, @targetUnit)
 			}
 		}
 	}
+}
+
+event traitskillevent_sociable
+{
 //[社交的]〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓
 //※追加のＲａｎｋ加算※____________________________________________________________________________________________________
-	while (count(@allSociableUnit) >= 1) {
-		index(@allSociableUnit, 0, @unit)
-		subv(@allSociableUnit, @unit)
-		storeSkillOfUnit(@unit, @skill)
+	routine(classRank)
+	routine(fluctuateRank)
+	add(totalBattleRank, battleRank)
+	add(totalEconomyRank, economyRank)
+}
 
-		routine(classRank)
-		routine(fluctuateRank)
-		add(totalBattleRank, battleRank)
-		add(totalEconomyRank, economyRank)
-	}
+event traitskillevent_absolute
+{
 //[絶対者]〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓
 //※一時能力スキル［忠誠低下無効］を付与※____________________________________________________________________________________________________
-	while (count(@allAbsoluteUnit) >= 1) {
-		index(@allAbsoluteUnit, 0, @unit)
-		subv(@allAbsoluteUnit, @unit)
-
-		storePowerOfForce(1, @topPower)
-		if (isMaster(@unit) == 1 && @topPower == @power) {
-			storeSpotOfUnit(@unit, @spot)
-			storeLeaderOfSpot(@spot, @allSpotLeader)
-			subv(@allSpotLeader, @allEccentricUnit)
-			subv(@allSpotLeader, @unit)
-			addv(@allLoyaltykeepGetUnit, @allSpotLeader)
-		}
-	}
-//[カリスマ]〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓
-//※一時能力スキル［全主要能力上昇］付与※____________________________________________________________________________________________________
-	while (count(@allCharismaticUnit) >= 1) {
-		index(@allCharismaticUnit, 0, @unit)
-		subv(@allCharismaticUnit, @unit)
-		storeSkillOfUnit(@unit, @skill)
+	storePowerOfForce(1, @topPower)
+	if (isMaster(@unit) == 1 && @topPower == @power) {
 		storeSpotOfUnit(@unit, @spot)
 		storeLeaderOfSpot(@spot, @allSpotLeader)
 		subv(@allSpotLeader, @allEccentricUnit)
 		subv(@allSpotLeader, @unit)
+		addv(@allLoyaltykeepGetUnit, @allSpotLeader)
+	}
+}
 
-		pushLevel(@unit, unitLevel)
-		while (count(@allSpotLeader) >= 1) {
-			index(@allSpotLeader, 0, @targetUnit)
-			subv(@allSpotLeader, @targetUnit)
-			pushLevel(@targetUnit, targetUnitLevel)
-			if (has(@allDoubleGetUnit, @unit) == 0 && unitLevel > targetUnitLevel) {
-				addv(@allAllaidGetUnit, @targetUnit)
-			}else if (has(@allDoubleGetUnit, @unit) == 1 && unitLevel > targetUnitLevel) {
-				addv(@allHighallaidGetUnit, @targetUnit)
-			}
+event traitskillevent_charismatic
+{
+//[カリスマ]〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓
+//※一時能力スキル［全主要能力上昇］付与※____________________________________________________________________________________________________
+	subv(@allSpotLeader, @allEccentricUnit)
+	subv(@allSpotLeader, @unit)
+
+	while (count(@allSpotLeader) >= 1) {
+		index(@allSpotLeader, 0, @targetUnit)
+		subv(@allSpotLeader, @targetUnit)
+		pushLevel(@targetUnit, targetUnitLevel)
+		if (has(@allDoubleGetUnit, @unit) == 0 && unitLevel > targetUnitLevel) {
+			addv(@allAllaidGetUnit, @targetUnit)
+		}else if (has(@allDoubleGetUnit, @unit) == 1 && unitLevel > targetUnitLevel) {
+			addv(@allHighallaidGetUnit, @targetUnit)
 		}
 	}
-//[忠臣(２)]〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓
-//※一時能力スキル［忠誠低下無効］を付与※____________________________________________________________________________________________________
-	while (count(@allLoyalsubjectUnit2) >= 1) {
-		index(@allLoyalsubjectUnit2, 0, @unit)
-		subv(@allLoyalsubjectUnit2, @unit)
-
-		addv(@allLoyaltykeepGetUnit, @unit)
-	}
-//[合理的思考(２)]〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓
-//※一時能力スキル「ＨＰ＆ＭＰ上昇」を付与※____________________________________________________________________________________________________
-	while (count(@allRationalUnit2) >= 1) {
-		index(@allRationalUnit2, 0, @unit)
-		subv(@allRationalUnit2, @unit)
-		storeSkillOfUnit(@unit, @skill)
-		storeSpotOfUnit(@unit, @spot)
-		storeLeaderOfSpot(@spot, @allSpotLeader)
-		subv(@allSpotLeader, @allEccentricUnit)
-		if (has(@allSpotLeader, @unit) == 0) {
-			addv(@allSpotLeader, @unit)
-		}
-
-		if (has(@skill, innovation) == 1 || has(@skill, materialguard) == 1 || has(@skill, magicguard) == 1) {
-			pushLevel(@unit, unitLevel)
-			if (has(@allDoubleGetUnit, @unit) == 0 && unitLevel >= 21) {
-				addv(@allHpmpaidGetUnit, @allSpotLeader)
-				addv(@allLoyaltybufferGetUnit, @allSpotLeader)
-			}else if (has(@allDoubleGetUnit, @unit) == 1 && unitLevel >= 21) {
-				addv(@allHighhpmpaidGetUnit, @allSpotLeader)
-				addv(@allLoyaltykeepGetUnit, @allSpotLeader)
-			}
-		}
-	}
+}
+	
+event traitskillevent_materialguard
+{
 //[対物理配備論]〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓
 //※一時能力スキル「防御上昇」を付与※____________________________________________________________________________________________________
-	while (count(@allMaterialguardUnit) >= 1) {
-		index(@allMaterialguardUnit, 0, @unit)
-		subv(@allMaterialguardUnit, @unit)
-		storeSkillOfUnit(@unit, @skill)
-		storeSpotOfUnit(@unit, @spot)
-		storeLeaderOfSpot(@spot, @allSpotLeader)
-		set(SWITCHmaterialguardUnitActive, 1)
-		while (count(@allSpotLeader) >= 1) {
-			index(@allSpotLeader, 0, @targetUnit)
-			subv(@allSpotLeader, @targetUnit)
-			storeSkillOfUnit(@targetUnit, @targetUnitSkill)
-			if (has(@targetUnitSkill, magicguard) == 1) {
-				set(SWITCHmaterialguardUnitActive, 0)
-			}
+	set(SWITCHmaterialguardUnitActive, 1)
+	while (count(@allSpotLeader) >= 1) {
+		index(@allSpotLeader, 0, @targetUnit)
+		subv(@allSpotLeader, @targetUnit)
+		storeSkillOfUnit(@targetUnit, @targetUnitSkill)
+		if (has(@targetUnitSkill, magicguard) == 1) {
+			set(SWITCHmaterialguardUnitActive, 0)
 		}
-		storeLeaderOfSpot(@spot, @allSpotLeader)
-		subv(@allSpotLeader, @allEccentricUnit)
-		if (has(@allSpotLeader, @unit) == 0) {
-			addv(@allSpotLeader, @unit)
-		}
-
-		if (has(@allDoubleGetUnit, @unit) == 0 && SWITCHmaterialguardUnitActive == 1) {
-			addv(@allDefenseaidGetUnit, @allSpotLeader)
-		}else if (has(@allDoubleGetUnit, @unit) == 1 && SWITCHmaterialguardUnitActive == 1) {
-			addv(@allHighdefenseaidGetUnit, @allSpotLeader)
-		}
-		set(SWITCHmaterialguardUnitActive, 0)
 	}
+	storeLeaderOfSpot(@spot, @allSpotLeader)
+	subv(@allSpotLeader, @allEccentricUnit)
+	if (has(@allSpotLeader, @unit) == 0) {
+		addv(@allSpotLeader, @unit)
+	}
+
+	if (has(@allDoubleGetUnit, @unit) == 0 && SWITCHmaterialguardUnitActive == 1) {
+		addv(@allDefenseaidGetUnit, @allSpotLeader)
+	}else if (has(@allDoubleGetUnit, @unit) == 1 && SWITCHmaterialguardUnitActive == 1) {
+		addv(@allHighdefenseaidGetUnit, @allSpotLeader)
+	}
+	set(SWITCHmaterialguardUnitActive, 0)
+}
+event traitskillevent_magicguard
+{
 //[対魔法配備論]〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓
 //※一時能力スキル「魔抵抗上昇」を付与※____________________________________________________________________________________________________
-	while (count(@allMagicguardUnit) >= 1) {
-		index(@allMagicguardUnit, 0, @unit)
-		subv(@allMagicguardUnit, @unit)
-		storeSkillOfUnit(@unit, @skill)
-		storeSpotOfUnit(@unit, @spot)
-		storeLeaderOfSpot(@spot, @allSpotLeader)
-		set(SWITCHmagicguardUnitActive, 1)
-		while (count(@allSpotLeader) >= 1) {
-			index(@allSpotLeader, 0, @targetUnit)
-			subv(@allSpotLeader, @targetUnit)
-			storeSkillOfUnit(@targetUnit, @targetUnitSkill)
-			if (has(@targetUnitSkill, materialguard) == 1) {
-				set(SWITCHmagicguardUnitActive, 0)
-			}
+	set(SWITCHmagicguardUnitActive, 1)
+	while (count(@allSpotLeader) >= 1) {
+		index(@allSpotLeader, 0, @targetUnit)
+		subv(@allSpotLeader, @targetUnit)
+		storeSkillOfUnit(@targetUnit, @targetUnitSkill)
+		if (has(@targetUnitSkill, materialguard) == 1) {
+			set(SWITCHmagicguardUnitActive, 0)
 		}
-		storeLeaderOfSpot(@spot, @allSpotLeader)
-		subv(@allSpotLeader, @allEccentricUnit)
-		if (has(@allSpotLeader, @unit) == 0) {
-			addv(@allSpotLeader, @unit)
-		}
-
-		if (has(@allDoubleGetUnit, @unit) == 0 && SWITCHmagicguardUnitActive == 1) {
-			addv(@allMagdefaidGetUnit, @allSpotLeader)
-		}else if (has(@allDoubleGetUnit, @unit) == 1 && SWITCHmagicguardUnitActive == 1) {
-			addv(@allHighmagdefaidGetUnit, @allSpotLeader)
-		}
-		set(SWITCHmagicguardUnitActive, 0)
 	}
+	storeLeaderOfSpot(@spot, @allSpotLeader)
+	subv(@allSpotLeader, @allEccentricUnit)
+	if (has(@allSpotLeader, @unit) == 0) {
+		addv(@allSpotLeader, @unit)
+	}
+
+	if (has(@allDoubleGetUnit, @unit) == 0 && SWITCHmagicguardUnitActive == 1) {
+		addv(@allMagdefaidGetUnit, @allSpotLeader)
+	}else if (has(@allDoubleGetUnit, @unit) == 1 && SWITCHmagicguardUnitActive == 1) {
+		addv(@allHighmagdefaidGetUnit, @allSpotLeader)
+	}
+	set(SWITCHmagicguardUnitActive, 0)
+}
+
+event traitskillevent_calm
+{
 //[冷静]〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓
 //※一時能力スキル「忠誠低下抑制」を付与※____________________________________________________________________________________________________
-	while (count(@allCalmUnit) >= 1) {
-		index(@allCalmUnit, 0, @unit)
-		subv(@allCalmUnit, @unit)
-		storeSkillOfUnit(@unit, @skill)
-
-		if (has(@allDoubleGetUnit, @unit) == 0) {
-			addv(@allLoyaltybufferGetUnit, @unit)
-		}else if (has(@allDoubleGetUnit, @unit) == 1) {
-			addv(@allLoyaltykeepGetUnit, @unit)
-		}
+	if (has(@allDoubleGetUnit, @unit) == 0) {
+		addv(@allLoyaltybufferGetUnit, @unit)
+	}else if (has(@allDoubleGetUnit, @unit) == 1) {
+		addv(@allLoyaltykeepGetUnit, @unit)
 	}
+}
+event traitskillevent_nuisance
+{
 //[厄介者]〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓
 //※一時能力スキル「忠誠低下」を付与※____________________________________________________________________________________________________
 //※一時能力スキル「攻撃上昇」を付与※____________________________________________________________________________________________________
-	while (count(@allNuisanceUnit) >= 1) {
-		index(@allNuisanceUnit, 0, @unit)
-		subv(@allNuisanceUnit, @unit)
-		storeSkillOfUnit(@unit, @skill)
-		storeSpotOfUnit(@unit, @spot)
-		storeLeaderOfSpot(@spot, @allSpotLeader)
-		subv(@allSpotLeader, @allEccentricUnit)
-		subv(@allSpotLeader, @unit)
+	subv(@allSpotLeader, @allEccentricUnit)
+	subv(@allSpotLeader, @unit)
 
-		if (has(@allDoubleGetUnit, @unit) == 0) {
-			addv(@allLoyaltydownGetUnit, @allSpotLeader)
-			if (has(@skill, sadist) == 1) {
-				addv(@allAttackaidGetUnit, @unit)
-			}
-		}else if (has(@allDoubleGetUnit, @unit) == 1) {
-			addv(@allHighloyaltydownGetUnit, @allSpotLeader)
-			if (has(@skill, sadist) == 1) {
-				addv(@allHighattackaidGetUnit, @unit)
-			}
+	if (has(@allDoubleGetUnit, @unit) == 0) {
+		addv(@allLoyaltydownGetUnit, @allSpotLeader)
+		if (has(@skill, sadist) == 1) {
+			addv(@allAttackaidGetUnit, @unit)
+		}
+	}else if (has(@allDoubleGetUnit, @unit) == 1) {
+		addv(@allHighloyaltydownGetUnit, @allSpotLeader)
+		if (has(@skill, sadist) == 1) {
+			addv(@allHighattackaidGetUnit, @unit)
 		}
 	}
+}
+
+event traitskillevent_affectionate
+{
 //[慈愛]〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓
 //※一時能力スキル「忠誠回復」を付与※____________________________________________________________________________________________________
-	while (count(@allAffectionateUnit) >= 1) {
-		index(@allAffectionateUnit, 0, @unit)
-		subv(@allAffectionateUnit, @unit)
-		storeSkillOfUnit(@unit, @skill)
-		storeSpotOfUnit(@unit, @spot)
-		storeLeaderOfSpot(@spot, @allSpotLeader)
-		subv(@allSpotLeader, @allEccentricUnit)
-		if (has(@allSpotLeader, @unit) == 0) {
-			addv(@allSpotLeader, @unit)
-		}
-
-		if (has(@allDoubleGetUnit, @unit) == 0) {
-			addv(@allLoyaltyupGetUnit, @allSpotLeader)
-		}else if (has(@allDoubleGetUnit, @unit) == 1) {
-			addv(@allHighloyaltyupGetUnit, @allSpotLeader)
-		}
+	subv(@allSpotLeader, @allEccentricUnit)
+	if (has(@allSpotLeader, @unit) == 0) {
+		addv(@allSpotLeader, @unit)
 	}
+
+	if (has(@allDoubleGetUnit, @unit) == 0) {
+		addv(@allLoyaltyupGetUnit, @allSpotLeader)
+	}else if (has(@allDoubleGetUnit, @unit) == 1) {
+		addv(@allHighloyaltyupGetUnit, @allSpotLeader)
+	}
+}
+
+event traitskillevent_coldblood
+{
 //[冷血]〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓
 //※一時能力スキル「忠誠低下」を付与※____________________________________________________________________________________________________
-	while (count(@allColdbloodUnit) >= 1) {
-		index(@allColdbloodUnit, 0, @unit)
-		subv(@allColdbloodUnit, @unit)
-		storeSkillOfUnit(@unit, @skill)
-		storeSpotOfUnit(@unit, @spot)
-		storeLeaderOfSpot(@spot, @allSpotLeader)
-		subv(@allSpotLeader, @allEccentricUnit)
-		subv(@allSpotLeader, @unit)
+	subv(@allSpotLeader, @allEccentricUnit)
+	subv(@allSpotLeader, @unit)
 
-		if (has(@allDoubleGetUnit, @unit) == 0) {
-			addv(@allLoyaltydownGetUnit, @allSpotLeader)
-		}else if (has(@allDoubleGetUnit, @unit) == 1) {
-			addv(@allHighloyaltydownGetUnit, @allSpotLeader)
-		}
+	if (has(@allDoubleGetUnit, @unit) == 0) {
+		addv(@allLoyaltydownGetUnit, @allSpotLeader)
+	}else if (has(@allDoubleGetUnit, @unit) == 1) {
+		addv(@allHighloyaltydownGetUnit, @allSpotLeader)
 	}
+}
+
+event traitskillevent_moodyperson
+{
 //[気分屋]〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓
 //※一時能力ランダム付与※____________________________________________________________________________________________________
-	while (count(@allMoodypersonUnit) >= 1) {
-		index(@allMoodypersonUnit, 0, @unit)
-		subv(@allMoodypersonUnit, @unit)
-		storeSkillOfUnit(@unit, @skill)
-
-		pushRand(rand)
-		if (has(@allDoubleGetUnit, @unit) == 0) {
-			if (rand >= 0 && rand <= 4) {
-				addv(@allLoyaltybufferGetUnit, @unit)
-			}else if (rand >= 5 && rand <= 9) {
-				addv(@allLoyaltyupGetUnit, @unit)
-			}else if (rand >= 10 && rand <= 14) {
-				addv(@allLoyaltydownGetUnit, @unit)
-			}else if (rand >= 15 && rand <= 19) {
-				addv(@allLevelupGetUnit, @unit)
-			}else if (rand >= 20 && rand <= 24) {
-				addv(@allAllaidGetUnit, @unit)
-			}else if (rand >= 25 && rand <= 29) {
-				addv(@allAllweakenGetUnit, @unit)
-			}else if (rand >= 30 && rand <= 34) {
-				addv(@allMpatkmagaidGetUnit, @unit)
-			}else if (rand >= 35 && rand <= 39) {
-				addv(@allHpdefmdfaidGetUnit, @unit)
-			}else if (rand >= 40 && rand <= 44) {
-				addv(@allHpmpaidGetUnit, @unit)
-			}else if (rand >= 45 && rand <= 49) {
-				addv(@allAttackaidGetUnit, @unit)
-			}else if (rand >= 50 && rand <= 54) {
-				addv(@allDefenseaidGetUnit, @unit)
-			}else if (rand >= 55 && rand <= 59) {
-				addv(@allMagdefaidGetUnit, @unit)
-			}else if (rand >= 60 && rand <= 64) {
-				addv(@allMedicineGetUnit, @unit)
-			}else if (rand >= 65 && rand <= 69) {
-				addv(@allAssaultrifle_temporaryGetUnit, @unit)
-			}else if (rand >= 70 && rand <= 74) {
-				addv(@allGrenadegun_temporaryGetUnit, @unit)
-			}else if (rand >= 75 && rand <= 79) {
-				addv(@allTorpedo_temporaryGetUnit, @unit)
-			}else if (rand >= 80 && rand <= 84) {
-				addv(@allSniperrifle_temporaryGetUnit, @unit)
-			}else if (rand >= 85 && rand <= 89) {
-				addv(@allPoisonousdrug_temporaryGetUnit, @unit)
-			}else if (rand >= 90 && rand <= 94) {
-				addv(@allSparkcutter_temporaryGetUnit, @unit)
-			}else if (rand >= 95 && rand <= 99) {
-				addv(@allTemptationconf_temporaryGetUnit, @unit)
-			}
-		}else if (has(@allDoubleGetUnit, @unit) == 1) {
-			if (rand >= 0 && rand <= 4) {
-				addv(@allLoyaltykeepGetUnit, @unit)
-			}else if (rand >= 5 && rand <= 9) {
-				addv(@allHighloyaltyupGetUnit, @unit)
-			}else if (rand >= 10 && rand <= 14) {
-				addv(@allHighloyaltydownGetUnit, @unit)
-			}else if (rand >= 15 && rand <= 19) {
-				addv(@allHighlevelupGetUnit, @unit)
-			}else if (rand >= 20 && rand <= 24) {
-				addv(@allHighallaidGetUnit, @unit)
-			}else if (rand >= 25 && rand <= 29) {
-				addv(@allHighallweakenGetUnit, @unit)
-			}else if (rand >= 30 && rand <= 34) {
-				addv(@allHighmpatkmagaidGetUnit, @unit)
-			}else if (rand >= 35 && rand <= 39) {
-				addv(@allHighhpdefmdfaidGetUnit, @unit)
-			}else if (rand >= 40 && rand <= 44) {
-				addv(@allHighhpmpaidGetUnit, @unit)
-			}else if (rand >= 45 && rand <= 49) {
-				addv(@allHighattackaidGetUnit, @unit)
-			}else if (rand >= 50 && rand <= 54) {
-				addv(@allHighdefenseaidGetUnit, @unit)
-			}else if (rand >= 55 && rand <= 59) {
-				addv(@allHighmagdefaidGetUnit, @unit)
-			}else if (rand >= 60 && rand <= 64) {
-				addv(@allHighmedicineGetUnit, @unit)
-			}else if (rand >= 65 && rand <= 69) {
-				addv(@allAssaultrifle_temporaryGetUnit, @unit)
-			}else if (rand >= 70 && rand <= 74) {
-				addv(@allGrenadegun_temporaryGetUnit, @unit)
-			}else if (rand >= 75 && rand <= 79) {
-				addv(@allTorpedo_temporaryGetUnit, @unit)
-			}else if (rand >= 80 && rand <= 84) {
-				addv(@allSniperrifle_temporaryGetUnit, @unit)
-			}else if (rand >= 85 && rand <= 89) {
-				addv(@allPoisonousdrug_temporaryGetUnit, @unit)
-			}else if (rand >= 90 && rand <= 94) {
-				addv(@allSparkcutter_temporaryGetUnit, @unit)
-			}else if (rand >= 95 && rand <= 99) {
-				addv(@allTemptationconf_temporaryGetUnit, @unit)
-			}
+	pushRand(rand)
+	if (has(@allDoubleGetUnit, @unit) == 0) {
+		if (rand <= 4) {
+			addv(@allLoyaltybufferGetUnit, @unit)
+		}else if (rand <= 9) {
+			addv(@allLoyaltyupGetUnit, @unit)
+		}else if (rand <= 14) {
+			addv(@allLoyaltydownGetUnit, @unit)
+		}else if (rand <= 19) {
+			addv(@allLevelupGetUnit, @unit)
+		}else if (rand <= 24) {
+			addv(@allAllaidGetUnit, @unit)
+		}else if (rand <= 29) {
+			addv(@allAllweakenGetUnit, @unit)
+		}else if (rand <= 34) {
+			addv(@allMpatkmagaidGetUnit, @unit)
+		}else if (rand <= 39) {
+			addv(@allHpdefmdfaidGetUnit, @unit)
+		}else if (rand <= 44) {
+			addv(@allHpmpaidGetUnit, @unit)
+		}else if (rand <= 49) {
+			addv(@allAttackaidGetUnit, @unit)
+		}else if (rand <= 54) {
+			addv(@allDefenseaidGetUnit, @unit)
+		}else if (rand <= 59) {
+			addv(@allMagdefaidGetUnit, @unit)
+		}else if (rand <= 64) {
+			addv(@allMedicineGetUnit, @unit)
+		}else if (rand <= 69) {
+			addv(@allAssaultrifle_temporaryGetUnit, @unit)
+		}else if (rand <= 74) {
+			addv(@allGrenadegun_temporaryGetUnit, @unit)
+		}else if (rand <= 79) {
+			addv(@allTorpedo_temporaryGetUnit, @unit)
+		}else if (rand <= 84) {
+			addv(@allSniperrifle_temporaryGetUnit, @unit)
+		}else if (rand <= 89) {
+			addv(@allPoisonousdrug_temporaryGetUnit, @unit)
+		}else if (rand <= 94) {
+			addv(@allSparkcutter_temporaryGetUnit, @unit)
+		}else {
+			addv(@allTemptationconf_temporaryGetUnit, @unit)
+		}
+	}else if (has(@allDoubleGetUnit, @unit) == 1) {
+		if (rand <= 4) {
+			addv(@allLoyaltykeepGetUnit, @unit)
+		}else if (rand <= 9) {
+			addv(@allHighloyaltyupGetUnit, @unit)
+		}else if (rand <= 14) {
+			addv(@allHighloyaltydownGetUnit, @unit)
+		}else if (rand <= 19) {
+			addv(@allHighlevelupGetUnit, @unit)
+		}else if (rand <= 24) {
+			addv(@allHighallaidGetUnit, @unit)
+		}else if (rand <= 29) {
+			addv(@allHighallweakenGetUnit, @unit)
+		}else if (rand <= 34) {
+			addv(@allHighmpatkmagaidGetUnit, @unit)
+		}else if (rand <= 39) {
+			addv(@allHighhpdefmdfaidGetUnit, @unit)
+		}else if (rand <= 44) {
+			addv(@allHighhpmpaidGetUnit, @unit)
+		}else if (rand <= 49) {
+			addv(@allHighattackaidGetUnit, @unit)
+		}else if (rand <= 54) {
+			addv(@allHighdefenseaidGetUnit, @unit)
+		}else if (rand <= 59) {
+			addv(@allHighmagdefaidGetUnit, @unit)
+		}else if (rand <= 64) {
+			addv(@allHighmedicineGetUnit, @unit)
+		}else if (rand <= 69) {
+			addv(@allAssaultrifle_temporaryGetUnit, @unit)
+		}else if (rand <= 74) {
+			addv(@allGrenadegun_temporaryGetUnit, @unit)
+		}else if (rand <= 79) {
+			addv(@allTorpedo_temporaryGetUnit, @unit)
+		}else if (rand <= 84) {
+			addv(@allSniperrifle_temporaryGetUnit, @unit)
+		}else if (rand <= 89) {
+			addv(@allPoisonousdrug_temporaryGetUnit, @unit)
+		}else if (rand <= 94) {
+			addv(@allSparkcutter_temporaryGetUnit, @unit)
+		}else {
+			addv(@allTemptationconf_temporaryGetUnit, @unit)
 		}
 	}
+}
+
+event traitskillevent_madness
+{
 //[狂気]〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓
 //※一時能力スキル［ＬＶ上昇］を付与※____________________________________________________________________________________________________
-	while (count(@allMadnessUnit) >= 1) {
-		index(@allMadnessUnit, 0, @unit)
-		subv(@allMadnessUnit, @unit)
-		storeSkillOfUnit(@unit, @skill)
-
-		if (has(@skill, loyalsubject_nini) == 1 || has(@skill, loyalsubject_honoka) == 1 || has(@skill, loyalsubject_ouen) == 1 || has(@skill, loyalsubject_kamiya) == 1 || has(@skill, loyalsubject_daiya) == 1 || has(@skill, loyalsubject_himesiro) == 1 || has(@skill, loyalsubject_riferi) == 1 || has(@skill, loyalsubject_rifon) == 1 || has(@skill, loyalsubject_gaagoriusu) == 1 || has(@skill, loyalsubject_suiren) == 1 || has(@skill, loyalsubject_kizaki) == 1 || has(@skill, loyalsubject_veiraru) == 1 || has(@skill, loyalsubject_isikawa) == 1 || has(@skill, loyalsubject_ryudou) == 1 || has(@skill, loyalsubject_fel) == 1 || has(@skill, warlike) == 1 || has(@skill, hardworker) == 1) {
-			if (has(@allDoubleGetUnit, @unit) == 0) {
-				addv(@allLevelupGetUnit, @unit)
-			}else if (has(@allDoubleGetUnit, @unit) == 1) {
-				addv(@allHighlevelupGetUnit, @unit)
-			}
+	if (has(@skill, loyalsubject_nini) == 1 || has(@skill, loyalsubject_honoka) == 1 || has(@skill, loyalsubject_ouen) == 1 || has(@skill, loyalsubject_kamiya) == 1 || has(@skill, loyalsubject_daiya) == 1 || has(@skill, loyalsubject_himesiro) == 1 || has(@skill, loyalsubject_riferi) == 1 || has(@skill, loyalsubject_rifon) == 1 || has(@skill, loyalsubject_gaagoriusu) == 1 || has(@skill, loyalsubject_suiren) == 1 || has(@skill, loyalsubject_kizaki) == 1 || has(@skill, loyalsubject_veiraru) == 1 || has(@skill, loyalsubject_isikawa) == 1 || has(@skill, loyalsubject_ryudou) == 1 || has(@skill, loyalsubject_fel) == 1 || has(@skill, warlike) == 1 || has(@skill, hardworker) == 1) {
+		if (has(@allDoubleGetUnit, @unit) == 0) {
+			addv(@allLevelupGetUnit, @unit)
+		}else if (has(@allDoubleGetUnit, @unit) == 1) {
+			addv(@allHighlevelupGetUnit, @unit)
 		}
 	}
+}
+
+event traitskillevent_serious
+{
 //[生真面目]〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓
 //※一時能力スキル「全主要能力上昇」を付与※____________________________________________________________________________________________________
 //※一時能力スキル「全主要能力低下」を付与※____________________________________________________________________________________________________
-	while (count(@allSeriousUnit) >= 1) {
-		index(@allSeriousUnit, 0, @unit)
-		subv(@allSeriousUnit, @unit)
-		storeSkillOfUnit(@unit, @skill)
-
-		pushLoyal(@unit, unitLoyal)
-		if (unitLoyal >= 100) {
-			if (has(@allDoubleGetUnit, @unit) == 0) {
-				addv(@allAllaidGetUnit, @unit)
-			}else if (has(@allDoubleGetUnit, @unit) == 1) {
-				addv(@allHighallaidGetUnit, @unit)
-			}
-		}else if (unitLoyal <= 30) {
-			if (has(@allDoubleGetUnit, @unit) == 0) {
-				addv(@allAllweakenGetUnit, @unit)
-			}else if (has(@allDoubleGetUnit, @unit) == 1) {
-				addv(@allHighallweakenGetUnit, @unit)
-			}
-		}
-	}
-//[努力家]〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓
-//※一時能力スキル［ＬＶ上昇］を付与※____________________________________________________________________________________________________
-	while (count(@allHardworkerUnit) >= 1) {
-		index(@allHardworkerUnit, 0, @unit)
-		subv(@allHardworkerUnit, @unit)
-		storeSkillOfUnit(@unit, @skill)
-
-		if (rand() <= 49) {
-			if (has(@allDoubleGetUnit, @unit) == 0) {
-				addv(@allLevelupGetUnit, @unit)
-			}else if (has(@allDoubleGetUnit, @unit) == 1) {
-				addv(@allHighlevelupGetUnit, @unit)
-			}
-		}
-	}
-//[ムードメーカー]〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓
-//※一時能力スキル「忠誠低下抑制」を付与※____________________________________________________________________________________________________
-	while (count(@allMoodmakerUnit) >= 1) {
-		index(@allMoodmakerUnit, 0, @unit)
-		subv(@allMoodmakerUnit, @unit)
-		storeSkillOfUnit(@unit, @skill)
-		storeSpotOfUnit(@unit, @spot)
-		storeLeaderOfSpot(@spot, @allSpotLeader)
-		subv(@allSpotLeader, @allEccentricUnit)
-		subv(@allSpotLeader, @unit)
-
-		if (has(@allDoubleGetUnit, @unit) == 0) {
-			addv(@allLoyaltybufferGetUnit, @allSpotLeader)
-		}else if (has(@allDoubleGetUnit, @unit) == 1) {
-			addv(@allLoyaltykeepGetUnit, @allSpotLeader)
-		}
-	}
-//[男好き＆女好き(２)]〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓
-//※一時能力スキル「ＨＰ＆ＭＰ上昇」「忠誠低下抑制」を付与※____________________________________________________________________________________________________
-	while (count(@allSensualistUnit2) >= 1) {
-		index(@allSensualistUnit2, 0, @unit)
-		subv(@allSensualistUnit2, @unit)
-		storeSkillOfUnit(@unit, @skill)
-
-		if (has(@allDoubleGetUnit, @unit) == 0) {
-			addv(@allHpmpaidGetUnit, @unit)
-			addv(@allLoyaltybufferGetUnit, @unit)
-		}else if (has(@allDoubleGetUnit, @unit) == 1) {
-			addv(@allHighhpmpaidGetUnit, @unit)
-			addv(@allLoyaltykeepGetUnit, @unit)
-		}
-	}
-//[矜持]〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓
-//※一時能力スキル［全主要能力上昇］付与※____________________________________________________________________________________________________
-	while (count(@allPickyUnit) >= 1) {
-		index(@allPickyUnit, 0, @unit)
-		subv(@allPickyUnit, @unit)
-		storeSkillOfUnit(@unit, @skill)
-
+	if (unitLoyal >= 100) {
 		if (has(@allDoubleGetUnit, @unit) == 0) {
 			addv(@allAllaidGetUnit, @unit)
 		}else if (has(@allDoubleGetUnit, @unit) == 1) {
 			addv(@allHighallaidGetUnit, @unit)
 		}
-	}
-//[サディスト]〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓
-//※一時能力スキル［ＭＰ＆攻撃＆魔力上昇］付与※____________________________________________________________________________________________________
-	while (count(@allSadistUnit) >= 1) {
-		index(@allSadistUnit, 0, @unit)
-		subv(@allSadistUnit, @unit)
-		storeSkillOfUnit(@unit, @skill)
-		storeSpotOfUnit(@unit, @spot)
-		storeLeaderOfSpot(@spot, @allSpotLeader)
-		subv(@allSpotLeader, @allEccentricUnit)
-		subv(@allSpotLeader, @unit)
-
-		set(SWITCHSadistActive, 0)
-		while (count(@allSpotLeader) >= 1) {
-			index(@allSpotLeader, 0, @targetUnit)
-			subv(@allSpotLeader, @targetUnit)
-			storeSkillOfUnit(@targetUnit, @targetUnitSkill)
-			if (has(@targetUnitSkill, masochist) == 1) {
-				set(SWITCHSadistActive, 1)
-			}
-		}
-		if (has(@allDoubleGetUnit, @unit) == 0 && SWITCHSadistActive == 1) {
-			addv(@allMpatkmagaidGetUnit, @unit)
-		}else if (has(@allDoubleGetUnit, @unit) == 1 && SWITCHSadistActive == 1) {
-			addv(@allHighmpatkmagaidGetUnit, @unit)
-		}
-		set(SWITCHSadistActive, 0)
-	}
-//[マゾヒスト]〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓
-//※一時能力スキル［ＨＰ＆防御＆魔抵抗上昇］付与※____________________________________________________________________________________________________
-	while (count(@allMasochistUnit) >= 1) {
-		index(@allMasochistUnit, 0, @unit)
-		subv(@allMasochistUnit, @unit)
-		storeSkillOfUnit(@unit, @skill)
-		storeSpotOfUnit(@unit, @spot)
-		storeLeaderOfSpot(@spot, @allSpotLeader)
-		subv(@allSpotLeader, @allEccentricUnit)
-		subv(@allSpotLeader, @unit)
-
-		set(SWITCHmasochistActive, 0)
-		while (count(@allSpotLeader) >= 1) {
-			index(@allSpotLeader, 0, @targetUnit)
-			subv(@allSpotLeader, @targetUnit)
-			storeSkillOfUnit(@targetUnit, @targetUnitSkill)
-			if (has(@targetUnitSkill, sadist) == 1) {
-				set(SWITCHmasochistActive, 1)
-			}
-		}
-		if (has(@allDoubleGetUnit, @unit) == 0 && SWITCHmasochistActive == 1) {
-			addv(@allHpdefmdfaidGetUnit, @unit)
-		}else if (has(@allDoubleGetUnit, @unit) == 1 && SWITCHmasochistActive == 1) {
-			addv(@allHighhpdefmdfaidGetUnit, @unit)
-		}
-		set(SWITCHmasochistActive, 0)
-	}
-//[希望職]〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓
-//※一時能力スキル「忠誠回復」を付与※____________________________________________________________________________________________________
-	while (count(@allWishclassUnit) >= 1) {
-		index(@allWishclassUnit, 0, @unit)
-		subv(@allWishclassUnit, @unit)
-		storeSkillOfUnit(@unit, @skill)
-
-		set(SWITCHwishclassActive, 0)
-		storeBaseClassOfUnit(@unit, @class)
-		if (has(@allWishclassUnit_artist, @unit) == 1) {
-			subv(@allWishclassUnit_artist, @unit)
-			if (has(@class, artist) == 1) {
-				set(SWITCHwishclassActive, 2)
-			}
-		}
-		if (has(@allWishclassUnit_shotputter, @unit) == 1) {
-			subv(@allWishclassUnit_shotputter, @unit)
-			if (has(@class, shotputter) == 1) {
-				set(SWITCHwishclassActive, 3)
-			}
-		}
-		if (has(@allWishclassUnit_ninga, @unit) == 1) {
-			subv(@allWishclassUnit_ninga, @unit)
-			if (has(@class, ninga) == 1) {
-				set(SWITCHwishclassActive, 1)
-			}
-		}
-		if (has(@allWishclassUnit_bakuto, @unit) == 1) {
-			subv(@allWishclassUnit_bakuto, @unit)
-			if (has(@class, bakuto) == 1) {
-				set(SWITCHwishclassActive, 1)
-			}
-		}
-		if (has(@allWishclassUnit_mizusyoubai, @unit) == 1) {
-			subv(@allWishclassUnit_mizusyoubai, @unit)
-			if (has(@class, mizusyoubaim) == 1 || has(@class, mizusyoubaiw) == 1) {
-				set(SWITCHwishclassActive, 1)
-			}
-		}
-		if (has(@allWishclassUnit_bike, @unit) == 1) {
-			subv(@allWishclassUnit_bike, @unit)
-			if (has(@class, bike) == 1) {
-				set(SWITCHwishclassActive, 1)
-			}
-		}
-		if (has(@allWishclassUnit_thief, @unit) == 1) {
-			subv(@allWishclassUnit_thief, @unit)
-			if (has(@class, thief) == 1) {
-				set(SWITCHwishclassActive, 1)
-			}
-		}
-		if (has(@allWishclassUnit_dealer, @unit) == 1) {
-			subv(@allWishclassUnit_dealer, @unit)
-			if (has(@class, dealer) == 1) {
-				set(SWITCHwishclassActive, 1)
-			}
-		}
-
-		if (has(@allDoubleGetUnit, @unit) == 0 && SWITCHwishclassActive == 1) {
-			addv(@allLoyaltyupGetUnit, @unit)
-		}else if (has(@allDoubleGetUnit, @unit) == 1 && SWITCHwishclassActive == 1) {
-			addv(@allHighloyaltyupGetUnit, @unit)
-		}else if (has(@allDoubleGetUnit, @unit) == 0 && SWITCHwishclassActive == 2) {
-			addv(@allLoyaltyupGetUnit, @unit)
-			addv(@allArtupGetUnit, @unit)
-		}else if (has(@allDoubleGetUnit, @unit) == 1 && SWITCHwishclassActive == 2) {
-			addv(@allHighloyaltyupGetUnit, @unit)
-			addv(@allHighartupGetUnit, @unit)
-		}else if (has(@allDoubleGetUnit, @unit) == 0 && SWITCHwishclassActive == 3) {
-			addv(@allLoyaltyupGetUnit, @unit)
-			addv(@allMoveaidGetUnit, @unit)
-		}else if (has(@allDoubleGetUnit, @unit) == 1 && SWITCHwishclassActive == 3) {
-			addv(@allHighloyaltyupGetUnit, @unit)
-			addv(@allHighmoveaidGetUnit, @unit)
-		}
-		set(SWITCHwishclassActive, 0)
-	}
-//[武装共有]〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓
-//※一時能力スキル［(※攻撃スキル)］付与____________________________________________________________________________________________________
-	while (count(@allSkillshareUnit) >= 1) {
-		index(@allSkillshareUnit, 0, @unit)
-		subv(@allSkillshareUnit, @unit)
-		storeSkillOfUnit(@unit, @skill)
-		storeSpotOfUnit(@unit, @spot)
-		storeLeaderOfSpot(@spot, @allSpotLeader)
-		subv(@allSpotLeader, @allEccentricUnit)
-		if (has(@allSpotLeader, @unit) == 0) {
-			addv(@allSpotLeader, @unit)
-		}
-
-		if (has(@allSkillshareUnit_assaultrifle, @unit) == 1) {
-			subv(@allSkillshareUnit_assaultrifle, @unit)
-			addv(@allAssaultrifle_temporaryGetUnit, @allSpotLeader)
-		}
-		if (has(@allSkillshareUnit_grenadegun, @unit) == 1) {
-			subv(@allSkillshareUnit_grenadegun, @unit)
-			addv(@allGrenadegun_temporaryGetUnit, @allSpotLeader)
-		}
-		if (has(@allSkillshareUnit_torpedo, @unit) == 1) {
-			subv(@allSkillshareUnit_torpedo, @unit)
-			addv(@allTorpedo_temporaryGetUnit, @allSpotLeader)
-		}
-		if (has(@allSkillshareUnit_sniperrifle, @unit) == 1) {
-			subv(@allSkillshareUnit_sniperrifle, @unit)
-			addv(@allSniperrifle_temporaryGetUnit, @allSpotLeader)
-		}
-		if (has(@allSkillshareUnit_poisonousdrug, @unit) == 1) {
-			subv(@allSkillshareUnit_poisonousdrug, @unit)
-			addv(@allPoisonousdrug_temporaryGetUnit, @allSpotLeader)
-		}
-		if (has(@allSkillshareUnit_sparkcutter, @unit) == 1) {
-			subv(@allSkillshareUnit_sparkcutter, @unit)
-			addv(@allSparkcutter_temporaryGetUnit, @allSpotLeader)
-		}
-		if (has(@allSkillshareUnit_temptationconf, @unit) == 1) {
-			subv(@allSkillshareUnit_temptationconf, @unit)
-			addv(@allTemptationconf_temporaryGetUnit, @allSpotLeader)
-		}
-	}
-//[大器晩成(１)]〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓
-//※一時能力スキル［全主要能力上昇］付与※____________________________________________________________________________________________________
-	while (count(@allSlowstarterUnit) >= 1) {
-		index(@allSlowstarterUnit, 0, @unit)
-		subv(@allSlowstarterUnit, @unit)
-		storeSkillOfUnit(@unit, @skill)
-
-		pushLevel(@unit, unitLevel)
-		if (has(@allDoubleGetUnit, @unit) == 0 && unitLevel >= 21) {
-			addv(@allAllaidGetUnit, @unit)
-			addv(@allSlowstarterUnit2, @unit)
-		}else if (has(@allDoubleGetUnit, @unit) == 1 && unitLevel >= 21) {
-			addv(@allHighallaidGetUnit, @unit)
-			addv(@allSlowstarterUnit2, @unit)
-		}
-	}
-//[貧弱]〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓
-//※一時能力スキル［全主要能力低下］付与※____________________________________________________________________________________________________
-	while (count(@allWeaklingUnit) >= 1) {
-		index(@allWeaklingUnit, 0, @unit)
-		subv(@allWeaklingUnit, @unit)
-		storeSkillOfUnit(@unit, @skill)
-
+	}else if (unitLoyal <= 30) {
 		if (has(@allDoubleGetUnit, @unit) == 0) {
 			addv(@allAllweakenGetUnit, @unit)
 		}else if (has(@allDoubleGetUnit, @unit) == 1) {
 			addv(@allHighallweakenGetUnit, @unit)
 		}
 	}
-//[変身]〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓
-//※強制クラスチェンジ※____________________________________________________________________________________________________
-//※一時能力スキル［変身中］付与※____________________________________________________________________________________________________
-	while (count(@allMetamorphosisUnit) >= 1) {
-		index(@allMetamorphosisUnit, 0, @unit)
-		subv(@allMetamorphosisUnit, @unit)
-		storeSkillOfUnit(@unit, @skill)
-		storeSpotOfUnit(@unit, @spot)
-		storeLeaderOfSpot(@spot, @allSpotLeader)
-		subv(@allSpotLeader, @unit)
+}
 
-		if (count(@allSpotLeader) == 0) {
-			if (has(@skill, metamorphosistime10) == 0 && has(@skill, metamorphosistime9) == 0 && has(@skill, metamorphosistime8) == 0 && has(@skill, metamorphosistime7) == 0 && has(@skill, metamorphosistime6) == 0 && has(@skill, metamorphosistime5) == 0 && has(@skill, metamorphosistime4) == 0 && has(@skill, metamorphosistime3) == 0 && has(@skill, metamorphosistime2) == 0 && has(@skill, metamorphosistime1) == 0) {
-				storeBaseClassOfUnit(@unit, @class)
-				setv(@metamorphosisBeforeClass, @class)
-				setud(SAVEmetamorphosisBeforeClass, @metamorphosisBeforeClass)
-				changeClass(@unit, hero)
-				pushLevel(@unit, level)
-				setLevel(@unit, 1)
-				sub(level, 1)
-				addLevel(@unit, level)
-				if (level == 0) {
-					addLevel(@unit, 1)
-					setLevel(@unit, 1)
-				}
-				storeMemberOfUnit(@unit, @allMember)
-				storeAllTalent(@allTalent)
-				subv(@allMember, @allTalent)
-				while (count(@allMember) >= 1) {
-					index(@allMember, 0, @member)
-					subv(@allMember, @member)
-					changeClass(@member, hero)
-					pushLevel(@member, level)
-					setLevel(@member, 1)
-					sub(level, 1)
-					addLevel(@member, level)
-					if (level == 0) {
-						addLevel(@member, 1)
-						setLevel(@member, 1)
-					}
-				}
-				addv(@allMetamorphosistimeGetUnit, @unit)
+event traitskillevent_hardworker
+{
+//[努力家]〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓
+//※一時能力スキル［ＬＶ上昇］を付与※____________________________________________________________________________________________________
+	if (rand() <= 49) {
+		if (has(@allDoubleGetUnit, @unit) == 0) {
+			addv(@allLevelupGetUnit, @unit)
+		}else if (has(@allDoubleGetUnit, @unit) == 1) {
+			addv(@allHighlevelupGetUnit, @unit)
+		}
+	}
+}
+
+event traitskillevent_moodmaker
+{
+//[ムードメーカー]〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓
+//※一時能力スキル「忠誠低下抑制」を付与※____________________________________________________________________________________________________
+	subv(@allSpotLeader, @allEccentricUnit)
+	subv(@allSpotLeader, @unit)
+
+	if (has(@allDoubleGetUnit, @unit) == 0) {
+		addv(@allLoyaltybufferGetUnit, @allSpotLeader)
+	}else if (has(@allDoubleGetUnit, @unit) == 1) {
+		addv(@allLoyaltykeepGetUnit, @allSpotLeader)
+	}
+}
+
+	
+event traitskillevent_picky
+{
+//[矜持]〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓
+//※一時能力スキル［全主要能力上昇］付与※____________________________________________________________________________________________________
+	if (has(@allDoubleGetUnit, @unit) == 0) {
+		addv(@allAllaidGetUnit, @unit)
+	}else if (has(@allDoubleGetUnit, @unit) == 1) {
+		addv(@allHighallaidGetUnit, @unit)
+	}
+}
+
+event traitskillevent_sadist
+{
+//[サディスト]〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓
+//※一時能力スキル［ＭＰ＆攻撃＆魔力上昇］付与※____________________________________________________________________________________________________
+	subv(@allSpotLeader, @allEccentricUnit)
+	subv(@allSpotLeader, @unit)
+
+	set(SWITCHSadistActive, 0)
+	while (count(@allSpotLeader) >= 1) {
+		index(@allSpotLeader, 0, @targetUnit)
+		subv(@allSpotLeader, @targetUnit)
+		storeSkillOfUnit(@targetUnit, @targetUnitSkill)
+		if (has(@targetUnitSkill, masochist) == 1) {
+			set(SWITCHSadistActive, 1)
+		}
+	}
+	if (has(@allDoubleGetUnit, @unit) == 0 && SWITCHSadistActive == 1) {
+		addv(@allMpatkmagaidGetUnit, @unit)
+	}else if (has(@allDoubleGetUnit, @unit) == 1 && SWITCHSadistActive == 1) {
+		addv(@allHighmpatkmagaidGetUnit, @unit)
+	}
+	set(SWITCHSadistActive, 0)
+}
+
+event traitskillevent_masohist
+{
+//[マゾヒスト]〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓
+//※一時能力スキル［ＨＰ＆防御＆魔抵抗上昇］付与※____________________________________________________________________________________________________
+	subv(@allSpotLeader, @allEccentricUnit)
+	subv(@allSpotLeader, @unit)
+
+	set(SWITCHmasochistActive, 0)
+	while (count(@allSpotLeader) >= 1) {
+		index(@allSpotLeader, 0, @targetUnit)
+		subv(@allSpotLeader, @targetUnit)
+		storeSkillOfUnit(@targetUnit, @targetUnitSkill)
+		if (has(@targetUnitSkill, sadist) == 1) {
+			set(SWITCHmasochistActive, 1)
+		}
+	}
+	if (has(@allDoubleGetUnit, @unit) == 0 && SWITCHmasochistActive == 1) {
+		addv(@allHpdefmdfaidGetUnit, @unit)
+	}else if (has(@allDoubleGetUnit, @unit) == 1 && SWITCHmasochistActive == 1) {
+		addv(@allHighhpdefmdfaidGetUnit, @unit)
+	}
+	set(SWITCHmasochistActive, 0)
+}
+
+event traitskillevent_wishclass_artist
+{
+	setv(@wishclasstarget,artist)
+	routine(traitskillevent_wishclass)
+}
+
+event traitskillevent_wishclass_shotputter
+{
+	setv(@wishclasstarget,shotputter)
+	routine(traitskillevent_wishclass)
+}
+
+event traitskillevent_wishclass_ninga
+{
+	setv(@wishclasstarget,ninga)
+	routine(traitskillevent_wishclass)
+}
+
+event traitskillevent_wishclass_bakuto
+{
+	setv(@wishclasstarget,bakuto)
+	routine(traitskillevent_wishclass)
+}
+
+event traitskillevent_wishclass_mizusyoubaim
+{
+	setv(@wishclasstarget,mizusyoubaim)
+	routine(traitskillevent_wishclass)
+}
+
+event traitskillevent_wishclass_bike
+{
+	setv(@wishclasstarget,bike)
+	routine(traitskillevent_wishclass)
+}
+
+event traitskillevent_wishclass_thief
+{
+	setv(@wishclasstarget,thief)
+	routine(traitskillevent_wishclass)
+}
+
+event traitskillevent_wishclass_dealer
+{
+	setv(@wishclasstarget,dealer)
+	routine(traitskillevent_wishclass)
+}
+
+event traitskillevent_wishclass
+{
+//[希望職]〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓
+//※一時能力スキル「忠誠回復」を付与※____________________________________________________________________________________________________
+	set(SWITCHwishclassActive, 0)
+	storeBaseClassOfUnit(@unit, @class)
+
+	if (@class==@wishclasstarget) {
+		set(SWITCHwishclassActive, 1)
+	}
+	
+	if (SWITCHwishclassActive == 1) {
+		if (@wishclasstarget==artist) {
+			if (has(@allDoubleGetUnit, @unit) == 0 && @wishclasstarget==artist) {
+				addv(@allLoyaltyupGetUnit, @unit)
+				addv(@allArtupGetUnit, @unit)
+			}else if (has(@allDoubleGetUnit, @unit) == 1 && @wishclasstarget==artist) {
+				addv(@allHighloyaltyupGetUnit, @unit)
+				addv(@allHighartupGetUnit, @unit)
+			}
+		}else if (@wishclasstarget==shotputter) {
+			else if (has(@allDoubleGetUnit, @unit) == 0 && SWITCHwishclassActive == 3) {
+				addv(@allLoyaltyupGetUnit, @unit)
+				addv(@allMoveaidGetUnit, @unit)
+			}else if (has(@allDoubleGetUnit, @unit) == 1 && SWITCHwishclassActive == 3) {
+				addv(@allHighloyaltyupGetUnit, @unit)
+				addv(@allHighmoveaidGetUnit, @unit)
+			}
+		}else {
+			if (has(@allDoubleGetUnit, @unit) == 0) {
+				addv(@allLoyaltyupGetUnit, @unit)
+			}else if (has(@allDoubleGetUnit, @unit) == 1) {
+				addv(@allHighloyaltyupGetUnit, @unit)
 			}
 		}
 	}
+	set(SWITCHwishclassActive, 0)
+}
+
+//[武装共有]〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓
+//※一時能力スキル［(※攻撃スキル)］付与____________________________________________________________________________________________________
+event traitskillevent_skillshare_assaultrifle
+{
+	subv(@allSpotLeader, @allEccentricUnit)
+	if (has(@allSpotLeader, @unit) == 0) {
+		addv(@allSpotLeader, @unit)
+	}
+	subv(@allSkillshareUnit_assaultrifle, @unit)
+	addv(@allAssaultrifle_temporaryGetUnit, @allSpotLeader)
+}
+
+event traitskillevent_skillshare_grenadegun
+{
+	subv(@allSpotLeader, @allEccentricUnit)
+	if (has(@allSpotLeader, @unit) == 0) {
+		addv(@allSpotLeader, @unit)
+	}
+	subv(@allSkillshareUnit_grenadegun, @unit)
+	addv(@allgrenadegun_temporaryGetUnit, @allSpotLeader)
+}
+
+event traitskillevent_skillshare_torepedo
+{
+	subv(@allSpotLeader, @allEccentricUnit)
+	if (has(@allSpotLeader, @unit) == 0) {
+		addv(@allSpotLeader, @unit)
+	}
+	subv(@allSkillshareUnit_torepedo, @unit)
+	addv(@alltorepedo_temporaryGetUnit, @allSpotLeader)
+}
+
+event traitskillevent_skillshare_sniperrifle
+{
+	subv(@allSpotLeader, @allEccentricUnit)
+	if (has(@allSpotLeader, @unit) == 0) {
+		addv(@allSpotLeader, @unit)
+	}
+	subv(@allSkillshareUnit_sniperrifle, @unit)
+	addv(@allsniperrifle_temporaryGetUnit, @allSpotLeader)
+}
+
+event traitskillevent_skillshare_poisonousdrug
+{
+	subv(@allSpotLeader, @allEccentricUnit)
+	if (has(@allSpotLeader, @unit) == 0) {
+		addv(@allSpotLeader, @unit)
+	}
+	subv(@allSkillshareUnit_poisonousdrug, @unit)
+	addv(@allpoisonousdrug_temporaryGetUnit, @allSpotLeader)
+}
+
+event traitskillevent_skillshare_sparkcutter
+{
+	subv(@allSpotLeader, @allEccentricUnit)
+	if (has(@allSpotLeader, @unit) == 0) {
+		addv(@allSpotLeader, @unit)
+	}
+	subv(@allSkillshareUnit_sparkcutter, @unit)
+	addv(@allsparkcutter_temporaryGetUnit, @allSpotLeader)
+}
+
+event traitskillevent_skillshare_temptationconf
+{
+	subv(@allSpotLeader, @allEccentricUnit)
+	if (has(@allSpotLeader, @unit) == 0) {
+		addv(@allSpotLeader, @unit)
+	}
+	subv(@allSkillshareUnit_temptationconf, @unit)
+	addv(@alltemptationconf_temporaryGetUnit, @allSpotLeader)
+}
+
+event traitskillevent_slowstarter
+{
+//[大器晩成(１)]〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓
+//※一時能力スキル［全主要能力上昇］付与※____________________________________________________________________________________________________
+	if (has(@allDoubleGetUnit, @unit) == 0 && unitLevel >= 21) {
+		addv(@allAllaidGetUnit, @unit)
+		addv(@allSlowstarterUnit2, @unit)
+	}else if (has(@allDoubleGetUnit, @unit) == 1 && unitLevel >= 21) {
+		addv(@allHighallaidGetUnit, @unit)
+		addv(@allSlowstarterUnit2, @unit)
+	}
+}
+
+event traitskillevent_weakling
+{
+//[貧弱]〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓
+//※一時能力スキル［全主要能力低下］付与※____________________________________________________________________________________________________
+	if (has(@allDoubleGetUnit, @unit) == 0) {
+		addv(@allAllweakenGetUnit, @unit)
+	}else if (has(@allDoubleGetUnit, @unit) == 1) {
+		addv(@allHighallweakenGetUnit, @unit)
+	}
+}
+
+event traitskillevent_metamorphosis
+{
+//[変身]〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓
+//※強制クラスチェンジ※____________________________________________________________________________________________________
+//※一時能力スキル［変身中］付与※____________________________________________________________________________________________________
+	subv(@allSpotLeader, @unit)
+
+	if (count(@allSpotLeader) == 0) {
+		if (has(@skill, metamorphosistime10) == 0 && has(@skill, metamorphosistime9) == 0 && has(@skill, metamorphosistime8) == 0 && has(@skill, metamorphosistime7) == 0 && has(@skill, metamorphosistime6) == 0 && has(@skill, metamorphosistime5) == 0 && has(@skill, metamorphosistime4) == 0 && has(@skill, metamorphosistime3) == 0 && has(@skill, metamorphosistime2) == 0 && has(@skill, metamorphosistime1) == 0) {
+			storeBaseClassOfUnit(@unit, @class)
+			setv(@metamorphosisBeforeClass, @class)
+			setud(SAVEmetamorphosisBeforeClass, @metamorphosisBeforeClass)
+			changeClass(@unit, hero)
+			pushLevel(@unit, level)
+			setLevel(@unit, 1)
+			sub(level, 1)
+			addLevel(@unit, level)
+			if (level == 0) {
+				addLevel(@unit, 1)
+				setLevel(@unit, 1)
+			}
+			storeMemberOfUnit(@unit, @allMember)
+			storeAllTalent(@allTalent)
+			subv(@allMember, @allTalent)
+			while (count(@allMember) >= 1) {
+				index(@allMember, 0, @member)
+				subv(@allMember, @member)
+				changeClass(@member, hero)
+				pushLevel(@member, level)
+				setLevel(@member, 1)
+				sub(level, 1)
+				addLevel(@member, level)
+				if (level == 0) {
+					addLevel(@member, 1)
+					setLevel(@member, 1)
+				}
+			}
+			addv(@allMetamorphosistimeGetUnit, @unit)
+		}
+	}
+}
+
+event traitskillevent_uniquemagic
+{
 //[専用魔法]〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓
 //※一時能力スキル［エレクトリック・リチュアル］付与____________________________________________________________________________________________________
-	while (count(@allUniquemagicUnit) >= 1) {
-		index(@allUniquemagicUnit, 0, @unit)
-		subv(@allUniquemagicUnit, @unit)
+	addv(@allElectricritual_temporaryGetUnit, @unit)
+}
 
-		addv(@allElectricritual_temporaryGetUnit, @unit)
-	}
-//[大器晩成(２)]〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓
-//※ステータス低下系一時能力スキル無効(発動前除去)※____________________________________________________________________________________________________
-	while (count(@allSlowstarterUnit2) >= 1) {
-		index(@allSlowstarterUnit2, 0, @unit)
-		subv(@allSlowstarterUnit2, @unit)
-		storeSkillOfUnit(@unit, @skill)
-
-		subv(@allAllweakenGetUnit, @unit)
-		subv(@allHighallweakenGetUnit, @unit)
-	}
 //〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓
 }
 //■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■
@@ -1472,23 +1358,23 @@ event powerTacticsAction
 		set(SWITCHsearch, 1)
 		set(requiredPoint, 20)
 		set(talentSearchActive, 1)
-	}else if (countSpot(@power) >= 5 && countSpot(@power) <= 9) {
+	}else if (countSpot(@power) <= 9) {
 		set(SWITCHsearch, 2)
 		set(requiredPoint, 40)
 		set(talentSearchActive, 1)
-	}else if (countSpot(@power) >= 10 && countSpot(@power) <= 24) {
+	}else if (countSpot(@power) <= 24) {
 		set(SWITCHsearch, 3)
 		set(requiredPoint, 55)
 		set(talentSearchActive, 1)
-	}else if (countSpot(@power) >= 25 && countSpot(@power) <= 44) {
+	}else if (countSpot(@power) <= 44) {
 		set(SWITCHsearch, 4)
 		set(requiredPoint, 70)
 		set(talentSearchActive, 1)
-	}else if (countSpot(@power) >= 45 && countSpot(@power) <= 69) {
+	}else if (countSpot(@power) <= 69) {
 		set(SWITCHsearch, 5)
 		set(requiredPoint, 85)
 		set(talentSearchActive, 1)
-	}else if (countSpot(@power) >= 70) {
+	}else {
 		set(SWITCHsearch, 6)
 		set(requiredPoint, 100)
 		set(talentSearchActive, 1)
@@ -1596,17 +1482,7 @@ event powerTacticsAction
 		subv(@allTrainingLeader, @unit)
 		pushLevel(@unit, level)
 		set(talentTrainingActive, 0)
-		if (SWITCHtraining == 1 && level < limitLV) {
-			set(talentTrainingActive, 1)
-		}else if (SWITCHtraining == 2 && level < limitLV) {
-			set(talentTrainingActive, 1)
-		}else if (SWITCHtraining == 3 && level < limitLV) {
-			set(talentTrainingActive, 1)
-		}else if (SWITCHtraining == 4 && level < limitLV) {
-			set(talentTrainingActive, 1)
-		}else if (SWITCHtraining == 5 && level < limitLV) {
-			set(talentTrainingActive, 1)
-		}else if (SWITCHtraining == 6 && level < limitLV) {
+		if (SWITCHtraining >= 1 && SWITCHtraining <= 6 && level < limitLV) {
 			set(talentTrainingActive, 1)
 		}
 		if (talentTrainingActive == 1) {
@@ -1908,55 +1784,50 @@ event NoticeDisplayAction
 	}else if (count(@allActivePowerTactics) >= 8 && @SearchUnit != @) {
 		dialog(【発動中の勢力戦略一覧】$勢力戦略についての効果や詳細はメニューウィンドウにて確認出来ます。$$・勢力戦略「&activePowerTactics1&」発動中$人材探索に成功し『&SearchUnit&』を入手！$・勢力戦略「&activePowerTactics2&」発動中$・勢力戦略「&activePowerTactics3&」発動中$・勢力戦略「&activePowerTactics4&」発動中$・勢力戦略「&activePowerTactics5&」発動中$・勢力戦略「&activePowerTactics6&」発動中$・勢力戦略「&activePowerTactics7&」発動中$・勢力戦略「&activePowerTactics8&」発動中)
 	}
-
-	index(@allPlayerSleepUnit, 0, @playerSleepUnit1)
-	if (count(@allPlayerSleepUnit) >= 1) {
+	
+	set(idx,0)
+	set(sleepcountPSU,0)
+	while (idx<8 && idx<count(@allPlayerSleepUnit)) {
+		index(@allPlayerSleepUnit,idx, @playerSleepUnit)
+		
 		storeSkillOfUnit(@playerSleepUnit1, @PSUallskill)
 		routine(sleepCountSetTool)
-		set(sleepcountPSU1, sleepcount)
+		set(idx2,idx)
+		while (idx2>0) {
+			//sleepcountPSUの1の位に一人目の残り休暇ターン、10の位に2人目、100の位に…と保存していく
+			sub(idx2,1)
+			mul(sleepcount,10)
+		}
+		add(sleepcountPSU,sleepcount)
+		add(idx,1)
 	}
-	index(@allPlayerSleepUnit, 1, @playerSleepUnit2)
-	if (count(@allPlayerSleepUnit) >= 2) {
-		storeSkillOfUnit(@playerSleepUnit2, @PSUallskill)
-		routine(sleepCountSetTool)
-		set(sleepcountPSU2, sleepcount)
-	}
-	index(@allPlayerSleepUnit, 2, @playerSleepUnit3)
-	if (count(@allPlayerSleepUnit) >= 3) {
-		storeSkillOfUnit(@playerSleepUnit3, @PSUallskill)
-		routine(sleepCountSetTool)
-		set(sleepcountPSU3, sleepcount)
-	}
-	index(@allPlayerSleepUnit, 3, @playerSleepUnit4)
-	if (count(@allPlayerSleepUnit) >= 4) {
-		storeSkillOfUnit(@playerSleepUnit4, @PSUallskill)
-		routine(sleepCountSetTool)
-		set(sleepcountPSU4, sleepcount)
-	}
-	index(@allPlayerSleepUnit, 4, @playerSleepUnit5)
-	if (count(@allPlayerSleepUnit) >= 5) {
-		storeSkillOfUnit(@playerSleepUnit5, @PSUallskill)
-		routine(sleepCountSetTool)
-		set(sleepcountPSU5, sleepcount)
-	}
-	index(@allPlayerSleepUnit, 5, @playerSleepUnit6)
-	if (count(@allPlayerSleepUnit) >= 6) {
-		storeSkillOfUnit(@playerSleepUnit6, @PSUallskill)
-		routine(sleepCountSetTool)
-		set(sleepcountPSU6, sleepcount)
-	}
-	index(@allPlayerSleepUnit, 6, @playerSleepUnit7)
-	if (count(@allPlayerSleepUnit) >= 7) {
-		storeSkillOfUnit(@playerSleepUnit7, @PSUallskill)
-		routine(sleepCountSetTool)
-		set(sleepcountPSU7, sleepcount)
-	}
-	index(@allPlayerSleepUnit, 7, @playerSleepUnit8)
-	if (count(@allPlayerSleepUnit) >= 8) {
-		storeSkillOfUnit(@playerSleepUnit8, @PSUallskill)
-		routine(sleepCountSetTool)
-		set(sleepcountPSU8, sleepcount)
-	}
+	
+	//ヴァーレンの数値変数は小数点以下が切り捨てられるので、上のようなゴミみたいな保存法でも
+	//こんな感じで手軽に取り出せる
+	set(sleepcountPSU1,sleepcountPSU)
+	mod(sleepcountPSU1,10)
+	set(sleepcountPSU2,sleepcountPSU)
+	mod(sleepcountPSU2,100)
+	div(sleepcountPSU2,10)
+	set(sleepcountPSU3,sleepcountPSU)
+	mod(sleepcountPSU3,1000)
+	div(sleepcountPSU3,100)
+	set(sleepcountPSU4,sleepcountPSU)
+	mod(sleepcountPSU4,10000)
+	div(sleepcountPSU4,1000)
+	set(sleepcountPSU5,sleepcountPSU)
+	mod(sleepcountPSU5,100000)
+	div(sleepcountPSU5,10000)
+	set(sleepcountPSU6,sleepcountPSU)
+	mod(sleepcountPSU6,1000000)
+	div(sleepcountPSU6,100000)
+	set(sleepcountPSU7,sleepcountPSU)
+	mod(sleepcountPSU7,10000000)
+	div(sleepcountPSU7,1000000)
+	set(sleepcountPSU7,sleepcountPSU)
+	mod(sleepcountPSU2,100000000)
+	div(sleepcountPSU2,10000000)
+
 	if (count(@allPlayerSleepUnit) == 1) {
 		dialog(【休暇中人材一覧】$忠誠が０になる等の理由で一時的に勢力を離れている人材の一覧です。$・「&playerSleepUnit1&」&sleepcountPSU1&ターン後復帰)
 	}else if (count(@allPlayerSleepUnit) == 2) {
@@ -2260,66 +2131,41 @@ event sleepComeback
 //〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓
 	if (@power == @belongingToPower) {
 		storeSkillOfUnit(@unit, @skill)
-		if (has(@skill, unitsleeping7) == 1) {
-			eraseSkill(@unit, unitsleeping7)
-			addSkill(@unit, unitsleeping6)
-		}else if (has(@skill, unitsleeping6) == 1) {
-			eraseSkill(@unit, unitsleeping6)
-			addSkill(@unit, unitsleeping5)
-		}else if (has(@skill, unitsleeping5) == 1) {
-			eraseSkill(@unit, unitsleeping5)
-			addSkill(@unit, unitsleeping4)
-		}else if (has(@skill, unitsleeping4) == 1) {
-			eraseSkill(@unit, unitsleeping4)
-			addSkill(@unit, unitsleeping3)
-		}else if (has(@skill, unitsleeping3) == 1) {
-			eraseSkill(@unit, unitsleeping3)
-			addSkill(@unit, unitsleeping2)
-		}else if (has(@skill, unitsleeping2) == 1) {
-			eraseSkill(@unit, unitsleeping2)
-			addSkill(@unit, unitsleeping1)
-		}else if (has(@skill, unitsleeping1) == 1) {
-			storeSpotOfPower(@power, @allPowerSpot)
-			storeLeaderOfSpot(@allPowerSpot, @allPowerLeader)
-			set(allSpotCapa, 0)
-			while (count(@allPowerSpot) >= 1) {
-				index(@allPowerSpot, 0, @spot)
-				subv(@allPowerSpot, @spot)
-				pushCapa(@spot, spotCapa)
-				add(allSpotCapa, spotCapa)
+		storeskillset(unitsleepingskillset,@skillset)
+		set(idx,0)
+		while (idx<7) {
+			index(@skillset,idx,@sleepingskill)
+			if (has(@skill,@sleepingskill) == 1) {
+				eraseSkill(@unit,@sleepingskill)
+				if (idx!=0) {
+					sub(idx,1)
+					index(@skillset,idx,@sleepingskill)
+					addSkill(@unit,@sleepingskill)
+				}
+				else {
+					storeSpotOfPower(@power, @allPowerSpot)
+						storeLeaderOfSpot(@allPowerSpot, @allPowerLeader)
+						set(allSpotCapa, 0)
+						while (count(@allPowerSpot) >= 1) {
+							index(@allPowerSpot, 0, @spot)
+							subv(@allPowerSpot, @spot)
+							pushCapa(@spot, spotCapa)
+							add(allSpotCapa, spotCapa)
+						}
+						if (allSpotCapa > count(@allPowerLeader)) {
+							eraseSkill(@unit, unitsleeping1)
+							addUnit(@unit, @power)
+							addLoyal(@unit, 100)
+						}else if (allSpotCapa <= count(@allPowerLeader)) {
+			// 			msg(［勢力内の領地が満員のため&unit&は休暇より復帰出来ませんでした。$引き続き休暇を継続します。］)
+			//ΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞ
+			// pushv(@allPowerLeader, allPowerLeaderTest)
+			// talk(fel, fel_tu.png, ［デバックメッセージ］変数確認するよ。$人材名「&unit&」勢力「&power&」$全リーダー数「&allPowerLeaderTest&」全駐在可能数「&allSpotCapa&」)
+			//ΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞ
+						}
+				}
 			}
-			if (allSpotCapa > count(@allPowerLeader)) {
-				eraseSkill(@unit, unitsleeping1)
-				addUnit(@unit, @power)
-				addLoyal(@unit, 100)
-			}else if (allSpotCapa <= count(@allPowerLeader)) {
-// 			msg(［勢力内の領地が満員のため&unit&は休暇より復帰出来ませんでした。$引き続き休暇を継続します。］)
-//ΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞ
-// pushv(@allPowerLeader, allPowerLeaderTest)
-// talk(fel, fel_tu.png, ［デバックメッセージ］変数確認するよ。$人材名「&unit&」勢力「&power&」$全リーダー数「&allPowerLeaderTest&」全駐在可能数「&allSpotCapa&」)
-//ΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞ
-			}
-		}else {
-			storeSpotOfPower(@power, @allPowerSpot)
-			storeLeaderOfSpot(@allPowerSpot, @allPowerLeader)
-			set(allSpotCapa, 0)
-			while (count(@allPowerSpot) >= 1) {
-				index(@allPowerSpot, 0, @spot)
-				subv(@allPowerSpot, @spot)
-				pushCapa(@spot, spotCapa)
-				add(allSpotCapa, spotCapa)
-			}
-			if (allSpotCapa > count(@allPowerLeader)) {
-				eraseSkill(@unit, unitsleeping7, unitsleeping6, unitsleeping5, unitsleeping4, unitsleeping3, unitsleeping2, unitsleeping1)
-				addUnit(@unit, @power)
-				addLoyal(@unit, 100)
-			}else if (allSpotCapa <= count(@allPowerLeader)) {
-// 			msg(［勢力内の領地が満員のため&unit&は休暇より復帰出来ませんでした。$引き続き休暇を継続します。］)
-//ΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞ
-// pushv(@allPowerLeader, allPowerLeaderTest)
-// talk(fel, fel_tu.png, ［デバックメッセージ］変数確認するよ。$人材名「&unit&」勢力「&power&」$全リーダー数「&allPowerLeaderTest&」全駐在可能数「&allSpotCapa&」)
-//ΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞ
-			}
+			add(idx,1)
 		}
 	}
 }
@@ -2345,68 +2191,19 @@ event sleepRemoval
 	}else if (EVsleep == 1) {
 		addSkill(@unit, unitsleeping1)
 	}
-	storeLeaderOfSpot(invisible1, @invisible1Capa)
-	storeLeaderOfSpot(invisible2, @invisible2Capa)
-	storeLeaderOfSpot(invisible3, @invisible3Capa)
-	storeLeaderOfSpot(invisible4, @invisible4Capa)
-	storeLeaderOfSpot(invisible5, @invisible5Capa)
-	storeLeaderOfSpot(invisible6, @invisible6Capa)
-	storeLeaderOfSpot(invisible7, @invisible7Capa)
-	storeLeaderOfSpot(invisible8, @invisible8Capa)
-	storeLeaderOfSpot(invisible9, @invisible9Capa)
-	storeLeaderOfSpot(invisible10, @invisible10Capa)
-	storeLeaderOfSpot(invisible11, @invisible11Capa)
-	storeLeaderOfSpot(invisible12, @invisible12Capa)
-	storeLeaderOfSpot(invisible13, @invisible13Capa)
-	storeLeaderOfSpot(invisible14, @invisible14Capa)
-	storeLeaderOfSpot(invisible15, @invisible15Capa)
-	storeLeaderOfSpot(invisible16, @invisible16Capa)
-	storeLeaderOfSpot(invisible17, @invisible17Capa)
-	storeLeaderOfSpot(invisible18, @invisible18Capa)
-	storeLeaderOfSpot(invisible19, @invisible19Capa)
-	storeLeaderOfSpot(invisible20, @invisible20Capa)
+	storeskillset(invisiblespot,@skillset)
+	set(idx,0)
+	while (idx<20) {
+		index(@skillset,idx,@invisibleSpot)
+		storeleaderofspot(@invisibleSpot,@invisibleCapa)
+		if (count(@invisibleCapa) <= 19) {
+			addUnit(@unit,@invisibleSpot)
+			break()
+		}
+		add(idx,1)
+	}
 
-	if (count(@invisible1Capa) <= 19) {
-		addUnit(@unit, invisible1)
-	}else if (count(@invisible2Capa) <= 19) {
-		addUnit(@unit, invisible2)
-	}else if (count(@invisible3Capa) <= 19) {
-		addUnit(@unit, invisible3)
-	}else if (count(@invisible4Capa) <= 19) {
-		addUnit(@unit, invisible4)
-	}else if (count(@invisible5Capa) <= 19) {
-		addUnit(@unit, invisible5)
-	}else if (count(@invisible6Capa) <= 19) {
-		addUnit(@unit, invisible6)
-	}else if (count(@invisible7Capa) <= 19) {
-		addUnit(@unit, invisible7)
-	}else if (count(@invisible8Capa) <= 19) {
-		addUnit(@unit, invisible8)
-	}else if (count(@invisible9Capa) <= 19) {
-		addUnit(@unit, invisible9)
-	}else if (count(@invisible10Capa) <= 19) {
-		addUnit(@unit, invisible10)
-	}else if (count(@invisible11Capa) <= 19) {
-		addUnit(@unit, invisible11)
-	}else if (count(@invisible12Capa) <= 19) {
-		addUnit(@unit, invisible12)
-	}else if (count(@invisible13Capa) <= 19) {
-		addUnit(@unit, invisible13)
-	}else if (count(@invisible14Capa) <= 19) {
-		addUnit(@unit, invisible14)
-	}else if (count(@invisible15Capa) <= 19) {
-		addUnit(@unit, invisible15)
-	}else if (count(@invisible16Capa) <= 19) {
-		addUnit(@unit, invisible16)
-	}else if (count(@invisible17Capa) <= 19) {
-		addUnit(@unit, invisible17)
-	}else if (count(@invisible18Capa) <= 19) {
-		addUnit(@unit, invisible18)
-	}else if (count(@invisible19Capa) <= 19) {
-		addUnit(@unit, invisible19)
-	}else if (count(@invisible20Capa) <= 19) {
-		addUnit(@unit, invisible20)
-// 	}else {
+// 	if (idx==20) {
 // 		msg(［休憩中ユニットが多すぎるため&unit&は休暇出来ませんでした。$忠誠値が回復し、引き続き戦場に残存します］)
 // 		addLoyal(@unit, 100)
 // 		eraseSkill(@unit, unitsleeping7)
@@ -2682,126 +2479,82 @@ event spObjectiveClassSet
 //▼▼※呼び出し前「一時ユニット@unit」「一時ユニット所持スキル@skill」に中身が必要。
 event sealDelete
 {
-		if (has(@skill, seal10) == 1) {
-			eraseSkill(@unit, seal10)
-			addSkill(@unit, seal9)
-		}else if (has(@skill, seal9) == 1) {
-			eraseSkill(@unit, seal9)
-			addSkill(@unit, seal8)
-		}else if (has(@skill, seal8) == 1) {
-			eraseSkill(@unit, seal8)
-			addSkill(@unit, seal7)
-		}else if (has(@skill, seal7) == 1) {
-			eraseSkill(@unit, seal7)
-			addSkill(@unit, seal6)
-		}else if (has(@skill, seal6) == 1) {
-			eraseSkill(@unit, seal6)
-			addSkill(@unit, seal5)
-		}else if (has(@skill, seal5) == 1) {
-			eraseSkill(@unit, seal5)
-			addSkill(@unit, seal4)
-		}else if (has(@skill, seal4) == 1) {
-			eraseSkill(@unit, seal4)
-			addSkill(@unit, seal3)
-		}else if (has(@skill, seal3) == 1) {
-			eraseSkill(@unit, seal3)
-			addSkill(@unit, seal2)
-		}else if (has(@skill, seal2) == 1) {
-			eraseSkill(@unit, seal2)
-			addSkill(@unit, seal1)
-		}else if (has(@skill, seal1) == 1) {
-			eraseSkill(@unit, seal1)
-		}
-
-		if (has(@skill, elation10) == 1) {
-			eraseSkill(@unit, elation10)
-			addSkill(@unit, elation9)
-		}else if (has(@skill, elation9) == 1) {
-			eraseSkill(@unit, elation9)
-			addSkill(@unit, elation8)
-		}else if (has(@skill, elation8) == 1) {
-			eraseSkill(@unit, elation8)
-			addSkill(@unit, elation7)
-		}else if (has(@skill, elation7) == 1) {
-			eraseSkill(@unit, elation7)
-			addSkill(@unit, elation6)
-		}else if (has(@skill, elation6) == 1) {
-			eraseSkill(@unit, elation6)
-			addSkill(@unit, elation5)
-		}else if (has(@skill, elation5) == 1) {
-			eraseSkill(@unit, elation5)
-			addSkill(@unit, elation4)
-		}else if (has(@skill, elation4) == 1) {
-			eraseSkill(@unit, elation4)
-			addSkill(@unit, elation3)
-		}else if (has(@skill, elation3) == 1) {
-			eraseSkill(@unit, elation3)
-			addSkill(@unit, elation2)
-		}else if (has(@skill, elation2) == 1) {
-			eraseSkill(@unit, elation2)
-			addSkill(@unit, elation1)
-		}else if (has(@skill, elation1) == 1) {
-			eraseSkill(@unit, elation1)
-		}
-
-		if (has(@skill, metamorphosistime10) == 1) {
-			eraseSkill(@unit, metamorphosistime10)
-			addSkill(@unit, metamorphosistime9)
-		}else if (has(@skill, metamorphosistime9) == 1) {
-			eraseSkill(@unit, metamorphosistime9)
-			addSkill(@unit, metamorphosistime8)
-		}else if (has(@skill, metamorphosistime8) == 1) {
-			eraseSkill(@unit, metamorphosistime8)
-			addSkill(@unit, metamorphosistime7)
-		}else if (has(@skill, metamorphosistime7) == 1) {
-			eraseSkill(@unit, metamorphosistime7)
-			addSkill(@unit, metamorphosistime6)
-		}else if (has(@skill, metamorphosistime6) == 1) {
-			eraseSkill(@unit, metamorphosistime6)
-			addSkill(@unit, metamorphosistime5)
-		}else if (has(@skill, metamorphosistime5) == 1) {
-			eraseSkill(@unit, metamorphosistime5)
-			addSkill(@unit, metamorphosistime4)
-		}else if (has(@skill, metamorphosistime4) == 1) {
-			eraseSkill(@unit, metamorphosistime4)
-			addSkill(@unit, metamorphosistime3)
-		}else if (has(@skill, metamorphosistime3) == 1) {
-			eraseSkill(@unit, metamorphosistime3)
-			addSkill(@unit, metamorphosistime2)
-		}else if (has(@skill, metamorphosistime2) == 1) {
-			eraseSkill(@unit, metamorphosistime2)
-			addSkill(@unit, metamorphosistime1)
-		}else if (has(@skill, metamorphosistime1) == 1) {
-			eraseSkill(@unit, metamorphosistime1)
-
-			storeud(SAVEmetamorphosisBeforeClass, @metamorphosisBeforeClass)
-			setv(@class, @metamorphosisBeforeClass)
-			changeClass(@unit, @class)
-			pushLevel(@unit, level)
-			setLevel(@unit, 1)
-			sub(level, 1)
-			addLevel(@unit, level)
-			if (level == 0) {
-				addLevel(@unit, 1)
-				setLevel(@unit, 1)
+	storeskillset(sealskillset,@skillset)
+	set(idx,0)
+	while (idx<10) {
+		index(@skillset,idx,@Countskill)
+		if (has(@skill,@Sealskill) == 1) {
+			eraseSkill(@unit,@Countskill)
+			if (idx!=0) {
+				sub(idx,1)
+				index(@skillset,idx,@Countskill)
+				addSkill(@unit,@Countskill)
 			}
-			storeMemberOfUnit(@unit, @allMember)
-			storeAllTalent(@allTalent)
-			subv(@allMember, @allTalent)
-			while (count(@allMember) >= 1) {
-				index(@allMember, 0, @member)
-				subv(@allMember, @member)
-				changeClass(@member, @class)
-				pushLevel(@member, level)
-				setLevel(@member, 1)
+			break()
+		}
+		add(idx,1)
+	}
+	
+	storeskillset(elationskillset,@skillset)
+	set(idx,0)
+	while (idx<10) {
+		index(@skillset,idx,@Countskill)
+		if (has(@skill,@Sealskill) == 1) {
+			eraseSkill(@unit,@Countskill)
+			if (idx!=0) {
+				sub(idx,1)
+				index(@skillset,idx,@Countskill)
+				addSkill(@unit,@Countskill)
+			}
+			break()
+		}
+		add(idx,1)
+	}
+	
+	storeskillset(metamorphosistimeskillset,@skillset)
+	set(idx,0)
+	while (idx<10) {
+		index(@skillset,idx,@Countskill)
+		if (has(@skill,@Sealskill) == 1) {
+			eraseSkill(@unit,@Countskill)
+			if (idx!=0) {
+				sub(idx,1)
+				index(@skillset,idx,@Countskill)
+				addSkill(@unit,@Countskill)
+			}
+			else {
+				storeud(SAVEmetamorphosisBeforeClass, @metamorphosisBeforeClass)
+				setv(@class, @metamorphosisBeforeClass)
+				changeClass(@unit, @class)
+				pushLevel(@unit, level)
+				setLevel(@unit, 1)
 				sub(level, 1)
-				addLevel(@member, level)
+				addLevel(@unit, level)
 				if (level == 0) {
-					addLevel(@member, 1)
+					addLevel(@unit, 1)
+					setLevel(@unit, 1)
+				}
+				storeMemberOfUnit(@unit, @allMember)
+				storeAllTalent(@allTalent)
+				subv(@allMember, @allTalent)
+				while (count(@allMember) >= 1) {
+					index(@allMember, 0, @member)
+					subv(@allMember, @member)
+					changeClass(@member, @class)
+					pushLevel(@member, level)
 					setLevel(@member, 1)
+					sub(level, 1)
+					addLevel(@member, level)
+					if (level == 0) {
+						addLevel(@member, 1)
+						setLevel(@member, 1)
+					}
 				}
 			}
+			break()
 		}
+		add(idx,1)
+	}
 }
 //■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■
 
@@ -2889,331 +2642,10 @@ event classChangeUnitSet_player
 event classRank
 {
 	storeBaseClassOfUnit(@unit, @class)
-//ガイド系______________________________________________________________________________________________________
-	if (@class == guidestaff) {
-		set(battleRank, 2)
-		set(economyRank, 1)
-	}else if (@class == butler) {
-		set(battleRank, 1)
-		set(economyRank, 2)
-	}else if (@class == sage) {
-		set(battleRank, 4)
-		set(economyRank, 2)
-	}else if (@class == patrician) {
-		set(battleRank, 3)
-		set(economyRank, 3)
-	}else if (@class == artist) {
-		set(battleRank, 0)
-		set(economyRank, 5)
-	}else if (@class == chevalier) {
-		set(battleRank, 7)
-		set(economyRank, 0)
-	}else if (@class == seer) {
-		set(battleRank, 3)
-		set(economyRank, 5)
-	}else if (@class == divine) {
-		set(battleRank, 7)
-		set(economyRank, 7)
-//アーミー系____________________________________________________________________________________________________
-	}else if (@class == army) {
-		set(battleRank, 3)
-		set(economyRank, 0)
-	}else if (@class == provisioner) {
-		set(battleRank, 0)
-		set(economyRank, 2)
-	}else if (@class == hinfantry) {
-		set(battleRank, 5)
-		set(economyRank, 0)
-	}else if (@class == sniper) {
-		set(battleRank, 4)
-		set(economyRank, 0)
-	}else if (@class == magicsoldier) {
-		set(battleRank, 4)
-		set(economyRank, 0)
-	}else if (@class == tank) {
-		set(battleRank, 7)
-		set(economyRank, 0)
-	}else if (@class == helicopter) {
-		set(battleRank, 7)
-		set(economyRank, 0)
-	}else if (@class == battleship) {
-		set(battleRank, 5)
-		set(economyRank, 2)
-//マシン系______________________________________________________________________________________________________
-	}else if (@class == nanashi001) {
-		set(battleRank, 1)
-		set(economyRank, 0)
-	}else if (@class == nanashi000) {
-		set(battleRank, 0)
-		set(economyRank, 1)
-	}else if (@class == nanashi002) {
-		set(battleRank, 2)
-		set(economyRank, 1)
-	}else if (@class == nanashi003) {
-		set(battleRank, 3)
-		set(economyRank, 0)
-	}else if (@class == nanashi004) {
-		set(battleRank, 3)
-		set(economyRank, 0)
-	}else if (@class == nanashi005) {
-		set(battleRank, 3)
-		set(economyRank, 0)
-	}else if (@class == nanashi006) {
-		set(battleRank, 0)
-		set(economyRank, 3)
-	}else if (@class == nanashi007) {
-		set(battleRank, 5)
-		set(economyRank, 0)
-	}else if (@class == nanashi008) {
-		set(battleRank, 4)
-		set(economyRank, 2)
-	}else if (@class == nanashi009) {
-		set(battleRank, 7)
-		set(economyRank, 0)
-//スチューデント系____________________________________________________________________________________________________
-	}else if (@class == studentm) {
-		set(battleRank, 1)
-		set(economyRank, 0)
-	}else if (@class == studentf) {
-		set(battleRank, 1)
-		set(economyRank, 0)
-	}else if (@class == scouncil) {
-		set(battleRank, 1)
-		set(economyRank, 2)
-	}else if (@class == shotputter) {
-		set(battleRank, 3)
-		set(economyRank, 0)
-	}else if (@class == occultclub) {
-		set(battleRank, 3)
-		set(economyRank, 0)
-	}else if (@class == biologyclub) {
-		set(battleRank, 1)
-		set(economyRank, 2)
-	}else if (@class == kendoclub) {
-		set(battleRank, 3)
-		set(economyRank, 0)
-	}else if (@class == cheerteam) {
-		set(battleRank, 0)
-		set(economyRank, 3)
-	}else if (@class == swimmingclub) {
-		set(battleRank, 3)
-		set(economyRank, 0)
-//スピリット系____________________________________________________________________________________________________
-	}else if (@class == slime) {
-		set(battleRank, 0)
-		set(economyRank, 0)
-	}else if (@class == reslime) {
-		set(battleRank, 3)
-		set(economyRank, 0)
-	}else if (@class == salamanber) {
-		set(battleRank, 6)
-		set(economyRank, 0)
-	}else if (@class == undine) {
-		set(battleRank, 2)
-		set(economyRank, 4)
-	}else if (@class == sylph) {
-		set(battleRank, 0)
-		set(economyRank, 6)
-	}else if (@class == gnome) {
-		set(battleRank, 4)
-		set(economyRank, 2)
-	}else if (@class == dragon) {
-		set(battleRank, 10)
-		set(economyRank, 0)
-//ゴクドウ系____________________________________________________________________________________________________
-	}else if (@class == toseinin) {
-		set(battleRank, 2)
-		set(economyRank, 0)
-	}else if (@class == tekiya) {
-		set(battleRank, 0)
-		set(economyRank, 2)
-	}else if (@class == kibamusya) {
-		set(battleRank, 4)
-		set(economyRank, 0)
-	}else if (@class == oni) {
-		set(battleRank, 6)
-		set(economyRank, 0)
-	}else if (@class == ninga) {
-		set(battleRank, 6)
-		set(economyRank, 0)
-	}else if (@class == bakuto) {
-		set(battleRank, 0)
-		set(economyRank, 6)
-	}else if (@class == ayakasi) {
-		set(battleRank, 8)
-		set(economyRank, 0)
-//Ｐサーヴァント系______________________________________________________________________________________________________
-	}else if (@class == police) {
-		set(battleRank, 1)
-		set(economyRank, 1)
-	}else if (@class == teacher) {
-		set(battleRank, 0)
-		set(economyRank, 2)
-	}else if (@class == spteam) {
-		set(battleRank, 4)
-		set(economyRank, 0)
-	}else if (@class == hakase) {
-		set(battleRank, 0)
-		set(economyRank, 4)
-	}else if (@class == doctor) {
-		set(battleRank, 2)
-		set(economyRank, 3)
-	}else if (@class == fireman) {
-		set(battleRank, 3)
-		set(economyRank, 2)
-	}else if (@class == guardarmor) {
-		set(battleRank, 6)
-		set(economyRank, 0)
-	}else if (@class == patrolcar) {
-		set(battleRank, 4)
-		set(economyRank, 3)
-	}else if (@class == hero) {
-		set(battleRank, 6)
-		set(economyRank, 4)
-	}else if (@class == armoredcar) {
-		set(battleRank, 5)
-		set(economyRank, 5)
-//グループ系______________________________________________________________________________________________________
-	}else if (@class == member) {
-		set(battleRank, 0)
-		set(economyRank, 2)
-	}else if (@class == activist) {
-		set(battleRank, 2)
-		set(economyRank, 3)
-	}else if (@class == bouncer) {
-		set(battleRank, 4)
-		set(economyRank, 0)
-	}else if (@class == researcher) {
-		set(battleRank, 0)
-		set(economyRank, 4)
-	}else if (@class == intellectual) {
-		set(battleRank, 0)
-		set(economyRank, 6)
-	}else if (@class == charisma) {
-		set(battleRank, 3)
-		set(economyRank, 7)
-//ワーカー系______________________________________________________________________________________________________
-	}else if (@class == salaryman) {
-		set(battleRank, 0)
-		set(economyRank, 1)
-	}else if (@class == maid) {
-		set(battleRank, 0)
-		set(economyRank, 3)
-	}else if (@class == cook) {
-		set(battleRank, 1)
-		set(economyRank, 2)
-	}else if (@class == securityguard) {
-		set(battleRank, 2)
-		set(economyRank, 1)
-	}else if (@class == carpenter) {
-		set(battleRank, 2)
-		set(economyRank, 1)
-	}else if (@class == mizusyoubaim) {
-		set(battleRank, 0)
-		set(economyRank, 3)
-	}else if (@class == mizusyoubaiw) {
-		set(battleRank, 0)
-		set(economyRank, 3)
-	}else if (@class == middlemanager) {
-		set(battleRank, 2)
-		set(economyRank, 4)
-	}else if (@class == idol) {
-		set(battleRank, 0)
-		set(economyRank, 5)
-	}else if (@class == athlete) {
-		set(battleRank, 4)
-		set(economyRank, 2)
-	}else if (@class == elite) {
-		set(battleRank, 0)
-		set(economyRank, 7)
-	}else if (@class == champion) {
-		set(battleRank, 5)
-		set(economyRank, 4)
-//プリースト系____________________________________________________________________________________________________
-	}else if (@class == priest) {
-		set(battleRank, 0)
-		set(economyRank, 1)
-	}else if (@class == monk) {
-		set(battleRank, 3)
-		set(economyRank, 0)
-	}else if (@class == shaman) {
-		set(battleRank, 0)
-		set(economyRank, 3)
-	}else if (@class == highpriest) {
-		set(battleRank, 3)
-		set(economyRank, 3)
-	}else if (@class == yorishiro) {
-		set(battleRank, 4)
-		set(economyRank, 5)
-//アウトロー系____________________________________________________________________________________________________
-	}else if (@class == tinpira) {
-		set(battleRank, 1)
-		set(economyRank, 0)
-	}else if (@class == kenkaya) {
-		set(battleRank, 3)
-		set(economyRank, 0)
-	}else if (@class == thief) {
-		set(battleRank, 1)
-		set(economyRank, 2)
-		add(SWITCHallFurosikiUnit, 1)
-	}else if (@class == bike) {
-		set(battleRank, 5)
-		set(economyRank, 0)
-	}else if (@class == dealer) {
-		set(battleRank, 0)
-		set(economyRank, 5)
-	}else if (@class == bantyou) {
-		set(battleRank, 7)
-		set(economyRank, 0)
-//Ｐワーカー系____________________________________________________________________________________________________
-	}else if (@class == tempworkerm) {
-		set(battleRank, 0)
-		set(economyRank, 1)
-	}else if (@class == tempworkerw) {
-		set(battleRank, 0)
-		set(economyRank, 1)
-//アサシン系____________________________________________________________________________________________________
-	}else if (@class == investigator) {
-		set(battleRank, 0)
-		set(economyRank, 2)
-	}else if (@class == spy) {
-		set(battleRank, 0)
-		set(economyRank, 2)
-	}else if (@class == assassin) {
-		set(battleRank, 4)
-		set(economyRank, 0)
-	}else if (@class == umbra) {
-		set(battleRank, 8)
-		set(economyRank, 0)
-//ＶＩＰ系____________________________________________________________________________________________________
-	}else if (@class == vip) {
-		set(battleRank, 0)
-		set(economyRank, 4)
-//レボリューショナリー系____________________________________________________________________________________________________
-	}else if (@class == resistance) {
-		set(battleRank, 2)
-		set(economyRank, 1)
-	}else if (@class == revolutionary) {
-		set(battleRank, 4)
-		set(economyRank, 5)
-	}else if (@class == evil) {
-		set(battleRank, 7)
-		set(economyRank, 7)
-//ゾンビ系____________________________________________________________________________________________________
-	}else if (@class == zombie) {
-		set(battleRank, 2)
-		set(economyRank, 0)
-	}else if (@class == kaomozi030) {
-		set(battleRank, 0)
-		set(economyRank, 0)
-//フェル系____________________________________________________________________________________________________
-	}else if (@class == hifel) {
-		set(battleRank, 10)
-		set(economyRank, 10)
-	}else if (@class == clonefel) {
-		set(battleRank, 0)
-		set(economyRank, 0)
-	}
+	setv(@memoryunit,memoryunit_)
+	addstr(@memoryunit,@class)
+	pusustatus(@memoryunit,attack,battleRank)
+	pusustatus(@memoryunit,defense,economyRank)
 }
 //■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■
 
@@ -3261,248 +2693,147 @@ event fluctuateRank
 event uniqueAbilityPossessor
 {
 	if (isLeader(@unit) == 1 && has(@skill, seal1) == 0 && has(@skill, seal2) == 0 && has(@skill, seal3) == 0 && has(@skill, seal4) == 0 && has(@skill, seal5) == 0 && has(@skill, seal6) == 0 && has(@skill, seal7) == 0 && has(@skill, seal8) == 0 && has(@skill, seal9) == 0 && has(@skill, seal10) == 0) {
-		if (has(@skill, educate) == 1) {
-			addv(@allEducateUnit, @unit)
-		}
-		if (has(@skill, innovation) == 1) {
-			addv(@allInnovationUnit, @unit)
-		}
-		if (has(@skill, assistant) == 1) {
-			addv(@allAssistantUnit, @unit)
-		}
-		if (has(@skill, treatment) == 1) {
-			addv(@allTreatmentUnit, @unit)
-		}
-		if (has(@skill, glibtalker) == 1) {
-			addv(@allGlibtalkerUnit, @unit)
-		}
-		if (has(@skill, invent) == 1) {
-			addv(@allInventUnit, @unit)
-		}
-		if (has(@skill, rich) == 1) {
-			addv(@allRichUnit, @unit)
-		}
-		if (has(@skill, recruiter_machine) == 1) {
-			addv(@allRecruiterUnit, @unit)
-			addv(@allRecruiterUnit_machine, @unit)
-		}
-		if (has(@skill, recruiter_worker) == 1) {
-			addv(@allRecruiterUnit, @unit)
-			addv(@allRecruiterUnit_worker, @unit)
-		}
-		if (has(@skill, recruiter_assassin) == 1) {
-			addv(@allRecruiterUnit, @unit)
-			addv(@allRecruiterUnit_assassin, @unit)
-		}
-		if (has(@skill, desiretoprotect) == 1) {
-			addv(@allDesiretoprotectUnit, @unit)
-		}
-		if (has(@skill, sociable) == 1) {
-			addv(@allSociableUnit, @unit)
-		}
-		if (has(@skill, shyness) == 1) {
-			addv(@allShynessUnit, @unit)
-		}
-		if (has(@skill, absolute) == 1) {
-			addv(@allAbsoluteUnit, @unit)
-		}
-		if (has(@skill, charismatic) == 1) {
-			addv(@allCharismaticUnit, @unit)
-		}
-		if (has(@skill, loyalsubject_nini) == 1) {
-			addv(@allLoyalsubjectUnit, @unit)
-			addv(@allLoyalsubjectUnit_nini, @unit)
-		}
-		if (has(@skill, loyalsubject_honoka) == 1) {
-			addv(@allLoyalsubjectUnit, @unit)
-			addv(@allLoyalsubjectUnit_honoka, @unit)
-		}
-		if (has(@skill, loyalsubject_ouen) == 1) {
-			addv(@allLoyalsubjectUnit, @unit)
-			addv(@allLoyalsubjectUnit_ouen, @unit)
-		}
-		if (has(@skill, loyalsubject_kamiya) == 1) {
-			addv(@allLoyalsubjectUnit, @unit)
-			addv(@allLoyalsubjectUnit_kamiya, @unit)
-		}
-		if (has(@skill, loyalsubject_daiya) == 1) {
-			addv(@allLoyalsubjectUnit, @unit)
-			addv(@allLoyalsubjectUnit_daiya, @unit)
-		}
-		if (has(@skill, loyalsubject_himesiro) == 1) {
-			addv(@allLoyalsubjectUnit, @unit)
-			addv(@allLoyalsubjectUnit_himesiro, @unit)
-		}
-		if (has(@skill, loyalsubject_riferi) == 1) {
-			addv(@allLoyalsubjectUnit, @unit)
-			addv(@allLoyalsubjectUnit_riferi, @unit)
-		}
-		if (has(@skill, loyalsubject_rifon) == 1) {
-			addv(@allLoyalsubjectUnit, @unit)
-			addv(@allLoyalsubjectUnit_rifon, @unit)
-		}
-		if (has(@skill, loyalsubject_gaagoriusu) == 1) {
-			addv(@allLoyalsubjectUnit, @unit)
-			addv(@allLoyalsubjectUnit_gaagoriusu, @unit)
-		}
-		if (has(@skill, loyalsubject_suiren) == 1) {
-			addv(@allLoyalsubjectUnit, @unit)
-			addv(@allLoyalsubjectUnit_suiren, @unit)
-		}
-		if (has(@skill, loyalsubject_kizaki) == 1) {
-			addv(@allLoyalsubjectUnit, @unit)
-			addv(@allLoyalsubjectUnit_kizaki, @unit)
-		}
-		if (has(@skill, loyalsubject_veiraru) == 1) {
-			addv(@allLoyalsubjectUnit, @unit)
-			addv(@allLoyalsubjectUnit_veiraru, @unit)
-		}
-		if (has(@skill, loyalsubject_isikawa) == 1) {
-			addv(@allLoyalsubjectUnit, @unit)
-			addv(@allLoyalsubjectUnit_isikawa, @unit)
-		}
-		if (has(@skill, loyalsubject_ryudou) == 1) {
-			addv(@allLoyalsubjectUnit, @unit)
-			addv(@allLoyalsubjectUnit_ryudou, @unit)
-		}
-		if (has(@skill, loyalsubject_fel) == 1) {
-			addv(@allLoyalsubjectUnit, @unit)
-			addv(@allLoyalsubjectUnit_fel, @unit)
-		}
-		if (has(@skill, rational) == 1) {
-			addv(@allRationalUnit, @unit)
-			addv(@allRationalUnit2, @unit)
-		}
-		if (has(@skill, materialguard) == 1) {
-			addv(@allMaterialguardUnit, @unit)
-		}
-		if (has(@skill, magicguard) == 1) {
-			addv(@allMagicguardUnit, @unit)
-		}
-		if (has(@skill, calm) == 1) {
-			addv(@allCalmUnit, @unit)
-		}
-		if (has(@skill, nuisance) == 1) {
-			addv(@allNuisanceUnit, @unit)
-		}
-		if (has(@skill, affectionate) == 1) {
-			addv(@allAffectionateUnit, @unit)
-		}
-		if (has(@skill, coldblood) == 1) {
-			addv(@allColdbloodUnit, @unit)
-		}
-		if (has(@skill, moodyperson) == 1) {
-			addv(@allMoodypersonUnit, @unit)
-		}
-		if (has(@skill, eccentric) == 1) {
-			addv(@allEccentricUnit, @unit)
-		}
-		if (has(@skill, madness) == 1) {
-			addv(@allMadnessUnit, @unit)
-		}
-		if (has(@skill, serious) == 1) {
-			addv(@allSeriousUnit, @unit)
-		}
-		if (has(@skill, twosides) == 1) {
-			addv(@allTwosidesUnit, @unit)
-		}
-		if (has(@skill, warlike) == 1) {
-			addv(@allWarlikeUnit, @unit)
-		}
-		if (has(@skill, hardworker) == 1) {
-			addv(@allHardworkerUnit, @unit)
-		}
-		if (has(@skill, moodmaker) == 1) {
-			addv(@allMoodmakerUnit, @unit)
-		}
-		if (has(@skill, sensualist_male) == 1) {
-			addv(@allSensualistUnit, @unit)
-			addv(@allSensualistUnit_male, @unit)
-		}
-		if (has(@skill, sensualist_female) == 1) {
-			addv(@allSensualistUnit, @unit)
-			addv(@allSensualistUnit_female, @unit)
-		}
-		if (has(@skill, picky) == 1) {
-			addv(@allPickyUnit, @unit)
-		}
-		if (has(@skill, sadist) == 1) {
-			addv(@allSadistUnit, @unit)
-		}
-		if (has(@skill, masochist) == 1) {
-			addv(@allMasochistUnit, @unit)
-		}
-		if (has(@skill, wishclass_artist) == 1) {
-			addv(@allWishclassUnit, @unit)
-			addv(@allWishclassUnit_artist, @unit)
-		}
-		if (has(@skill, wishclass_shotputter) == 1) {
-			addv(@allWishclassUnit, @unit)
-			addv(@allWishclassUnit_shotputter, @unit)
-		}
-		if (has(@skill, wishclass_ninga) == 1) {
-			addv(@allWishclassUnit, @unit)
-			addv(@allWishclassUnit_ninga, @unit)
-		}
-		if (has(@skill, wishclass_bakuto) == 1) {
-			addv(@allWishclassUnit, @unit)
-			addv(@allWishclassUnit_bakuto, @unit)
-		}
-		if (has(@skill, wishclass_mizusyoubai) == 1) {
-			addv(@allWishclassUnit, @unit)
-			addv(@allWishclassUnit_mizusyoubai, @unit)
-		}
-		if (has(@skill, wishclass_bike) == 1) {
-			addv(@allWishclassUnit, @unit)
-			addv(@allWishclassUnit_bike, @unit)
-		}
-		if (has(@skill, wishclass_thief) == 1) {
-			addv(@allWishclassUnit, @unit)
-			addv(@allWishclassUnit_thief, @unit)
-		}
-		if (has(@skill, wishclass_dealer) == 1) {
-			addv(@allWishclassUnit, @unit)
-			addv(@allWishclassUnit_dealer, @unit)
-		}
-		if (has(@skill, skillshare_assaultrifle) == 1) {
-			addv(@allSkillshareUnit, @unit)
-			addv(@allSkillshareUnit_assaultrifle, @unit)
-		}
-		if (has(@skill, skillshare_grenadegun) == 1) {
-			addv(@allSkillshareUnit, @unit)
-			addv(@allSkillshareUnit_grenadegun, @unit)
-		}
-		if (has(@skill, skillshare_torpedo) == 1) {
-			addv(@allSkillshareUnit, @unit)
-			addv(@allSkillshareUnit_torpedo, @unit)
-		}
-		if (has(@skill, skillshare_sniperrifle) == 1) {
-			addv(@allSkillshareUnit, @unit)
-			addv(@allSkillshareUnit_sniperrifle, @unit)
-		}
-		if (has(@skill, skillshare_poisonousdrug) == 1) {
-			addv(@allSkillshareUnit, @unit)
-			addv(@allSkillshareUnit_poisonousdrug, @unit)
-		}
-		if (has(@skill, skillshare_sparkcutter) == 1) {
-			addv(@allSkillshareUnit, @unit)
-			addv(@allSkillshareUnit_sparkcutter, @unit)
-		}
-		if (has(@skill, skillshare_temptationconf) == 1) {
-			addv(@allSkillshareUnit, @unit)
-			addv(@allSkillshareUnit_temptationconf, @unit)
-		}
-		if (has(@skill, slowstarter) == 1) {
-			addv(@allSlowstarterUnit, @unit)
-		}
-		if (has(@skill, weakling) == 1) {
-			addv(@allWeaklingUnit, @unit)
-		}
-		if (has(@skill, metamorphosis) == 1) {
-			addv(@allMetamorphosisUnit, @unit)
-		}
-		if (has(@skill, uniquemagic) == 1) {
-			addv(@allUniquemagicUnit, @unit)
+		storeskillofunit(@unit,@traitskill)
+		setv(@traitskill2,@traitskill)
+		subv(@traitskill2,educate) 
+		subv(@traitskill2,innovation)
+		subv(@traitskill2,assistant)
+		subv(@traitskill2,treatment)
+		subv(@traitskill2,glibtalker)
+		subv(@traitskill2,invent)
+		subv(@traitskill2,rich)
+		subv(@traitskill2,recruiter_machine)
+		subv(@traitskill2,recruiter_worker)
+		subv(@traitskill2,recruiter_assassin)
+		subv(@traitskill2,desiretoprotect)
+		subv(@traitskill2,sociable)
+		subv(@traitskill2,shyness)
+		subv(@traitskill2,absolute)
+		subv(@traitskill2,charismatic)
+		subv(@traitskill2,loyalsubject_nini)
+		subv(@traitskill2,loyalsubject_honoka)
+		subv(@traitskill2,loyalsubject_ouen)
+		subv(@traitskill2,loyalsubject_kamiya)
+		subv(@traitskill2,loyalsubject_daiya)
+		subv(@traitskill2,loyalsubject_himesiro)
+		subv(@traitskill2,loyalsubject_riferi)
+		subv(@traitskill2,loyalsubject_rifon)
+		subv(@traitskill2,loyalsubject_gaagoriusu)
+		subv(@traitskill2,loyalsubject_suiren)
+		subv(@traitskill2,loyalsubject_kizaki)
+		subv(@traitskill2,loyalsubject_veiraru)
+		subv(@traitskill2,loyalsubject_isikawa)
+		subv(@traitskill2,loyalsubject_ryudou)
+		subv(@traitskill2,loyalsubject_fel)
+		subv(@traitskill2,rational)
+		subv(@traitskill2,materialguard)
+		subv(@traitskill2,magicguard)
+		subv(@traitskill2,calm)
+		subv(@traitskill2,nuisance)
+		subv(@traitskill2,affectionate)
+		subv(@traitskill2,coldblood)
+		subv(@traitskill2,moodyperson)
+		subv(@traitskill2,eccentric)
+		subv(@traitskill2,madness)
+		subv(@traitskill2,serious)
+		subv(@traitskill2,twosides)
+		subv(@traitskill2,warlike)
+		subv(@traitskill2,hardworker)
+		subv(@traitskill2,moodmaker)
+		subv(@traitskill2,sensualist_male)
+		subv(@traitskill2,sensualist_female)
+		subv(@traitskill2,picky)
+		subv(@traitskill2,sadist)
+		subv(@traitskill2,masochist)
+		subv(@traitskill2,wishclass_artist)
+		subv(@traitskill2,wishclass_shotputter)
+		subv(@traitskill2,wishclass_ninga)
+		subv(@traitskill2,wishclass_bakuto)
+		subv(@traitskill2,wishclass_mizusyoubai)
+		subv(@traitskill2,wishclass_bike)
+		subv(@traitskill2,wishclass_thief)
+		subv(@traitskill2,wishclass_dealer)
+		subv(@traitskill2,skillshare_assaultrifle)
+		subv(@traitskill2,skillshare_grenadegun)
+		subv(@traitskill2,skillshare_torpedo)
+		subv(@traitskill2,skillshare_sniperrifle)
+		subv(@traitskill2,skillshare_poisonousdrug)
+		subv(@traitskill2,skillshare_sparkcutter)
+		subv(@traitskill2,skillshare_temptationconf)
+		subv(@traitskill2,slowstarter)
+		subv(@traitskill2,weakling)
+		subv(@traitskill2,metamorphosis)
+		subv(@traitskill2,uniquemagic)
+		subv(@traitskill,@traitskill2)
+		
+		while (@traitskill!=0) {
+			index(@traitskill,0,@traitskill2) subv(@traitskill,@traitskill2)
+			setv(@traitskillevent,traitskillevent_)
+			addstr(@traitskillevent,@traitskill)
+			
+			pushLevel(@unit, unitLevel)
+			pushLoyal(@unit, unitLoyal)
+			storeSkillOfUnit(@unit, @skill)
+			storeSpotOfUnit(@unit, @spot)
+			storeLeaderOfSpot(@spot, @allSpotLeader)
+			routine(@traitskillevent)
+		}
+//[大器晩成(２)]〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓
+//※ステータス低下系一時能力スキル無効(発動前除去)※____________________________________________________________________________________________________
+		while (count(@allSlowstarterUnit2) >= 1) {
+			index(@allSlowstarterUnit2, 0, @unit)
+			subv(@allSlowstarterUnit2, @unit)
+			storeSkillOfUnit(@unit, @skill)
+
+			subv(@allAllweakenGetUnit, @unit)
+			subv(@allHighallweakenGetUnit, @unit)
+		}
+//[忠臣(２)]〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓
+//※一時能力スキル［忠誠低下無効］を付与※____________________________________________________________________________________________________
+		while (count(@allLoyalsubjectUnit2) >= 1) {
+			index(@allLoyalsubjectUnit2, 0, @unit)
+			subv(@allLoyalsubjectUnit2, @unit)
+
+			addv(@allLoyaltykeepGetUnit, @unit)
+		}
+//[合理的思考(２)]〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓
+//※一時能力スキル「ＨＰ＆ＭＰ上昇」を付与※____________________________________________________________________________________________________
+		while (count(@allRationalUnit2) >= 1) {
+			index(@allRationalUnit2, 0, @unit)
+			subv(@allRationalUnit2, @unit)
+			storeSkillOfUnit(@unit, @skill)
+			storeSpotOfUnit(@unit, @spot)
+			storeLeaderOfSpot(@spot, @allSpotLeader)
+			subv(@allSpotLeader, @allEccentricUnit)
+			if (has(@allSpotLeader, @unit) == 0) {
+				addv(@allSpotLeader, @unit)
+			}
+
+			if (has(@skill, innovation) == 1 || has(@skill, materialguard) == 1 || has(@skill, magicguard) == 1) {
+				pushLevel(@unit, unitLevel)
+				if (has(@allDoubleGetUnit, @unit) == 0 && unitLevel >= 21) {
+					addv(@allHpmpaidGetUnit, @allSpotLeader)
+					addv(@allLoyaltybufferGetUnit, @allSpotLeader)
+				}else if (has(@allDoubleGetUnit, @unit) == 1 && unitLevel >= 21) {
+					addv(@allHighhpmpaidGetUnit, @allSpotLeader)
+					addv(@allLoyaltykeepGetUnit, @allSpotLeader)
+				}
+			}
+		}
+//[男好き＆女好き(２)]〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓
+//※一時能力スキル「ＨＰ＆ＭＰ上昇」「忠誠低下抑制」を付与※____________________________________________________________________________________________________
+		while (count(@allSensualistUnit2) >= 1) {
+			index(@allSensualistUnit2, 0, @unit)
+			subv(@allSensualistUnit2, @unit)
+			storeSkillOfUnit(@unit, @skill)
+
+			if (has(@allDoubleGetUnit, @unit) == 0) {
+				addv(@allHpmpaidGetUnit, @unit)
+				addv(@allLoyaltybufferGetUnit, @unit)
+			}else if (has(@allDoubleGetUnit, @unit) == 1) {
+				addv(@allHighhpmpaidGetUnit, @unit)
+				addv(@allLoyaltykeepGetUnit, @unit)
+			}
 		}
 	}
 }
