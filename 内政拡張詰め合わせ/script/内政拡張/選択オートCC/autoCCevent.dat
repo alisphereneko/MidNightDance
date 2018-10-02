@@ -26,7 +26,7 @@ event ObjectiveautoCCmod_main
 		subv(@objectiveCC,infectzombie) subv(@objectiveCC,infectkaomozi) subv(@objectiveCC,infectfel)
 		//感染系でクラスチェンジされたユニットは対象にならない
 		if (@objectiveCC!=@objectiveCC2) {return()}
-		routine(ObjectiveautoCCmod_hozon)
+		routine(ObjectiveautoCCmod_search)
 		pushstatus(@sikibetusihozonresults,attack,ObjectiveautoCCONOFF)
 		if (ObjectiveautoCCONOFF!=0) {
 			storeskillofunit(@sikibetusihozonresults,@objectiveClass)
@@ -34,16 +34,14 @@ event ObjectiveautoCCmod_main
 			//msg(&unit& &ObjectiveautoCCONOFF& &objectiveClass&)
 		}
 		else {
-			addunit(@sikibetusihozonresults,nekoerasespot)
 			storebaseclassofunit(@unit,@class)
-			routine(ObjectiveautoCCmod_hozon2)
+			routine(ObjectiveautoCCmod_search2)
 			pushstatus(@sikibetusihozonresults,attack,ObjectiveautoCCONOFF)
 			if (ObjectiveautoCCONOFF!=0) {
 				storeskillofunit(@sikibetusihozonresults,@objectiveClass)
 				index(@objectiveClass,1,@objectiveClass)
 				//msg(&class& &ObjectiveautoCCONOFF& &objectiveClass&)
 			}
-			else {addunit(@sikibetusihozonresults,nekoerasespot)}
 		}
 		if (@objectiveClass==mizusyoubaim || @objectiveClass==mizusyoubaiw) {
 			pushsex(@unit,unitSex)
@@ -184,17 +182,20 @@ event ObjectiveautoCCmod_classchoiceforEachClass
 		addv(@class,priest) addv(@class,tinpira) addv(@class,investigator)
 		addv(@class,resistance)
 		
-		routine(ObjectiveautoCCmod_hozon2)
+		routine(ObjectiveautoCCmod_search2)
 		
 		clear(@ObjectiveautoCCmodtemp2)
-		while (@sikibetusihozonresults!=0) {
-			index(@sikibetusihozonresults,0,@ObjectiveautoCCmodtemp) subv(@sikibetusihozonresults,@ObjectiveautoCCmodtemp)
-			storeskillofunit(@ObjectiveautoCCmodtemp,@ObjectiveautoCCmodtemp)
-			if (count(@ObjectiveautoCCmodtemp)==1) {addv(@ObjectiveautoCCmodtemp2,ObjectiveautoCCmod_omakase)}
+		pushv(@sikibetusihozonresults,ObjectiveautoCCmodnum)
+		set(ObjectiveautoCCmodnum2,0)
+		while (ObjectiveautoCCmodnum>ObjectiveautoCCmodnum2) {
+			index(@sikibetusihozonresults,ObjectiveautoCCmodnum2,@ObjectiveautoCCmodtemp)
+			if (@ObjectiveautoCCmodtemp==none) {addv(@ObjectiveautoCCmodtemp2,ObjectiveautoCCmod_omakase)}
 			else {
+				storeskillofunit(@ObjectiveautoCCmodtemp,@ObjectiveautoCCmodtemp)
 				index(@ObjectiveautoCCmodtemp,1,@ObjectiveautoCCmodtemp)
 				addv(@ObjectiveautoCCmodtemp2,@ObjectiveautoCCmodtemp)
 			}
+			add(ObjectiveautoCCmodnum2,1)
 		}
 		
 		index(@ObjectiveautoCCmodtemp2,0,@ObjectiveautoCCmod0)
@@ -244,17 +245,7 @@ event ObjectiveautoCCmod_classchoiceforEachClass
 		addskill(@sikibetusihozonresults,@targetClass)
 		setstatus(@sikibetusihozonresults,attack,LevelPrerequisite)
 		set(classChangeActive, 0)
-		
-		
-		//処理の関係上おまかせにしているクラスの保存ユニットも作成されるので削除
-		storeunitofspot(ObjectiveautoCCmod_cache_class,@ObjectiveautoCCmod1)
-		while (@ObjectiveautoCCmod1!=0) {
-			index(@ObjectiveautoCCmod1,0,@ObjectiveautoCCmod2) subv(@ObjectiveautoCCmod,@ObjectiveautoCCmod2)
-			pushstatus(@ObjectiveautoCCmod2,attack,ObjectiveautoCCmodnum)
-			if (ObjectiveautoCCmodnum==0) {
-				addunit(@ObjectiveautoCCmod2,nekoerasespot)
-			}
-		}
+
 		routine(autoCC_save)
 	}
 	clear(@ObjectiveautoCCmodtemp) clear(@ObjectiveautoCCmodtemp2) clear(@ObjectiveautoCCmod1)

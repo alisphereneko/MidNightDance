@@ -1,3 +1,48 @@
+unit 003wwwdropfiltermod
+{
+	politics = fix
+	name = フィルター設定の登録
+	image = systemicon_spacebox3
+	merce=memoryfilter1
+	friend=memoryfilter1,usefilter1,usefilter2,usefilter3,usefilter4,usefilter5
+}
+
+class memoryfilter1
+{
+	politics=erase
+	name=登録
+}
+
+class memoryfilter2 : memoryfilter1
+{
+	name=削除
+}
+
+class usefilter1 : memoryfilter1
+{
+	name=フィルター設定1
+}
+
+class usefilter2 : usefilter1
+{
+	name=フィルター設定2
+}
+
+class usefilter3 : usefilter1
+{
+	name=フィルター設定3
+}
+
+class usefilter4 : usefilter1
+{
+	name=フィルター設定4
+}
+
+class usefilter5 : usefilter1
+{
+	name=フィルター設定5
+}
+
 unit 003wwwdroplevel
 {
 	politics = fix

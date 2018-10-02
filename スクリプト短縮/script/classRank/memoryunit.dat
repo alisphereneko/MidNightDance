@@ -1,7 +1,8 @@
 //attack：戦闘ランク defense：経済ランク
+//addstrでユニット名を作ってpushstatusすることでランク計算周りのif式を節約できる
 
 //ガイド系______________________________________________________________________________________________________
-unit memoryunit_guidestaff)
+unit memoryunit_guidestaff
 {
 	attack=2
 	defense=1

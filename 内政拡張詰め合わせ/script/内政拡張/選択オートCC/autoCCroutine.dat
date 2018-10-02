@@ -12,6 +12,17 @@ event ObjectiveautoCCmod_hozon
 	routine(sikibetusi_hozon_main)
 }
 
+event ObjectiveautoCCmod_search
+{
+	//@unitのクラスチェンジ先保存用のユニットを呼び出すルーティン
+	//不在の場合新しく作成せずnoneを返す
+	setv(@sikibetusihozontarget,@unit)
+	setv(@sikibetusihozonspot,autoCCmodspot)
+	setv(@sikibetusihozoncache,ObjectiveautoCCmod_cache_unit)
+	set(sikibetusi_hozon_indexoption,1)
+	routine(sikibetusi_search_main)
+}
+
 event ObjectiveautoCCmod_hozon2
 {
 	//@classの優先クラスチェンジ先保存用のユニットを呼び出すルーティン
@@ -20,6 +31,16 @@ event ObjectiveautoCCmod_hozon2
 	setv(@sikibetusihozoncache,ObjectiveautoCCmod_cache_class)
 	set(sikibetusi_hozon_indexoption,1)
 	routine(sikibetusi_hozon_main)
+}
+
+event ObjectiveautoCCmod_search2
+{
+	//@classの優先クラスチェンジ先保存用のユニットを呼び出すルーティン
+	setv(@sikibetusihozontarget,@class)
+	setv(@sikibetusihozonspot,autoCCmodspot2)
+	setv(@sikibetusihozoncache,ObjectiveautoCCmod_cache_class)
+	set(sikibetusi_hozon_indexoption,1)
+	routine(sikibetusi_search_main)
 }
 
 event ObjectiveautoCCmod_classchoicesetroutine

@@ -132,6 +132,91 @@ event sikibetusi_hozon_main
 event sikibetusi_hozon_born
 {
 	//初期生成時の追加処理をここに書く
+	routine(sikibetusi_hozon_youhei)
+}
+
+event sikibetusi_search_main
+{
+	//sikibetusi_hozon_mainのユニット作成機能を除いたもの いない場合に作成したくない場合はこちらを使う
+	//検索して見つかれば@sikibetusihozonresultsに代入　居なければダミー識別子noneを代入
+	//(複数要素対応のため0ではなくnoneを代入する形)
+	//複数要素変数対応 @sikibetusihozontargetと同じ順に@sikibetusihozonresultsに代入される
+	//対象勢力・領地・ユニットなどを@sikibetusihozontarget,保存領地を@sikibetusihozonspotに代入して呼ぶ
+	//キャッシュ用ユニットがいれば@sikibetusihozoncacheに入れ、sikibetusi_hozon_indexoptionに1以上の数字を入れる
+	if (@sikibetusihozontarget==0) {return()}
+	storeskillofunit(@sikibetusihozoncache,@sikibetusihozontemp) /+pushv(@sikibetusihozontemp,num) msg(&num&)
+	storeunitofspot(@sikibetusihozonspot,@sikibetusihozontemp2)
+	subv(@sikibetusihozontemp2,@sikibetusihozontemp)//キャッシュとの被りを除去
+	addv(@sikibetusihozontemp,@sikibetusihozontemp2)
+	pushv(@sikibetusihozontarget,sikibetusihozon1)
+	clear(@sikibetusihozonresults)
+	set(sikibetusihozon_idx,0)
+	while (sikibetusihozon1>sikibetusihozon_idx) {
+		index(@sikibetusihozontarget,sikibetusihozon_idx,@sikibetusihozonunit)
+		pushv(@sikibetusihozontemp,sikibetusihozon2)
+		set(sikibetusihozon_idx2,0)
+		while (sikibetusihozon2>sikibetusihozon_idx2) {
+			index(@sikibetusihozontemp,sikibetusihozon_idx2,@sikibetusihozontemp2)
+			storeskillofunit(@sikibetusihozontemp2,@sikibetusihozonunit2)
+			index(@sikibetusihozonunit2,0,@sikibetusihozonunit2)
+			if (@sikibetusihozonunit2==@sikibetusihozonunit) {break()}
+			clear(@sikibetusihozontemp2)
+			add(sikibetusihozon_idx2,1)
+		}
+		addv(@sikibetusihozonresults,@sikibetusihozontemp2)
+		if (@sikibetusihozontemp2==0) {addv(@sikibetusihozonresults,none)}
+		add(sikibetusihozon_idx,1)
+	}
+	if (sikibetusi_hozon_indexoption>=1) {
+		//オプションをオンにすると参照ターン数と参照回数を記録しキャッシュ
+		//数が多いときはこれを使って並べ替えたりすると良いかも
+		addskill(@sikibetusihozoncache,@sikibetusihozonresults)//キャッシュ用ユニットに保存
+		setstatus(@sikibetusihozonresults,speed,nekomodT)//最後に参照したターン数を素早さに保存
+		//参照回数をHP回復力に保存 重要度に応じて増加数値を変えられる
+		addstatus(@sikibetusihozonresults,hprec,sikibetusi_hozon_indexoption)
+		set(sikibetusi_hozon_indexoption,0)
+	}
+
+	clear(@sikibetusihozontemp) clear(@sikibetusihozontemp2) clear(@sikibetusihozonunit) clear(@sikibetusihozonunit2)
+	clear(@sikibetusihozontarget) clear(@sikibetusihozonspot) clear(@sikibetusihozoncache)
+	set(sikibetusihozon1,0) set(sikibetusihozon2,0) set(sikibetusihozon_idx,0) set(sikibetusihozon_idx2,0)
+}
+
+event sikibetusi_search2_main
+{
+	//指定保存領地の保存対象に@sikibetusihozontargetを含む保存ユニット全てを@sikibetusihozonresultsに代入する
+	//これは1要素でしか使えない
+	//検索して見つかれば@sikibetusihozonresultsに代入　一人も居なければ0を代入
+	//対象勢力・領地・ユニットなどを@sikibetusihozontarget,保存領地を@sikibetusihozonspotに代入して呼ぶ
+	//キャッシュ用ユニットがいれば@sikibetusihozoncacheに入れ、sikibetusi_hozon_indexoptionに1以上の数字を入れる
+	if (@sikibetusihozontarget==0) {return()}
+	storeskillofunit(@sikibetusihozoncache,@sikibetusihozontemp) /+pushv(@sikibetusihozontemp,num) msg(&num&)
+	storeunitofspot(@sikibetusihozonspot,@sikibetusihozontemp2)
+	subv(@sikibetusihozontemp2,@sikibetusihozontemp)//キャッシュとの被りを除去
+	addv(@sikibetusihozontemp,@sikibetusihozontemp2)
+	pushv(@sikibetusihozontemp,sikibetusihozon1)
+	clear(@sikibetusihozonresults)
+	set(sikibetusihozon_idx,0)
+	while (sikibetusihozon1>sikibetusihozon_idx) {
+		index(@sikibetusihozontemp,sikibetusihozon_idx,@sikibetusihozonunit)
+		storeskillofunit(@sikibetusihozontunit,@sikibetusihozontemp2)
+		if (has(@sikibetusihozontemp2,@sikibetusihozontarget)) {addv(@sikibetusihozonresults,@sikibetusihozonunit)}
+		add(sikibetusihozon_idx,1)
+	}
+
+	if (sikibetusi_hozon_indexoption>=1) {
+		//オプションをオンにすると参照ターン数と参照回数を記録しキャッシュ
+		//数が多いときはこれを使って並べ替えたりすると良いかも
+		addskill(@sikibetusihozoncache,@sikibetusihozonresults)//キャッシュ用ユニットに保存
+		setstatus(@sikibetusihozonresults,speed,nekomodT)//最後に参照したターン数を素早さに保存
+		//参照回数をHP回復力に保存 重要度に応じて増加数値を変えられる
+		addstatus(@sikibetusihozonresults,hprec,sikibetusi_hozon_indexoption)
+		set(sikibetusi_hozon_indexoption,0)
+	}
+
+	clear(@sikibetusihozontemp) clear(@sikibetusihozontemp2) clear(@sikibetusihozonunit) clear(@sikibetusihozonunit2)
+	clear(@sikibetusihozontarget) clear(@sikibetusihozonspot) clear(@sikibetusihozoncache)
+	set(sikibetusihozon1,0) set(sikibetusihozon2,0) set(sikibetusihozon_idx,0) set(sikibetusihozon_idx2,0)
 }
 
 class sikibetusi_class
@@ -631,7 +716,7 @@ skill nekochoicelevel100
 event nekochoice
 {
 	//@nekomemberの要素を選択肢表示するルーティン
-	//@nekomember2に追加情報を入れられる(@nekomemberと同じ順に入れる)
+	//@nekomember2,@nekomember3に追加情報を入れられる(@nekomemberと同じ順に入れる)
 	//nekochoice_leveloption=1で呼び出すとこの追加情報がレベル表示になる　レベル0は非表示となる
 	//選択された要素は@nekotempに代入　やめるを選択すると0が入る
 	//nekochoicenoresetに1を代入して呼び出すと前回のページから再開する
@@ -644,48 +729,48 @@ event nekochoice
 	clear(@nekochoiceunit3) clear(@nekochoiceunit4) clear(@nekochoiceunit5)
 	clear(@nekochoiceunit6) clear(@nekochoiceunit7)
 	while (1==1) {
-		index(@nekomember,nekochoicenum,@nekochoiceunit0) index(@nekomember2,nekochoicenum,@nekochoiceunit20)
+		index(@nekomember,nekochoicenum,@nekochoiceunit0) index(@nekomember2,nekochoicenum,@nekochoiceunit20) index(@nekomember3,nekochoicenum,@nekochoiceunit30)
 		add(nekochoicenum,1)
-		index(@nekomember,nekochoicenum,@nekochoiceunit1) index(@nekomember2,nekochoicenum,@nekochoiceunit21)
+		index(@nekomember,nekochoicenum,@nekochoiceunit1) index(@nekomember2,nekochoicenum,@nekochoiceunit21) index(@nekomember3,nekochoicenum,@nekochoiceunit31)
 		add(nekochoicenum,1)
-		index(@nekomember,nekochoicenum,@nekochoiceunit2) index(@nekomember2,nekochoicenum,@nekochoiceunit22)
+		index(@nekomember,nekochoicenum,@nekochoiceunit2) index(@nekomember2,nekochoicenum,@nekochoiceunit22) index(@nekomember3,nekochoicenum,@nekochoiceunit32)
 		add(nekochoicenum,1)
-		index(@nekomember,nekochoicenum,@nekochoiceunit3) index(@nekomember2,nekochoicenum,@nekochoiceunit23)
+		index(@nekomember,nekochoicenum,@nekochoiceunit3) index(@nekomember2,nekochoicenum,@nekochoiceunit23) index(@nekomember3,nekochoicenum,@nekochoiceunit33)
 		add(nekochoicenum,1)
-		index(@nekomember,nekochoicenum,@nekochoiceunit4) index(@nekomember2,nekochoicenum,@nekochoiceunit24)
+		index(@nekomember,nekochoicenum,@nekochoiceunit4) index(@nekomember2,nekochoicenum,@nekochoiceunit24) index(@nekomember3,nekochoicenum,@nekochoiceunit34)
 		add(nekochoicenum,1)
-		index(@nekomember,nekochoicenum,@nekochoiceunit5) index(@nekomember2,nekochoicenum,@nekochoiceunit25)
+		index(@nekomember,nekochoicenum,@nekochoiceunit5) index(@nekomember2,nekochoicenum,@nekochoiceunit25) index(@nekomember3,nekochoicenum,@nekochoiceunit35)
 		add(nekochoicenum,1)
-		index(@nekomember,nekochoicenum,@nekochoiceunit6) index(@nekomember2,nekochoicenum,@nekochoiceunit26)
+		index(@nekomember,nekochoicenum,@nekochoiceunit6) index(@nekomember2,nekochoicenum,@nekochoiceunit26) index(@nekomember3,nekochoicenum,@nekochoiceunit36)
 		add(nekochoicenum,1)
-		index(@nekomember,nekochoicenum,@nekochoiceunit7) index(@nekomember2,nekochoicenum,@nekochoiceunit27)
+		index(@nekomember,nekochoicenum,@nekochoiceunit7) index(@nekomember2,nekochoicenum,@nekochoiceunit27) index(@nekomember3,nekochoicenum,@nekochoiceunit37)
 		
 		if (nekochoice_leveloption==1) {
 			storeskillset(nekochoice_levelskill,@nekochoiceskillset)
 			pushlevel(@nekochoiceunit0,nekochoicenum4) sub(nekochoicenum4,1)
-			if (nekochoicenum4==-1) {setv(@nekochoiceunit20,nekochoice_none)}
-			else {index(@nekochoiceskillset,nekochoicenum4,@nekochoiceunit20)}
+			if (nekochoicenum4==-1) {setv(@nekochoiceunit30,nekochoice_none)}
+			else {index(@nekochoiceskillset,nekochoicenum4,@nekochoiceunit30)}
 			pushlevel(@nekochoiceunit1,nekochoicenum4) sub(nekochoicenum4,1)
-			if (nekochoicenum4==-1) {setv(@nekochoiceunit21,nekochoice_none)}
-			else {index(@nekochoiceskillset,nekochoicenum4,@nekochoiceunit21)}
+			if (nekochoicenum4==-1) {setv(@nekochoiceunit31,nekochoice_none)}
+			else {index(@nekochoiceskillset,nekochoicenum4,@nekochoiceunit31)}
 			pushlevel(@nekochoiceunit2,nekochoicenum4) sub(nekochoicenum4,1)
-			if (nekochoicenum4==-1) {setv(@nekochoiceunit22,nekochoice_none)}
-			else {index(@nekochoiceskillset,nekochoicenum4,@nekochoiceunit22)}
+			if (nekochoicenum4==-1) {setv(@nekochoiceunit32,nekochoice_none)}
+			else {index(@nekochoiceskillset,nekochoicenum4,@nekochoiceunit32)}
 			pushlevel(@nekochoiceunit3,nekochoicenum4) sub(nekochoicenum4,1)
-			if (nekochoicenum4==-1) {setv(@nekochoiceunit23,nekochoice_none)}
-			else {index(@nekochoiceskillset,nekochoicenum4,@nekochoiceunit23)}
+			if (nekochoicenum4==-1) {setv(@nekochoiceunit33,nekochoice_none)}
+			else {index(@nekochoiceskillset,nekochoicenum4,@nekochoiceunit33)}
 			pushlevel(@nekochoiceunit4,nekochoicenum4) sub(nekochoicenum4,1)
-			if (nekochoicenum4==-1) {setv(@nekochoiceunit24,nekochoice_none)}
-			else {index(@nekochoiceskillset,nekochoicenum4,@nekochoiceunit24)}
+			if (nekochoicenum4==-1) {setv(@nekochoiceunit34,nekochoice_none)}
+			else {index(@nekochoiceskillset,nekochoicenum4,@nekochoiceunit34)}
 			pushlevel(@nekochoiceunit5,nekochoicenum4) sub(nekochoicenum4,1)
-			if (nekochoicenum4==-1) {setv(@nekochoiceunit25,nekochoice_none)}
-			else {index(@nekochoiceskillset,nekochoicenum4,@nekochoiceunit25)}
+			if (nekochoicenum4==-1) {setv(@nekochoiceunit35,nekochoice_none)}
+			else {index(@nekochoiceskillset,nekochoicenum4,@nekochoiceunit35)}
 			pushlevel(@nekochoiceunit6,nekochoicenum4) sub(nekochoicenum4,1)
-			if (nekochoicenum4==-1) {setv(@nekochoiceunit26,nekochoice_none)}
-			else {index(@nekochoiceskillset,nekochoicenum4,@nekochoiceunit26)}
+			if (nekochoicenum4==-1) {setv(@nekochoiceunit36,nekochoice_none)}
+			else {index(@nekochoiceskillset,nekochoicenum4,@nekochoiceunit36)}
 			pushlevel(@nekochoiceunit7,nekochoicenum4) sub(nekochoicenum4,1)
-			if (nekochoicenum4==-1) {setv(@nekochoiceunit27,nekochoice_none)}
-			else {index(@nekochoiceskillset,nekochoicenum4,@nekochoiceunit27)}
+			if (nekochoicenum4==-1) {setv(@nekochoiceunit37,nekochoice_none)}
+			else {index(@nekochoiceskillset,nekochoicenum4,@nekochoiceunit37)}
 			clear(@nekochoiceskillset)
 		}
 		
@@ -699,24 +784,40 @@ event nekochoice
 		if (nekochoicenum2<7 || @nekochoiceunit26==0) {setv(@nekochoiceunit26,nekochoice_none)}
 		if (nekochoicenum2<8 || @nekochoiceunit27==0) {setv(@nekochoiceunit27,nekochoice_none)}
 		
+		if (@nekochoiceunit30==0) {setv(@nekochoiceunit30,nekochoice_none)}
+		if (nekochoicenum2<2 || @nekochoiceunit31==0) {setv(@nekochoiceunit31,nekochoice_none)}
+		if (nekochoicenum2<3 || @nekochoiceunit32==0) {setv(@nekochoiceunit32,nekochoice_none)}
+		if (nekochoicenum2<4 || @nekochoiceunit33==0) {setv(@nekochoiceunit33,nekochoice_none)}
+		if (nekochoicenum2<5 || @nekochoiceunit34==0) {setv(@nekochoiceunit34,nekochoice_none)}
+		if (nekochoicenum2<6 || @nekochoiceunit35==0) {setv(@nekochoiceunit35,nekochoice_none)}
+		if (nekochoicenum2<7 || @nekochoiceunit36==0) {setv(@nekochoiceunit36,nekochoice_none)}
+		if (nekochoicenum2<8 || @nekochoiceunit37==0) {setv(@nekochoiceunit37,nekochoice_none)}
+		
 		if (nekochoicenum3<8) {
-			if (nekochoicenum2==1) {choice(nekochoicenum4, 　 　&nekochoiceunit0& &nekochoiceunit20&,やめる)}
-			else if (nekochoicenum2==2) {choice(nekochoicenum4, 　&nekochoiceunit0& &nekochoiceunit20&, 　&nekochoiceunit1& &nekochoiceunit21&,やめる)}
-			else if (nekochoicenum2==3) {choice(nekochoicenum4, 　&nekochoiceunit0& &nekochoiceunit20&, 　&nekochoiceunit1& &nekochoiceunit21&, 　&nekochoiceunit2& &nekochoiceunit22&,やめる)}
-			else if (nekochoicenum2==4) {choice(nekochoicenum4, 　&nekochoiceunit0& &nekochoiceunit20&, 　&nekochoiceunit1& &nekochoiceunit21&, 　&nekochoiceunit2& &nekochoiceunit22&, 　&nekochoiceunit3& &nekochoiceunit23&,やめる)}
-			else if (nekochoicenum2==5) {choice(nekochoicenum4, 　&nekochoiceunit0& &nekochoiceunit20&, 　&nekochoiceunit1& &nekochoiceunit21&, 　&nekochoiceunit2& &nekochoiceunit22&, 　&nekochoiceunit3& &nekochoiceunit23&, 　&nekochoiceunit4& &nekochoiceunit24&,やめる)}
-			else if (nekochoicenum2==6) {choice(nekochoicenum4, 　&nekochoiceunit0& &nekochoiceunit20&, 　&nekochoiceunit1& &nekochoiceunit21&, 　&nekochoiceunit2& &nekochoiceunit22&, 　&nekochoiceunit3& &nekochoiceunit23&, 　&nekochoiceunit4& &nekochoiceunit24&, 　&nekochoiceunit5& &nekochoiceunit25&,やめる)}
-			else if (nekochoicenum2==7) {choice(nekochoicenum4, 　&nekochoiceunit0& &nekochoiceunit20&, 　&nekochoiceunit1& &nekochoiceunit21&, 　&nekochoiceunit2& &nekochoiceunit22&, 　&nekochoiceunit3& &nekochoiceunit23&, 　&nekochoiceunit4& &nekochoiceunit24&, 　&nekochoiceunit5& &nekochoiceunit25&, 　&nekochoiceunit6& &nekochoiceunit26&,やめる)}
-			else if (nekochoicenum2==8) {choice(nekochoicenum4, 　&nekochoiceunit0& &nekochoiceunit20&, 　&nekochoiceunit1& &nekochoiceunit21&, 　&nekochoiceunit2& &nekochoiceunit22&, 　&nekochoiceunit3& &nekochoiceunit23&, 　&nekochoiceunit4& &nekochoiceunit24&, 　&nekochoiceunit5& &nekochoiceunit25&, 　&nekochoiceunit6& &nekochoiceunit26&, 　&nekochoiceunit7& &nekochoiceunit27&,やめる)}
-			else {choice(nekochoicenum4, 　&nekochoiceunit0& &nekochoiceunit20&, 　&nekochoiceunit1& &nekochoiceunit21&, 　&nekochoiceunit2& &nekochoiceunit22&, 　&nekochoiceunit3& &nekochoiceunit23&, 　&nekochoiceunit4& &nekochoiceunit24&, 　&nekochoiceunit5& &nekochoiceunit25&, 　&nekochoiceunit6& &nekochoiceunit26&, 　&nekochoiceunit7& &nekochoiceunit27&,次へ,やめる)}
+			if (nekochoicenum2==1) {choice(nekochoicenum4,やめる, 　　&nekochoiceunit0& &nekochoiceunit20& &nekochoiceunit30&)}
+			else if (nekochoicenum2==2) {choice(nekochoicenum4,やめる, 　　&nekochoiceunit0& &nekochoiceunit20& &nekochoiceunit30&, 　　&nekochoiceunit1& &nekochoiceunit21& &nekochoiceunit31&)}
+			else if (nekochoicenum2==3) {choice(nekochoicenum4,やめる, 　　&nekochoiceunit0& &nekochoiceunit20& &nekochoiceunit30&, 　　&nekochoiceunit1& &nekochoiceunit21& &nekochoiceunit31&, 　　&nekochoiceunit2& &nekochoiceunit22& &nekochoiceunit32&)}
+			else if (nekochoicenum2==4) {choice(nekochoicenum4,やめる, 　　&nekochoiceunit0& &nekochoiceunit20& &nekochoiceunit30&, 　　&nekochoiceunit1& &nekochoiceunit21& &nekochoiceunit31&, 　　&nekochoiceunit2& &nekochoiceunit22& &nekochoiceunit32&, 　　&nekochoiceunit3& &nekochoiceunit23& &nekochoiceunit33&)}
+			else if (nekochoicenum2==5) {choice(nekochoicenum4,やめる, 　　&nekochoiceunit0& &nekochoiceunit20& &nekochoiceunit30&, 　　&nekochoiceunit1& &nekochoiceunit21& &nekochoiceunit31&, 　　&nekochoiceunit2& &nekochoiceunit22& &nekochoiceunit32&, 　　&nekochoiceunit3& &nekochoiceunit23& &nekochoiceunit33&, 　　&nekochoiceunit4& &nekochoiceunit24& &nekochoiceunit34&)}
+			else if (nekochoicenum2==6) {choice(nekochoicenum4,やめる, 　　&nekochoiceunit0& &nekochoiceunit20& &nekochoiceunit30&, 　　&nekochoiceunit1& &nekochoiceunit21& &nekochoiceunit31&, 　　&nekochoiceunit2& &nekochoiceunit22& &nekochoiceunit32&, 　　&nekochoiceunit3& &nekochoiceunit23& &nekochoiceunit33&, 　　&nekochoiceunit4& &nekochoiceunit24& &nekochoiceunit34&, 　　&nekochoiceunit5& &nekochoiceunit25& &nekochoiceunit35&)}
+			else if (nekochoicenum2==7) {choice(nekochoicenum4,やめる, 　　&nekochoiceunit0& &nekochoiceunit20& &nekochoiceunit30&, 　　&nekochoiceunit1& &nekochoiceunit21& &nekochoiceunit31&, 　　&nekochoiceunit2& &nekochoiceunit22& &nekochoiceunit32&, 　　&nekochoiceunit3& &nekochoiceunit23& &nekochoiceunit33&, 　　&nekochoiceunit4& &nekochoiceunit24& &nekochoiceunit34&, 　　&nekochoiceunit5& &nekochoiceunit25& &nekochoiceunit35&, 　　&nekochoiceunit6& &nekochoiceunit26& &nekochoiceunit36&)}
+			else if (nekochoicenum2==8) {choice(nekochoicenum4,やめる, 　　&nekochoiceunit0& &nekochoiceunit20& &nekochoiceunit30&, 　　&nekochoiceunit1& &nekochoiceunit21& &nekochoiceunit31&, 　　&nekochoiceunit2& &nekochoiceunit22& &nekochoiceunit32&, 　　&nekochoiceunit3& &nekochoiceunit23& &nekochoiceunit33&, 　　&nekochoiceunit4& &nekochoiceunit24& &nekochoiceunit34&, 　　&nekochoiceunit5& &nekochoiceunit25& &nekochoiceunit35&, 　　&nekochoiceunit6& &nekochoiceunit26& &nekochoiceunit36&, 　　&nekochoiceunit7& &nekochoiceunit27& &nekochoiceunit37&)}
+			else {choice(nekochoicenum4, やめる,　　&nekochoiceunit0& &nekochoiceunit20& &nekochoiceunit30&, 　　&nekochoiceunit1& &nekochoiceunit21& &nekochoiceunit31&, 　　&nekochoiceunit2& &nekochoiceunit22& &nekochoiceunit32&, 　　&nekochoiceunit3& &nekochoiceunit23& &nekochoiceunit33&, 　　&nekochoiceunit4& &nekochoiceunit24& &nekochoiceunit34&, 　　&nekochoiceunit5& &nekochoiceunit25& &nekochoiceunit35&, 　　&nekochoiceunit6& &nekochoiceunit26& &nekochoiceunit36&, 　　&nekochoiceunit7& &nekochoiceunit27& &nekochoiceunit37&,次へ)}
 			clear(@nekochoiceunit0) clear(@nekochoiceunit1) clear(@nekochoiceunit2)
 			clear(@nekochoiceunit3) clear(@nekochoiceunit4) clear(@nekochoiceunit5)
 			clear(@nekochoiceunit6) clear(@nekochoiceunit7)
 			clear(@nekochoiceunit20) clear(@nekochoiceunit21) clear(@nekochoiceunit22)
 			clear(@nekochoiceunit23) clear(@nekochoiceunit24) clear(@nekochoiceunit25)
 			clear(@nekochoiceunit26) clear(@nekochoiceunit27)
-			if (nekochoicenum4==nekochoicenum2 || nekochoicenum4==9) {clear(@nekotemp) break() }
-			else if (nekochoicenum4==8) {
+			clear(@nekochoiceunit30) clear(@nekochoiceunit31) clear(@nekochoiceunit32)
+			clear(@nekochoiceunit33) clear(@nekochoiceunit34) clear(@nekochoiceunit35)
+			clear(@nekochoiceunit36) clear(@nekochoiceunit37)
+			
+			if (nekochoicenum4==0) {clear(@nekotemp) break() }
+			
+			sub(nekochoicenum4,1)
+			
+			if (nekochoicenum4==8) {
 				add(nekochoicenum,1)
 				sub(nekochoicenum2,8)
 				add(nekochoicenum3,8)
@@ -729,21 +830,29 @@ event nekochoice
 			}
 		}
 		else {
-			if (nekochoicenum2==1) {choice(nekochoicenum4, 　&nekochoiceunit0& &nekochoiceunit20&,前へ,やめる)}
-			else if (nekochoicenum2==2) {choice(nekochoicenum4, 　&nekochoiceunit0& &nekochoiceunit20&, 　&nekochoiceunit1& &nekochoiceunit21&,前へ,やめる)}
-			else if (nekochoicenum2==3) {choice(nekochoicenum4, 　&nekochoiceunit0& &nekochoiceunit20&, 　&nekochoiceunit1& &nekochoiceunit21&, 　&nekochoiceunit2& &nekochoiceunit22&,前へ,やめる)}
-			else if (nekochoicenum2==4) {choice(nekochoicenum4, 　&nekochoiceunit0& &nekochoiceunit20&, 　&nekochoiceunit1& &nekochoiceunit21&, 　&nekochoiceunit2& &nekochoiceunit22&, 　&nekochoiceunit3& &nekochoiceunit23&,前へ,やめる)}
-			else if (nekochoicenum2==5) {choice(nekochoicenum4, 　&nekochoiceunit0& &nekochoiceunit20&, 　&nekochoiceunit1& &nekochoiceunit21&, 　&nekochoiceunit2& &nekochoiceunit22&, 　&nekochoiceunit3& &nekochoiceunit23&, 　&nekochoiceunit4& &nekochoiceunit24&,前へ,やめる)}
-			else if (nekochoicenum2==6) {choice(nekochoicenum4, 　&nekochoiceunit0& &nekochoiceunit20&, 　&nekochoiceunit1& &nekochoiceunit21&, 　&nekochoiceunit2& &nekochoiceunit22&, 　&nekochoiceunit3& &nekochoiceunit23&, 　&nekochoiceunit4& &nekochoiceunit24&, 　&nekochoiceunit5& &nekochoiceunit25&,前へ,やめる)}
-			else if (nekochoicenum2==7) {choice(nekochoicenum4, 　&nekochoiceunit0& &nekochoiceunit20&, 　&nekochoiceunit1& &nekochoiceunit21&, 　&nekochoiceunit2& &nekochoiceunit22&, 　&nekochoiceunit3& &nekochoiceunit23&, 　&nekochoiceunit4& &nekochoiceunit24&, 　&nekochoiceunit5& &nekochoiceunit25&, 　&nekochoiceunit6& &nekochoiceunit26&,前へ,やめる)}
-			else if (nekochoicenum2==8) {choice(nekochoicenum4, 　&nekochoiceunit0& &nekochoiceunit20&, 　&nekochoiceunit1& &nekochoiceunit21&, 　&nekochoiceunit2& &nekochoiceunit22&, 　&nekochoiceunit3& &nekochoiceunit23&, 　&nekochoiceunit4& &nekochoiceunit24&, 　&nekochoiceunit5& &nekochoiceunit25&, 　&nekochoiceunit6& &nekochoiceunit26&, 　&nekochoiceunit7& &nekochoiceunit27&,前へ,やめる)}
-			else {choice(nekochoicenum4, 　&nekochoiceunit0& &nekochoiceunit20&, 　&nekochoiceunit1& &nekochoiceunit21&, 　&nekochoiceunit2& &nekochoiceunit22&, 　&nekochoiceunit3& &nekochoiceunit23&, 　&nekochoiceunit4& &nekochoiceunit24&, 　&nekochoiceunit5& &nekochoiceunit25&, 　&nekochoiceunit6& &nekochoiceunit26&, 　&nekochoiceunit7& &nekochoiceunit27&,前へ,次へ,やめる)}
+			if (nekochoicenum2==1) {choice(nekochoicenum4,やめる, 　　&nekochoiceunit0& &nekochoiceunit20& &nekochoiceunit30&,前へ)}
+			else if (nekochoicenum2==2) {choice(nekochoicenum4,やめる, 　　&nekochoiceunit0& &nekochoiceunit20& &nekochoiceunit30&, 　　&nekochoiceunit1& &nekochoiceunit21& &nekochoiceunit31&,前へ)}
+			else if (nekochoicenum2==3) {choice(nekochoicenum4,やめる, 　　&nekochoiceunit0& &nekochoiceunit20& &nekochoiceunit30&, 　　&nekochoiceunit1& &nekochoiceunit21& &nekochoiceunit31&, 　　&nekochoiceunit2& &nekochoiceunit22& &nekochoiceunit32&,前へ)}
+			else if (nekochoicenum2==4) {choice(nekochoicenum4,やめる, 　　&nekochoiceunit0& &nekochoiceunit20& &nekochoiceunit30&, 　　&nekochoiceunit1& &nekochoiceunit21& &nekochoiceunit31&, 　　&nekochoiceunit2& &nekochoiceunit22& &nekochoiceunit32&, 　　&nekochoiceunit3& &nekochoiceunit23& &nekochoiceunit33&,前へ)}
+			else if (nekochoicenum2==5) {choice(nekochoicenum4,やめる, 　　&nekochoiceunit0& &nekochoiceunit20& &nekochoiceunit30&, 　　&nekochoiceunit1& &nekochoiceunit21& &nekochoiceunit31&, 　　&nekochoiceunit2& &nekochoiceunit22& &nekochoiceunit32&, 　　&nekochoiceunit3& &nekochoiceunit23& &nekochoiceunit33&, 　　&nekochoiceunit4& &nekochoiceunit24& &nekochoiceunit34&,前へ)}
+			else if (nekochoicenum2==6) {choice(nekochoicenum4,やめる, 　　&nekochoiceunit0& &nekochoiceunit20& &nekochoiceunit30&, 　　&nekochoiceunit1& &nekochoiceunit21& &nekochoiceunit31&, 　　&nekochoiceunit2& &nekochoiceunit22& &nekochoiceunit32&, 　　&nekochoiceunit3& &nekochoiceunit23& &nekochoiceunit33&, 　　&nekochoiceunit4& &nekochoiceunit24& &nekochoiceunit34&, 　　&nekochoiceunit5& &nekochoiceunit25& &nekochoiceunit35&,前へ)}
+			else if (nekochoicenum2==7) {choice(nekochoicenum4,やめる, 　　&nekochoiceunit0& &nekochoiceunit20& &nekochoiceunit30&, 　　&nekochoiceunit1& &nekochoiceunit21& &nekochoiceunit31&, 　　&nekochoiceunit2& &nekochoiceunit22& &nekochoiceunit32&, 　　&nekochoiceunit3& &nekochoiceunit23& &nekochoiceunit33&, 　　&nekochoiceunit4& &nekochoiceunit24& &nekochoiceunit34&, 　　&nekochoiceunit5& &nekochoiceunit25& &nekochoiceunit35&, 　　&nekochoiceunit6& &nekochoiceunit26& &nekochoiceunit36&,前へ)}
+			else if (nekochoicenum2==8) {choice(nekochoicenum4,やめる, 　　&nekochoiceunit0& &nekochoiceunit20& &nekochoiceunit30&, 　　&nekochoiceunit1& &nekochoiceunit21& &nekochoiceunit31&, 　　&nekochoiceunit2& &nekochoiceunit22& &nekochoiceunit32&, 　　&nekochoiceunit3& &nekochoiceunit23& &nekochoiceunit33&, 　　&nekochoiceunit4& &nekochoiceunit24& &nekochoiceunit34&, 　　&nekochoiceunit5& &nekochoiceunit25& &nekochoiceunit35&, 　　&nekochoiceunit6& &nekochoiceunit26& &nekochoiceunit36&, 　　&nekochoiceunit7& &nekochoiceunit27& &nekochoiceunit37&,前へ)}
+			else {choice(nekochoicenum4,やめる, 　　&nekochoiceunit0& &nekochoiceunit20& &nekochoiceunit30&, 　　&nekochoiceunit1& &nekochoiceunit21& &nekochoiceunit31&, 　　&nekochoiceunit2& &nekochoiceunit22& &nekochoiceunit32&, 　　&nekochoiceunit3& &nekochoiceunit23& &nekochoiceunit33&, 　　&nekochoiceunit4& &nekochoiceunit24& &nekochoiceunit34&, 　　&nekochoiceunit5& &nekochoiceunit25& &nekochoiceunit35&, 　　&nekochoiceunit6& &nekochoiceunit26& &nekochoiceunit36&, 　　&nekochoiceunit7& &nekochoiceunit27& &nekochoiceunit37&,前へ,次へ)}
 			clear(@nekochoiceunit0) clear(@nekochoiceunit1) clear(@nekochoiceunit2)
 			clear(@nekochoiceunit3) clear(@nekochoiceunit4) clear(@nekochoiceunit5)
 			clear(@nekochoiceunit6) clear(@nekochoiceunit7)
 			clear(@nekochoiceunit20) clear(@nekochoiceunit21) clear(@nekochoiceunit22)
 			clear(@nekochoiceunit23) clear(@nekochoiceunit24) clear(@nekochoiceunit25)
 			clear(@nekochoiceunit26) clear(@nekochoiceunit27)
+			clear(@nekochoiceunit30) clear(@nekochoiceunit31) clear(@nekochoiceunit32)
+			clear(@nekochoiceunit33) clear(@nekochoiceunit34) clear(@nekochoiceunit35)
+			clear(@nekochoiceunit36) clear(@nekochoiceunit37)
+			
+			if (nekochoicenum4==0) {clear(@nekotemp) break()}
+			
+			sub(nekochoicenum4,1)
+			
 			if (nekochoicenum2>8) {
 				if (nekochoicenum4==8) {
 					sub(nekochoicenum,15)

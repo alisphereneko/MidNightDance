@@ -21,6 +21,11 @@ event filtermod_unitchange_main
 	addunit(003wwwdroplevel,politics1) addunit(003wwwdropEcard,politics1) addunit(003wwwdropreset,politics1)
 }
 
+event memoryfilter
+{
+	
+}
+
 event sortOutAction_kaihen
 {
 	//展開コマンドのイベント
