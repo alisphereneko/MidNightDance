@@ -3,15 +3,23 @@
 event filtermod_trigger
 {
 	//内政トリガー
-	if (ptest(politics1, droplevel1)){set(sortOutPurpose, 1001) event(sortOutAction)}
-	else if (ptest(politics1, droplevel2)){set(sortOutPurpose, 1011) event(sortOutAction)}
-	else if (ptest(politics1, droplevel3)){set(sortOutPurpose, 1021) event(sortOutAction)}
-	else if (ptest(politics1, droplevel4)){set(sortOutPurpose, 1031) event(sortOutAction)}
-	else if (ptest(politics1, dropEcard1)){set(sortOutPurpose, 1101) event(sortOutAction)}
-	else if (ptest(politics1, dropEcard2)){set(sortOutPurpose, 1100) event(sortOutAction)}
-	else if (ptest(politics1, dropCCpass1)){set(sortOutPurpose, 1103) event(sortOutAction)}
-	else if (ptest(politics1, dropCCpass2)){set(sortOutPurpose, 1102) event(sortOutAction)}
-	else if (ptest(politics1, dropreset)){set(sortOutPurpose, 1050) event(sortOutAction)}
+	set(sortOutPurpose, 0)
+	if (ptest(politics1, droplevel1)){set(sortOutPurpose, 1001)}
+	else if (ptest(politics1, droplevel2)){set(sortOutPurpose, 1011)}
+	else if (ptest(politics1, droplevel3)){set(sortOutPurpose, 1021)}
+	else if (ptest(politics1, droplevel4)){set(sortOutPurpose, 1031)}
+	else if (ptest(politics1, dropreset)){set(sortOutPurpose, -1)}
+	else if (ptest(politics1,dropskill1)){
+		set(sortOutPurpose, 1101)
+		set(filtermod_filtered_skill2,0)
+		set(filtermod_filtered_skill3,filtermod_filtered_skill)
+	}
+	else if (ptest(politics1,dropskill2)){
+		set(sortOutPurpose, 1100)
+		set(filtermod_filtered_skill2,0)
+		set(filtermod_filtered_skill3,filtermod_filtered_skill)
+	}
+	if (sortOutPurpose!=0) {event(sortOutAction)}
 }
 
 event filtermod_unitchange_main
@@ -21,19 +29,18 @@ event filtermod_unitchange_main
 	addunit(003wwwdroplevel,politics1) addunit(003wwwdropEcard,politics1) addunit(003wwwdropreset,politics1)
 }
 
-event memoryfilter
-{
-	
-}
-
 event sortOutAction_kaihen
 {
 	//展開コマンドのイベント
 	routine(filtermod_main)
-	
+	spotmark()
 	while (count(@allPowerTalent) >= 1 && count(@politicsUnitCount) < 127) {
 		index(@allPowerTalent, 0, @unit)
 		subv(@allPowerTalent, @unit)
+
+		storespotofunit(@unit,@filtermod)
+		spotmark(@filtermod,2)
+		set(filtermod_spotmark,1)
 
 		set(purpose, 6)
 		routine(privateData)
@@ -45,12 +52,13 @@ event sortOutAction_kaihen
 		msg(※人材が多すぎるため、すべてを展開出来ませんでした。$より条件の狭い展開方法を選択してください。)
 		erase()
 	}
+	clear(@filtermod)
 }
 
 event filtermod_main_nochange
 {
 	//前回のフィルター設定から変更を加えずにフィルターする処理
-	set(sortOutPurpose,-1)//条件に引っかからなければ何でも良い
+	set(sortOutPurpose,99999999)
 	routine(filtermod_main)
 }
 
@@ -65,13 +73,14 @@ event filtermod_main
 
 	//フラグ書き換え処理
 	//コマンドごとの指定系統のフラグを上書きする
-	if (sortOutPurpose == 1050 || sortOutPurpose == 0) {
+	if (sortOutPurpose <= 0) {
 		routine(filtermod_reset)
-		if (sortOutPurpose == 1050) {clear(@allPowerTalent)}
+		if (sortOutPurpose == -1) {clear(@allPowerTalent)}
 		return()
 	}
 	else if (1<=sortOutPurpose && sortOutPurpose<=99) {set(filtermod_filtered_class,sortOutPurpose)}
-	else if (sortOutPurpose >= 1100) {set(filtermod_filtered_Ecard,sortOutPurpose)}
+	else if (sortOutPurpose == 99999999) {}
+	else if (sortOutPurpose >= 1100) {set(filtermod_filtered_skill,sortOutPurpose)}
 	else if (sortOutPurpose >= 1000){
 		set(filtermod_filtered_level,sortOutPurpose)
 		sub(filtermod_filtered_level,1000)
@@ -99,10 +108,167 @@ event filtermod_main
 		else  if (filtermod_filtered_class == 25){storeud(SAVEzombieLineage,@allSortOutClass)}
 		else  if (filtermod_filtered_class == 99){storeud(SAVEfelLineage,@allSortOutClass)}
 	}
-	if (filtermod_filtered_Ecard!=0) {
-		set(filtermodnum,filtermod_filtered_Ecard)
-		if (filtermodnum<1102) {sub(filtermodnum,1100)}
-		else {sub(filtermodnum,1102)}
+	if (filtermod_filtered_skill!=0) {
+		set(filtermodnum,filtermod_filtered_skill)
+		if (filtermod_filtered_skill2==0) {
+			while (1==1) {
+				clear(@nekomember)
+				choice(filtermodnum2,やめる,エネルギーカード,特殊クラスチェンジパス,一時能力,固有能力（システム系）,固有能力（その他）)
+				if (filtermodnum2==0) {
+					set(filtermod_filtered_skill,filtermod_filtered_skill3)
+					set(filtermod_filtered_skill2,1)
+					set(filtermodnum,filtermod_filtered_skill3)
+					break()
+				}
+				else if (filtermodnum2==1) {
+					setv(@nekotemp,energycard)
+				}
+				else if (filtermodnum2==2) {
+					setv(@nekotemp,ccpass)
+				}
+				else if (filtermodnum2==3) {
+					choice(filtermodnum2,やめる,スキル指定,系統指定)
+					if (filtermodnum2==0) {
+						continue()
+					}
+					else if (filtermodnum2==1) {
+						routine(filtermod_listskill_loyaltyprotect)
+						routine(filtermod_listskill_upstatus)
+						routine(filtermod_listskill_downstatus)
+						routine(filtermod_listskill_temporary)
+					}
+					else if (filtermodnum2==2) {
+						choice(filtermodnum2,やめる,能力上昇,能力低下・制限,忠誠低下耐性,一時武装)
+						if (filtermodnum2==0) {
+							continue()
+						}
+						else if (filtermodnum2==1) {
+							setv(@nekotemp,filtermod_listskill_upstatus)
+						}
+						else if (filtermodnum2==2) {
+							setv(@nekotemp,filtermod_listskill_downstatus)
+						}
+						else if (filtermodnum2==3) {
+							setv(@nekotemp,filtermod_listskill_loyaltyprotect)
+						}
+						else if (filtermodnum2==4) {
+							setv(@nekotemp,filtermod_listskill_temporary)
+						}
+					}
+				}
+				else if (filtermodnum2==4) {
+					choice(filtermodnum2,やめる,忠臣,希望職,リクルーター,固有能力（武装共有）)
+					if (filtermodnum2==0) {
+						continue()
+					}
+					else if (filtermodnum2==1) {
+						setv(@nekomember,loyalsubject_nini)
+						addv(@nekomember,loyalsubject_honoka) addv(@nekomember,loyalsubject_ouen)
+						addv(@nekomember,loyalsubject_kamiya) addv(@nekomember,loyalsubject_daiya) 
+						addv(@nekomember,loyalsubject_himesiro) addv(@nekomember,loyalsubject_riferi)
+						addv(@nekomember,loyalsubject_rifon) addv(@nekomember,loyalsubject_gaagoriusu)
+						addv(@nekomember,loyalsubject_suiren) addv(@nekomember,loyalsubject_kizaki)
+						addv(@nekomember,loyalsubject_veiraru) addv(@nekomember,loyalsubject_isikawa)
+						addv(@nekomember,loyalsubject_ryudou) addv(@nekomember,loyalsubject_fel)
+					}
+					else if (filtermodnum2==2) {
+						setv(@nekomember,wishclass_artist) addv(@nekomember,wishclass_shotputter)
+						addv(@nekomember,wishclass_ninga) addv(@nekomember,wishclass_bakuto)
+						addv(@nekomember,wishclass_mizusyoubai) addv(@nekomember,wishclass_bike)
+						addv(@nekomember,wishclass_thief) addv(@nekomember,wishclass_dealer)
+					}
+					else if (filtermodnum2==3) {
+						setv(@nekomember,recruiter_machine) addv(@nekomember,recruiter_worker)
+						addv(@nekomember,recruiter_assassin)
+					}
+					else if (filtermodnum2==4) {
+						setv(@nekomember,skillshare_assaultrifle)
+						addv(@nekomember,skillshare_grenadegun) addv(@nekomember,skillshare_torpedo)
+						addv(@nekomember,skillshare_sniperrifle) addv(@nekomember,skillshare_poisonousdrug)
+						addv(@nekomember,skillshare_sparkcutter) addv(@nekomember,skillshare_temptationconf)
+					}
+				}
+				else if (filtermodnum2==5) {
+					setv(@nekomember,educate) addv(@nekomember,innovation) addv(@nekomember,assistant)
+					addv(@nekomember,condemn) addv(@nekomember,alienate) addv(@nekomember,treatment)
+					addv(@nekomember,glibtalker) addv(@nekomember,invent) addv(@nekomember,rich)
+					addv(@nekomember,desiretoprotect) addv(@nekomember,sociable)
+					addv(@nekomember,shyness) addv(@nekomember,kingvessel) addv(@nekomember,absolute)
+					addv(@nekomember,charismatic) 
+					addv(@nekomember,rational) addv(@nekomember,materialguard) addv(@nekomember,magicguard)
+					addv(@nekomember,bravery) addv(@nekomember,calm) addv(@nekomember,nuisance)
+					addv(@nekomember,affectionate) addv(@nekomember,coldblood) addv(@nekomember,moodyperson)
+					addv(@nekomember,eccentric) addv(@nekomember,madness) addv(@nekomember,serious)
+					addv(@nekomember,twosides) addv(@nekomember,warlike) addv(@nekomember,hardworker)
+					addv(@nekomember,moodmaker) addv(@nekomember,sensualist_male)
+					addv(@nekomember,sensualist_female)
+					addv(@nekomember,picky) addv(@nekomember,sadist) addv(@nekomember,masochist)
+					addv(@nekomember,slowstarter) addv(@nekomember,weakling) addv(@nekomember,metamorphosis)
+				}
+				if (@nekomember!=0) {
+					routine(nekochoice)
+					if (@nekotemp==0) {continue()}
+				}
+				clear(@nekomember)
+				setud(filtermod_filtered_selectedskill,@nekotemp)
+				set(filtermod_filtered_skill2,1)
+				break()
+			}
+		}
+
+		storeud(filtermod_filtered_selectedskill,@filtermodTargetskill)
+		if (has(@filtermodTargetskill,filtermod_seal)>0) {
+			addv(@filtermodTargetskill,seal5) addv(@filtermodTargetskill,seal4)
+			addv(@filtermodTargetskill,seal3) addv(@filtermodTargetskill,seal2)
+			addv(@filtermodTargetskill,seal1) addv(@filtermodTargetskill,seal10)
+			addv(@filtermodTargetskill,seal9) addv(@filtermodTargetskill,seal8)
+			addv(@filtermodTargetskill,seal7) addv(@filtermodTargetskill,seal6)
+			subv(@filtermodTargetskill,filtermod_seal)
+		}
+		if (has(@filtermodTargetskill,filtermod_elation)>0) {
+			addv(@filtermodTargetskill,elation1) addv(@filtermodTargetskill,elation2)
+			addv(@filtermodTargetskill,elation3) addv(@filtermodTargetskill,elation4)
+			addv(@filtermodTargetskill,elation5) addv(@filtermodTargetskill,elation6)
+			addv(@filtermodTargetskill,elation7) addv(@filtermodTargetskill,elation8)
+			addv(@filtermodTargetskill,elation9) addv(@filtermodTargetskill,elation10)
+			subv(@filtermodTargetskill,filtermod_elation)
+		}
+		if (has(@filtermodTargetskill,filtermod_elation_kaihen)>0) {
+			routine(loyaltyOFFskillchange_setelaiton)
+			addv(@filtermodTargetskill,@loyaltyOFFskillchange_elation)
+			clear(@loyaltyOFFskillchange_elation)
+			subv(@filtermodTargetskill,filtermod_elation_kaihen)
+		}
+		if (has(@filtermodTargetskill,filtermod_metamorphosistime)>0) {
+			addv(@filtermodTargetskill,metamorphosistime5)
+			addv(@filtermodTargetskill,metamorphosistime4) addv(@filtermodTargetskill,metamorphosistime3)
+			addv(@filtermodTargetskill,metamorphosistime2) addv(@filtermodTargetskill,metamorphosistime1)
+			addv(@filtermodTargetskill,metamorphosistime10) addv(@filtermodTargetskill,metamorphosistime9)
+			addv(@filtermodTargetskill,metamorphosistime8) addv(@filtermodTargetskill,metamorphosistime7)
+			addv(@filtermodTargetskill,metamorphosistime6)
+			subv(@filtermodTargetskill,filtermod_metamorphosistime)
+		}
+		if (has(@filtermodTargetskill,filtermod_listskill_loyaltyprotect)>0) {
+			routine(filtermod_listskill_loyaltyprotect)
+			addv(@filtermodTargetskill,@nekomember)
+			clear(@nekomember)
+		}
+		if (has(@filtermodTargetskill,filtermod_listskill_upstatus)>0) {
+			routine(filtermod_listskill_upstatus)
+			addv(@filtermodTargetskill,@nekomember)
+			clear(@nekomember)
+		}
+		if (has(@filtermodTargetskill,filtermod_listskill_downstatus)>0) {
+			routine(filtermod_listskill_downstatus)
+			addv(@filtermodTargetskill,@nekomember)
+			clear(@nekomember)
+		}
+		if (has(@filtermodTargetskill,filtermod_listskill_temporary)>0) {
+			routine(filtermod_listskill_temporary)
+			addv(@filtermodTargetskill,@nekomember)
+			clear(@nekomember)
+		}
+		sub(filtermodnum,1100)
 	}
 	if (filtermod_filtered_level!=0){
 		set(filtermodnum2,filtermod_filtered_level)
@@ -126,12 +292,14 @@ event filtermod_main
 			if (has(@allSortOutClass,@filtermod2) == 0) {continue()}
 		}
 		
-		storeskillofunit(@unit,@filtermod2)
-		if (filtermod_filtered_Ecard>=1102) {
-			if (has(@filtermod2,ccpass)!=filtermodnum) {continue()}
-		}
-		else if (filtermod_filtered_Ecard!=0) {
-			if (has(@filtermod2,energycard)!=filtermodnum) {continue()}
+		if (filtermod_filtered_skill!=0) {
+			//仕様変更の度にわけわからなくなるのでメモ
+			//所持選択時はフラグ1、非所持選択時はフラグ0
+			//条件に合うものを通さなければいけないので、ifには所持時に0、非所持時に1を返す条件を書く
+			storeskillofunit(@unit,@filtermod2)
+			setv(@filtermod3,@filtermod2)
+			subv(@filtermod2,@filtermodTargetskill)
+			if (has(@filtermod2,@filtermod3)==filtermodnum) {continue()}
 		}
 		
 		if (filtermod_filtered_level!=0){
@@ -145,8 +313,44 @@ event filtermod_main
 		addv(@filtermod,@unit)
 	}
 	setv(@allPowerTalent,@filtermod)
-	clear(@filtermod) clear(@filtermod2) set(sortOutPurpose,0)
+	clear(@filtermod) clear(@filtermod2) clear(@filtermod3) clear(@filtermodTargetskill) set(sortOutPurpose,0)
 	routine(filtermod_count)
+}
+
+event filtermod_listskill_loyaltyprotect
+{
+	addv(@nekomember,loyaltybuffer) addv(@nekomember,loyaltykeep)
+}
+
+event filtermod_listskill_upstatus
+{
+	addv(@nekomember,double)
+	addv(@nekomember,filtermod_elation)
+	addv(@nekomember,filtermod_elation_kaihen)
+	addv(@nekomember,allaid) addv(@nekomember,highallaid) 
+	addv(@nekomember,mpatkmagaid)
+	addv(@nekomember,highmpatkmagaid) addv(@nekomember,hpdefmdfaid) addv(@nekomember,highhpdefmdfaid)
+	addv(@nekomember,hpmpaid) addv(@nekomember,highhpmpaid) addv(@nekomember,attackaid)
+	addv(@nekomember,highattackaid) addv(@nekomember,ultraattackaid) addv(@nekomember,defenseaid)
+	addv(@nekomember,highdefenseaid) addv(@nekomember,magdefaid) addv(@nekomember,highmagdefaid)
+	addv(@nekomember,moveaid) addv(@nekomember,highmoveaid) addv(@nekomember,medicine)
+	addv(@nekomember,highmedicine) 
+	addv(@nekomember,artup) addv(@nekomember,highartup)
+	addv(@nekomember,filtermod_metamorphosistime)
+}
+
+event filtermod_listskill_downstatus
+{
+	addv(@nekomember,filtermod_seal) addv(@nekomember,allweaken) addv(@nekomember,highallweaken)
+}
+
+event filtermod_listskill_temporary
+{
+	addv(@nekomember,assaultrifle_temporary)
+	addv(@nekomember,grenadegun_temporary) addv(@nekomember,torpedo_temporary)
+	addv(@nekomember,sniperrifle_temporary) addv(@nekomember,poisonousdrug_temporary)
+	addv(@nekomember,sparkcutter_temporary) addv(@nekomember,temptationconf_temporary)
+	addv(@nekomember,electricritual_temporary)
 }
 
 event filtermod_count
@@ -155,7 +359,7 @@ event filtermod_count
 	//現在は掛かっているかいないかの判断にしか使っていないので種類数は意味がない
 	set(filtermod_filteredcount,0)
 	if (filtermod_filtered_class!=0) {add(filtermod_filteredcount,1)}
-	if (filtermod_filtered_Ecard!=0) {add(filtermod_filteredcount,1)}
+	if (filtermod_filtered_skill!=0) {add(filtermod_filteredcount,1)}
 	if (filtermod_filtered_autoCC!=0) {add(filtermod_filteredcount,1)}
 	if (filtermod_filtered_level!=0) {add(filtermod_filteredcount,1)}
 }
@@ -164,7 +368,9 @@ event filtermod_reset
 {
 	//フィルターを全てOFFにするルーティン
 	set(filtermod_filtered_class,0)
-	set(filtermod_filtered_Ecard,0)
+	set(filtermod_filtered_skill,0)
+	set(filtermod_filtered_skill2,0)
+	set(filtermod_filtered_skill3,0)
 	set(filtermod_filtered_level,0)
 	set(filtermod_filtered_autoCC,0)
 }

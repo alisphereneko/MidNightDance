@@ -69,6 +69,12 @@ event LoyaldownONOFF
 
 	routine(LoyaldownONOFF_addunit)
 
+	if (LoyaldownONOFFmod==0) {
+		event(loyaltyOFFskillchange_ONOFF)
+		if (loyaltyOFFskillchange==1) {routine(loyaltyOFFskillchange_eraseelation2)}
+	}
+	else {routine(loyaltyOFFskillchange_eraseelation)}
+
 	save()
 	talk(felclone, fel_emi.png,ê›íËÇïœçXÇµÇΩÇÊÅI)
 }

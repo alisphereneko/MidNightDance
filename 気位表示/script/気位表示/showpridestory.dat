@@ -1,0 +1,69 @@
+story showpride
+{
+	if (yet(showprideskillchange)) {routine(showprideskillchange)}
+	if (isPlayerturn()) {
+		routine(showprideskillchange)
+	}
+	if (isPlayerEnd()) {
+		routine(showprideskillchange2)
+	}
+}
+
+event showprideskillchange
+{
+	//全人材の「気位」のスキルをMP回復を上昇させるものに置き換える
+	storealltalent(@showpridealltalent)
+	while (@showpridealltalent!=0) {
+		index(@showpridealltalent,0,@showprideunit)
+		subv(@showpridealltalent,@showprideunit)
+		
+		storeskillofunit(@showprideunit,@showprideskill)
+		setv(@showprideskill2,@showprideskill)
+		subv(@showprideskill,pride_s)
+		subv(@showprideskill,pride_a)
+		subv(@showprideskill,pride_b)
+		subv(@showprideskill,pride_c)
+		subv(@showprideskill,pride_d)
+		subv(@showprideskill2,@showprideskill)
+		
+		if (@showprideskill2!=@showprideskill) {
+			eraseskill(@showprideunit,@showprideskill2)
+			addstr(@showprideskill2,_kaihen)
+			addskill(@showprideunit,@showprideskill2)
+		}
+	}
+	clear(@showpridealltalent) clear(@showprideunit) clear(@showprideskill) clear(@showprideskill2)
+}
+
+event showprideskillchange2
+{
+	//置き換えたスキルをもとに戻す
+	storealltalent(@showpridealltalent)
+	while (@showpridealltalent!=0) {
+		index(@showpridealltalent,0,@showprideunit)
+		subv(@showpridealltalent,@showprideunit)
+		
+		storeskillofunit(@showprideunit,@showprideskill)
+		if (has(@showprideskill,pride_s_kaihen)) {
+			eraseskill(@showprideunit,pride_s_kaihen)
+			addskill(@showprideunit,pride_s)
+		}
+		else if (has(@showprideskill,pride_a_kaihen)) {
+			eraseskill(@showprideunit,pride_a_kaihen)
+			addskill(@showprideunit,pride_a)
+		}
+		else if (has(@showprideskill,pride_b_kaihen)) {
+			eraseskill(@showprideunit,pride_b_kaihen)
+			addskill(@showprideunit,pride_b)
+		}
+		else if (has(@showprideskill,pride_c_kaihen)) {
+			eraseskill(@showprideunit,pride_c_kaihen)
+			addskill(@showprideunit,pride_c)
+		}
+		else if (has(@showprideskill,pride_d_kaihen)) {
+			eraseskill(@showprideunit,pride_d_kaihen)
+			addskill(@showprideunit,pride_d)
+		}
+	}
+	clear(@showpridealltalent) clear(@showprideunit) clear(@showprideskill) clear(@showprideskill2)
+}

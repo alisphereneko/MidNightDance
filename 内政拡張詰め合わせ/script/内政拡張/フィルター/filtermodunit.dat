@@ -1,48 +1,3 @@
-unit 003wwwdropfiltermod
-{
-	politics = fix
-	name = フィルター設定の登録
-	image = systemicon_spacebox3
-	merce=memoryfilter1
-	friend=memoryfilter1,usefilter1,usefilter2,usefilter3,usefilter4,usefilter5
-}
-
-class memoryfilter1
-{
-	politics=erase
-	name=登録
-}
-
-class memoryfilter2 : memoryfilter1
-{
-	name=削除
-}
-
-class usefilter1 : memoryfilter1
-{
-	name=フィルター設定1
-}
-
-class usefilter2 : usefilter1
-{
-	name=フィルター設定2
-}
-
-class usefilter3 : usefilter1
-{
-	name=フィルター設定3
-}
-
-class usefilter4 : usefilter1
-{
-	name=フィルター設定4
-}
-
-class usefilter5 : usefilter1
-{
-	name=フィルター設定5
-}
-
 unit 003wwwdroplevel
 {
 	politics = fix
@@ -77,34 +32,23 @@ class droplevel4
 unit 003wwwdropEcard
 {
 	politics = fix
-	name = クラスチェンジ用カード所持OR非所持のみ展開
+	name = システムスキル所持OR非所持のみ展開
 	image = systemicon_spacebox3
-	merce = dropEcard1,dropEcard2,dropCCpass1,dropCCpass2
+	merce = dropskill1,dropskill2
 }
-class dropEcard1
+class dropskill1
 {
 	politics = erase
-	name = 「エネルギーカード所持」展開
+	name = 「システムスキル所持」展開
 	image = systemicon_discreditON
 }
-class dropEcard2
+class dropskill2
 {
 	politics = erase
-	name = 「エネルギーカード非所持」展開
+	name = 「システムスキル非所持」展開
 	image = systemicon_discreditOFF
 }
-class dropCCpass1
-{
-	politics = erase
-	name = 「特殊クラスチェンジパス所持」展開
-	image = systemicon_discreditON
-}
-class dropCCpass2
-{
-	politics = erase
-	name = 「特殊クラスチェンジパス非所持」展開
-	image = systemicon_discreditOFF
-}
+
 unit 003wwwdropreset
 {
 	politics = fix
@@ -117,4 +61,24 @@ class dropreset
 	politics = erase
 	name = 条件リセット
 	image = siro
+}
+
+class filtermod_seal
+{
+	name=固有能力封印
+}
+
+class filtermod_elation
+{
+	name=高揚感
+}
+
+class filtermod_metamorphosistime
+{
+	name=変身中
+}
+
+class filtermod_elation_kaihen
+{
+	name=使命感
 }

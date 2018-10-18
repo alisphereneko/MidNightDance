@@ -1,0 +1,236 @@
+event loyaltyOFFskillchange_ONOFF
+{
+	if (getmode()<2) {
+		select(loyaltyOFFskillchange,忠誠関連スキルの調整を行いますか？$決定を選ぶと自勢力の忠誠の増減がステータス上昇スキルに置き換えられます。$※同MODのコマンドで忠誠低下をONにした場合、この機能は無効になります。再度OFFにした場合、再度有効になります。)
+	}
+}
+
+event loyaltyOFFskillchange_eraseelation
+{
+	//全ユニットから使命感を消し、その時に持っている使命感のレベルを保存
+	//再度有効化された時に再度付与する
+	storealltalent(@loyaltyOFFskillchange)
+	routine(loyaltyOFFskillchange_setelaiton)
+	clear(@loyaltyOFFskillchangeelationunit)
+	while (@loyaltyOFFskillchange!=0) {
+		index(@loyaltyOFFskillchange,0,@loyaltyOFFskillchangeunit)
+		subv(@loyaltyOFFskillchange,@loyaltyOFFskillchangeunit)
+		storeskillofunit(@loyaltyOFFskillchangeunit,@loyaltyOFFskillchangeskill)
+		setv(@loyaltyOFFskillchangeskill2,@loyaltyOFFskillchangeskill)
+		subv(@loyaltyOFFskillchangeskill2,@loyaltyOFFskillchange_elation)
+		subv(@loyaltyOFFskillchangeskill,@loyaltyOFFskillchangeskill2)
+		if (@loyaltyOFFskillchangeskill!=0) {
+			addv(@loyaltyOFFskillchangeelationunit,@loyaltyOFFskillchangeunit)
+			addv(@loyaltyOFFskillchangeelationunit,@loyaltyOFFskillchangeskill)
+			eraseskill(@loyaltyOFFskillchangeunit,@loyaltyOFFskillchangeskill)
+		}
+	}
+	setud(loyaltyOFFskillchange_eraseelationunit,@loyaltyOFFskillchangeelationunit)
+}
+
+event loyaltyOFFskillchange_eraseelation2
+{
+	//再度付与する処理
+	storeud(loyaltyOFFskillchange_eraseelationunit,@loyaltyOFFskillchange)
+	pushv(@loyaltyOFFskillchange,loyaltyOFFskillchangeidx)
+	while (loyaltyOFFskillchangeidx>0) {
+		sub(loyaltyOFFskillchangeidx,1)
+		index(@loyaltyOFFskillchange,loyaltyOFFskillchangeidx,@loyaltyOFFskillchangeskill)
+		sub(loyaltyOFFskillchangeidx,1)
+		index(@loyaltyOFFskillchange,loyaltyOFFskillchangeidx,@loyaltyOFFskillchangeunit)
+		addskill(@loyaltyOFFskillchangeunit,@loyaltyOFFskillchangeskill)
+	}
+	clear(@loyaltyOFFskillchange)
+	routine(loyaltyOFFskillchange_eraseelation3)
+	setud(loyaltyOFFskillchange_eraseelationunit,@loyaltyOFFskillchange)
+}
+
+event loyaltyOFFskillchange_eraseelation3
+{
+	//プレイヤー勢力以外のユニットから使命感を削除
+	storeplayerPower(@loyaltyOFFskillchangeunit)
+	storeunitofpower(@loyaltyOFFskillchangeunit,@loyaltyOFFskillchangeunit)
+	storealltalent(@loyaltyOFFskillchange)
+	subv(@loyaltyOFFskillchange,@loyaltyOFFskillchangeunit)
+	routine(loyaltyOFFskillchange_setelaiton)
+	eraseskill(@loyaltyOFFskillchange,@loyaltyOFFskillchange_elation)
+	
+	clear(@loyaltyOFFskillchange) clear(@loyaltyOFFskillchangeunit)
+	clear(@loyaltyOFFskillchange_elation)
+}
+
+event loyaltyOFFskillchange_elationLv
+{
+	routine(loyaltyOFFskillchange_setelaiton)
+	//@loyaltyOFFskillchangeunitの使命感のレベルをloyaltyOFFskillchange_elationLvに返す
+	storeskillofunit(@loyaltyOFFskillchangeunit,@loyaltyOFFskillchangeskill)
+	set(loyaltyOFFskillchange_elationLv_idx,0)
+	set(loyaltyOFFskillchange_elationLv,0)
+	while (loyaltyOFFskillchange_elationLv_idx<=10) {
+		index(@loyaltyOFFskillchange_elation,loyaltyOFFskillchange_elationLv_idx,@loyaltyOFFskillchange_elationLvskill)
+		if (has(@loyaltyOFFskillchangeskill,@loyaltyOFFskillchange_elationLvskill)) {
+			set(loyaltyOFFskillchange_elationLv,loyaltyOFFskillchange_elationLv_idx)
+			break()
+		}
+		add(loyaltyOFFskillchange_elationLv_idx,1)
+	}
+}
+
+event loyaltyOFFskillchange_setelaiton
+{
+	//使命感のスキルを順に@loyaltyOFFskillchange_elationに代入
+	//レベル0はindex番号とレベル数を揃えるためのダミー
+	setv(@loyaltyOFFskillchange_elation,elation0_kaihen)
+	addv(@loyaltyOFFskillchange_elation,elation1_kaihen) addv(@loyaltyOFFskillchange_elation,elation2_kaihen)
+	addv(@loyaltyOFFskillchange_elation,elation3_kaihen) addv(@loyaltyOFFskillchange_elation,elation4_kaihen)
+	addv(@loyaltyOFFskillchange_elation,elation5_kaihen) addv(@loyaltyOFFskillchange_elation,elation6_kaihen)
+	addv(@loyaltyOFFskillchange_elation,elation7_kaihen) addv(@loyaltyOFFskillchange_elation,elation8_kaihen)
+	addv(@loyaltyOFFskillchange_elation,elation9_kaihen) addv(@loyaltyOFFskillchange_elation,elation10_kaihen)
+}
+
+event loyaltyOFFskillchange_addloyal
+{
+	//addloyalの書き換え処理
+	//loyaltyOFFskillchange_loyalに忠誠変動値を、@loyaltyOFFskillchangeunitに対象を代入して呼ぶ
+	//機能ONの場合使命感レベルに置き換え、そうでない場合addloyalする
+	storepowerofunit(@loyaltyOFFskillchangeunit,@loyaltyOFFskillchangepower)
+	if (getMode() < 2 && LoyaldownONOFFmod==0) {
+		if (loyaltyOFFskillchange==0 || isnpc(@loyaltyOFFskillchangepower)) {
+			addLoyal(@loyaltyOFFskillchangeunit,loyaltyOFFskillchange_loyal)
+		}
+		else {
+			if (loyaltyOFFskillchange_loyal>0 && loyaltyOFFskillchange_loyal<5) {set(loyaltyOFFskillchange_loyal,5)}
+			div(loyaltyOFFskillchange_loyal,5) 
+			routine(loyaltyOFFskillchange_elationLv)
+			add(loyaltyOFFskillchange_elationLv,loyaltyOFFskillchange_loyal)
+			eraseskill(@loyaltyOFFskillchangeunit,@loyaltyOFFskillchange_elation)
+			if (loyaltyOFFskillchange_elationLv>0) {
+				index(@loyaltyOFFskillchange_elation,loyaltyOFFskillchange_elationLv,@loyaltyOFFskillchange_elationLvskill)
+				//msg(&@loyaltyOFFskillchangeunit& &@loyaltyOFFskillchange_elationLvskill&) 
+				addskill(@loyaltyOFFskillchangeunit,@loyaltyOFFskillchange_elationLvskill)
+			}
+		}
+	}
+	else if (isnpc(@loyaltyOFFskillchangepower)) {
+		addLoyal(@loyaltyOFFskillchangeunit,loyaltyOFFskillchange_loyal)
+	}
+}
+
+event loyaltyOFFskillchange_addloyal_allDeadLeaderCounttype
+{
+	//サディストとかの死亡リーダー数(allDeadLeaderCount)で忠誠変動する奴用の中継ルーティン
+	setv(@loyaltyOFFskillchangeunit,@unit)
+	set(loyaltyOFFskillchange_loyal,allDeadLeaderCount)
+	routine(loyaltyOFFskillchange_addloyal)
+}
+
+event loyaltyOFFskillchange_addloyal_madness
+{
+	//狂気持ち用の中継ルーティン
+	setv(@loyaltyOFFskillchangeunit,@unit)
+	set(loyaltyOFFskillchange_loyal,madnessLoyalHeal)
+	routine(loyaltyOFFskillchange_addloyal)
+}
+
+event loyaltyOFFskillchange_addloyal_member
+{
+	//部隊メンバー死亡数による忠誠低下の中継ルーティン
+	setv(@loyaltyOFFskillchangeunit,@unit)
+	set(loyaltyOFFskillchange_loyal,loyalSubSize)
+	routine(loyaltyOFFskillchange_addloyal)
+}
+
+event loyaltyOFFskillchange_addloyal_deadunit
+{
+	//死亡時用の中継ルーティン
+	setv(@loyaltyOFFskillchangeunit,@deadunit)
+	routine(loyaltyOFFskillchange_addloyal)
+}
+
+event loyaltyOFFskillchange_addloyal_unit
+{
+	//@unit用の中継ルーティン
+	setv(@loyaltyOFFskillchangeunit,@unit)
+	routine(loyaltyOFFskillchange_addloyal)
+}
+
+skill elation1_kaihen : elation1
+{
+	name = 使命感ＬＶ１
+	help = ##【人材スキル［リーダー時限定能力］】$##【総合力★／使用可能地域・街雪水森室封／雇用費負担額・無し】$●一時能力●$『効果量１＜ＭＰ依存＞』$『効果量１＜攻撃依存＞』$『効果量１＜魔力依存＞』$『ＭＰ＆攻撃＆魔力上昇／自部隊対象／常時発動』$$自部隊全員の攻撃系能力全般を上昇させる。$またこの一時能力スキルは消去フェイズ時に消失・変化せず、忠誠値が変動するタイミングで代わりにレベルが変動する（レベル０になった場合は消滅する）。
+	fkey = skelation_kaihen * 1
+	time = 1
+	value = 2
+}
+skill elation2_kaihen : elation2
+{
+	name = 使命感ＬＶ２
+	help = ##【人材スキル［リーダー時限定能力］】$##【総合力★／使用可能地域・街雪水森室封／雇用費負担額・無し】$●一時能力●$『効果量２＜ＭＰ依存＞』$『効果量２＜攻撃依存＞』$『効果量２＜魔力依存＞』$『ＭＰ＆攻撃＆魔力上昇／自部隊対象／常時発動』$$自部隊全員の攻撃系能力全般を上昇させる。$またこの一時能力スキルは消去フェイズ時に消失・変化せず、忠誠値が変動するタイミングで代わりにレベルが変動する（レベル０になった場合は消滅する）。
+	fkey = skelation_kaihen * 2
+	time = 2
+	value = 4
+}
+skill elation3_kaihen : elation3
+{
+	name = 使命感ＬＶ３
+	help = ##【人材スキル［リーダー時限定能力］】$##【総合力★★／使用可能地域・街雪水森室封／雇用費負担額・無し】$●一時能力●$『効果量３＜ＭＰ依存＞』$『効果量３＜攻撃依存＞』$『効果量３＜魔力依存＞』$『ＭＰ＆攻撃＆魔力上昇／自部隊対象／常時発動』$$自部隊全員の攻撃系能力全般を上昇させる。$またこの一時能力スキルは消去フェイズ時に消失・変化せず、忠誠値が変動するタイミングで代わりにレベルが変動する（レベル０になった場合は消滅する）。
+	fkey = skelation_kaihen * 3
+	time = 3
+	value = 7
+}
+skill elation4_kaihen : elation4
+{
+	name = 使命感ＬＶ４
+	help = ##【人材スキル［リーダー時限定能力］】$##【総合力★★／使用可能地域・街雪水森室封／雇用費負担額・無し】$●一時能力●$『効果量４＜ＭＰ依存＞』$『効果量４＜攻撃依存＞』$『効果量４＜魔力依存＞』$『ＭＰ＆攻撃＆魔力上昇／自部隊対象／常時発動』$$自部隊全員の攻撃系能力全般を上昇させる。$またこの一時能力スキルは消去フェイズ時に消失・変化せず、忠誠値が変動するタイミングで代わりにレベルが変動する（レベル０になった場合は消滅する）。
+	fkey = skelation_kaihen * 4
+	time = 4
+	value = 9
+}
+skill elation5_kaihen : elation5
+{
+	name = 使命感ＬＶ５
+	help = ##【人材スキル［リーダー時限定能力］】$##【総合力★★★／使用可能地域・街雪水森室封／雇用費負担額・無し】$●一時能力●$『効果量５＜ＭＰ依存＞』$『効果量５＜攻撃依存＞』$『効果量５＜魔力依存＞』$『ＭＰ＆攻撃＆魔力上昇／自部隊対象／常時発動』$$自部隊全員の攻撃系能力全般を上昇させる。$またこの一時能力スキルは消去フェイズ時に消失・変化せず、忠誠値が変動するタイミングで代わりにレベルが変動する（レベル０になった場合は消滅する）。
+	fkey = skelation_kaihen * 5
+	time = 5
+	value = 12
+}
+skill elation6_kaihen : elation6
+{
+	name = 使命感ＬＶ６
+	help = ##【人材スキル［リーダー時限定能力］】$##【総合力★★★／使用可能地域・街雪水森室封／雇用費負担額・無し】$●一時能力●$『効果量６＜ＭＰ依存＞』$『効果量６＜攻撃依存＞』$『効果量６＜魔力依存＞』$『ＭＰ＆攻撃＆魔力上昇／自部隊対象／常時発動』$$自部隊全員の攻撃系能力全般を上昇させる。$またこの一時能力スキルは消去フェイズ時に消失・変化せず、忠誠値が変動するタイミングで代わりにレベルが変動する（レベル０になった場合は消滅する）。
+	fkey = skelation_kaihen * 6
+	time = 6
+	value = 14
+}
+skill elation7_kaihen : elation7
+{
+	name = 使命感ＬＶ７
+	help = ##【人材スキル［リーダー時限定能力］】$##【総合力★★★／使用可能地域・街雪水森室封／雇用費負担額・無し】$●一時能力●$『効果量７＜ＭＰ依存＞』$『効果量７＜攻撃依存＞』$『効果量７＜魔力依存＞』$『ＭＰ＆攻撃＆魔力上昇／自部隊対象／常時発動』$$自部隊全員の攻撃系能力全般を上昇させる。$またこの一時能力スキルは消去フェイズ時に消失・変化せず、忠誠値が変動するタイミングで代わりにレベルが変動する（レベル０になった場合は消滅する）。
+	fkey = skelation_kaihen * 7
+	time = 7
+	value = 16
+}
+skill elation8_kaihen : elation8
+{
+	name = 使命感ＬＶ８
+	help = ##【人材スキル［リーダー時限定能力］】$##【総合力★★★★／使用可能地域・街雪水森室封／雇用費負担額・無し】$●一時能力●$『効果量８＜ＭＰ依存＞』$『効果量８＜攻撃依存＞』$『効果量８＜魔力依存＞』$『ＭＰ＆攻撃＆魔力上昇／自部隊対象／常時発動』$$自部隊全員の攻撃系能力全般を上昇させる。$またこの一時能力スキルは消去フェイズ時に消失・変化せず、忠誠値が変動するタイミングで代わりにレベルが変動する（レベル０になった場合は消滅する）。
+	fkey = skelation_kaihen * 8
+	time = 8
+	value = 19
+}
+skill elation9_kaihen : elation9
+{
+	name = 使命感ＬＶ９
+	help = ##【人材スキル［リーダー時限定能力］】$##【総合力★★★★／使用可能地域・街雪水森室封／雇用費負担額・無し】$●一時能力●$『効果量９＜ＭＰ依存＞』$『効果量９＜攻撃依存＞』$『効果量９＜魔力依存＞』$『ＭＰ＆攻撃＆魔力上昇／自部隊対象／常時発動』$$自部隊全員の攻撃系能力全般を上昇させる。$またこの一時能力スキルは消去フェイズ時に消失・変化せず、忠誠値が変動するタイミングで代わりにレベルが変動する（レベル０になった場合は消滅する）。
+	fkey = skelation_kaihen * 9
+	time = 9
+	value = 21
+}
+skill elation10_kaihen : elation10
+{
+	name = 使命感ＬＶ１０
+	help = ##【人材スキル［リーダー時限定能力］】$##【総合力★★★★／使用可能地域・街雪水森室封／雇用費負担額・無し】$●一時能力●$『効果量１０＜ＭＰ依存＞』$『効果量１０＜攻撃依存＞』$『効果量１０＜魔力依存＞』$『ＭＰ＆攻撃＆魔力上昇／自部隊対象／常時発動』$$自部隊全員の攻撃系能力全般を上昇させる。$またこの一時能力スキルは消去フェイズ時に消失・変化せず、忠誠値が変動するタイミングで代わりにレベルが変動する（レベル０になった場合は消滅する）。
+	fkey = skelation_kaihen * 10
+	time = 10
+	value = 24
+}

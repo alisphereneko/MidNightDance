@@ -1,9 +1,26 @@
-//NGTのmodで使ってた処理のまとめファイル
-//なんか久しぶりに見るとわけわかんない処理もあるが、消しても影響でないかもわけわかんないので全部持ってきた
-//重要なのはsikibetusi_hozon_main
-story aaaaaaaaaaaaaaaanekomod_turn_1.01
+//mod用共通ルーティン
+
+//変更履歴メモ
+//ver1.01
+//・nekotempspot2を追加　色々おいていい領地
+//・sikibetusi_search_main、sikibetusi_search2_main追加
+//　前者はsikibetusi_hozon_mainから新規作成機能を除いたルーティン、後者は対象自体の保存ユニットだけでなく
+//　保存されている中に対象ユニットを含む保存ユニットも検索するルーティン
+//・nekochoiceの追加表示可能要素を2つに増加　クラスと領地などの複数情報を表示可能になる
+//ver1.02
+//・isnewturn()、iscomturn()、isarbeit(ユニット)の結果を変数nekomodNT、nekomodCT、arbeitingに代入する処理を削除
+//　傭兵内政が異常に重かったため色々試行錯誤していた時に生まれた産物でしたが、
+//　理由がreturn()であったことがようやく分かったため削除しました
+//・sikibetusi_search系が何か上手く動いてなかったのを修正…できたかわからない
+//　まだ全然使ってなかったんで問題なし
+//　その一環でダミー識別子名をsikibetusi_emptyに変更
+//・焼却炉の処理の最初にsikibetusi_classをeraseunit2するように修正
+//　元々別にもたつかないので大差ないと思うけど
+//・sikibetusi_hozon_deldeadを追加　死亡勢力・ユニットの保存ユニットを除去します。
+
+story aaaaaaaaaaaaaaaanekomod_turn_1.02
 {
-	if (yet(nekotempspot_add_1.01)) {routine(nekotempspot_add_1.01)}
+	if (yet(nekomod.dat_1.02)) {routine(nekomod.dat_1.02)}
 	if (@nekoplay==0 || @nekoplay==new_player_choice) {
 		if (iswatching()) {storeud(nekoplayer,@nekoplay)}
 		else {
@@ -14,12 +31,11 @@ story aaaaaaaaaaaaaaaanekomod_turn_1.01
 	
 	storeunitofspot(nekotempspot,@nekotemp)
 	addunit(@nekotemp,nekoerasespot)
-	
-	if (nekomodT==0) {pushturn(nekomodT)}
-	set(nekomodNT,0)
+
 	if (isnewturn()) {
-		set(nekomodNT,1) pushturn(nekomodT)
+		pushturn(nekomodT)
 		//焼却処理
+		eraseunit2(nekoerasespot,sikibetusi_class)
 		storeunitofspot(nekoerasespot,@nekotemp)
 		while (@nekotemp!=0) {
 			eraseunit2(nekoerasespot,@nekotemp)
@@ -28,18 +44,18 @@ story aaaaaaaaaaaaaaaanekomod_turn_1.01
 		}
 	}
 	
-	set(nekomodCT,0)
-	if (iscomturn()) {set(nekomodCT,1)}
-	
 	clear(@sikibetusihozonresults) clear(@nekotemp)
 }
 
-event nekotempspot_add_1.01
+event nekomod.dat_1.02
 {
-	//焼却炉と中継地点を出す
+	//各種領地を出す
 	addspot(nekotempspot) hidespot(nekotempspot)
 	addspot(nekotempspot2) hidespot(nekotempspot2)
 	addspot(nekoerasespot) hidespot(nekoerasespot)
+
+	//sikibetusi_emptyを追加
+	addunit(sikibetusi_empty,nekotempspot2)
 }
 
 event nekoplay_setud
@@ -79,54 +95,47 @@ event sikibetusi_hozon_main
 	//対象勢力・領地・ユニットなどを@sikibetusihozontarget,保存領地を@sikibetusihozonspotに代入して呼ぶ
 	//キャッシュ用ユニットがいれば@sikibetusihozoncacheに入れ、sikibetusi_hozon_indexoptionに1以上の数字を入れる
 	clear(@sikibetusihozonresults)
-	if (@sikibetusihozontarget==0) {return()}
-	storeskillofunit(@sikibetusihozoncache,@sikibetusihozontemp) /+pushv(@sikibetusihozontemp,num) msg(&num&)
-	storeunitofspot(@sikibetusihozonspot,@sikibetusihozontemp2)
-	subv(@sikibetusihozontemp2,@sikibetusihozontemp)//キャッシュとの被りを除去
-	addv(@sikibetusihozontemp,@sikibetusihozontemp2)
-	pushv(@sikibetusihozontarget,sikibetusihozon1)
-	set(sikibetusihozon_idx,0)
-	while (sikibetusihozon1>sikibetusihozon_idx) {
-		index(@sikibetusihozontarget,sikibetusihozon_idx,@sikibetusihozonunit)
-		pushv(@sikibetusihozontemp,sikibetusihozon2)
-		set(sikibetusihozon_idx2,0)
-		while (sikibetusihozon2>sikibetusihozon_idx2) {
-			index(@sikibetusihozontemp,sikibetusihozon_idx2,@sikibetusihozontemp2)
-			storeskillofunit(@sikibetusihozontemp2,@sikibetusihozonunit2)
-			index(@sikibetusihozonunit2,0,@sikibetusihozonunit2)
-			if (@sikibetusihozonunit2==@sikibetusihozonunit) {break()}
-			clear(@sikibetusihozontemp2)
-			add(sikibetusihozon_idx2,1)
+	if (@sikibetusihozontarget!=0) {
+		
+		routine(sikibetusi_hozon_setting)
+		
+		pushv(@sikibetusihozontarget,sikibetusihozon1)
+		set(sikibetusihozon_idx,0)
+		while (sikibetusihozon1>sikibetusihozon_idx) {
+			index(@sikibetusihozontarget,sikibetusihozon_idx,@sikibetusihozonunit)
+			pushv(@sikibetusihozontemp,sikibetusihozon2)
+			set(sikibetusihozon_idx2,0)
+			while (sikibetusihozon2>sikibetusihozon_idx2) {
+				index(@sikibetusihozontemp,sikibetusihozon_idx2,@sikibetusihozontemp2)
+				storeskillofunit(@sikibetusihozontemp2,@sikibetusihozonunit2)
+				index(@sikibetusihozonunit2,0,@sikibetusihozonunit2)
+				if (@sikibetusihozonunit2==@sikibetusihozonunit) {break()}
+				clear(@sikibetusihozontemp2)
+				add(sikibetusihozon_idx2,1)
+			}
+			if (@sikibetusihozontemp2==0) {
+				//保存クラスが居なければ新しく作り、@sikibetusihozontemp2に代入
+				addunit(sikibetusi_class,nekotempspot) //一時領地は常に空いている場所ならどこでも良い
+				storeunitofspot(nekotempspot,@sikibetusihozontemp2)
+
+				addunit(@sikibetusihozontemp2,@sikibetusihozonspot)
+
+				addskill(@sikibetusihozontemp2,@sikibetusihozonunit)
+				addv(@sikibetusihozontemp,@sikibetusihozontemp2)
+				//if (isalive(@sikibetusihozontemp2)==0) {msg(&sikibetusihozonunit&の保存ユニットが生成失敗しました。)}
+				//msg(&sikibetusihozonunit&の保存ユニットが生成されました。)
+				routine(sikibetusi_hozon_born)
+			}
+			addv(@sikibetusihozonresults,@sikibetusihozontemp2)//ユニットを@sikibetusihozonresultsに追加
+			add(sikibetusihozon_idx,1)
 		}
-		if (@sikibetusihozontemp2==0) {
-			//保存クラスが居なければ新しく作り、@sikibetusihozontemp2に代入
-			addunit(sikibetusi_class,nekotempspot) //一時領地は常に空いている場所ならどこでも良い
-			storeunitofspot(nekotempspot,@sikibetusihozontemp2)
 
-			addunit(@sikibetusihozontemp2,@sikibetusihozonspot)
+		routine(sikibetusi_hozon_indexoption)
 
-			addskill(@sikibetusihozontemp2,@sikibetusihozonunit)
-			addv(@sikibetusihozontemp,@sikibetusihozontemp2)
-			//+if (isalive(@sikibetusihozontemp2)==0) {msg(&sikibetusihozonunit&の保存ユニットが生成失敗しました。)}
-			//+msg(&sikibetusihozonunit&の保存ユニットが生成されました。)
-			routine(sikibetusi_hozon_born)
-		}
-		addv(@sikibetusihozonresults,@sikibetusihozontemp2)//ユニットを@sikibetusihozonresultsに追加
-		add(sikibetusihozon_idx,1)
+		clear(@sikibetusihozontemp) clear(@sikibetusihozontemp2) clear(@sikibetusihozonunit) clear(@sikibetusihozonunit2)
+		clear(@sikibetusihozontarget) clear(@sikibetusihozonspot) clear(@sikibetusihozoncache)
+		set(sikibetusihozon1,0) set(sikibetusihozon2,0) set(sikibetusihozon_idx,0) set(sikibetusihozon_idx2,0)
 	}
-	if (sikibetusi_hozon_indexoption>=1) {
-		//オプションをオンにすると参照ターン数と参照回数を記録しキャッシュ
-		//数が多いときはこれを使って並べ替えたりすると良いかも
-		addskill(@sikibetusihozoncache,@sikibetusihozonresults)//キャッシュ用ユニットに保存
-		setstatus(@sikibetusihozonresults,speed,nekomodT)//最後に参照したターン数を素早さに保存
-		//参照回数をHP回復力に保存 重要度に応じて増加数値を変えられる
-		addstatus(@sikibetusihozonresults,hprec,sikibetusi_hozon_indexoption)
-		set(sikibetusi_hozon_indexoption,0)
-	}
-
-	clear(@sikibetusihozontemp) clear(@sikibetusihozontemp2) clear(@sikibetusihozonunit) clear(@sikibetusihozonunit2)
-	clear(@sikibetusihozontarget) clear(@sikibetusihozonspot) clear(@sikibetusihozoncache)
-	set(sikibetusihozon1,0) set(sikibetusihozon2,0) set(sikibetusihozon_idx,0) set(sikibetusihozon_idx2,0)
 }
 
 event sikibetusi_hozon_born
@@ -138,48 +147,41 @@ event sikibetusi_hozon_born
 event sikibetusi_search_main
 {
 	//sikibetusi_hozon_mainのユニット作成機能を除いたもの いない場合に作成したくない場合はこちらを使う
-	//検索して見つかれば@sikibetusihozonresultsに代入　居なければダミー識別子noneを代入
-	//(複数要素対応のため0ではなくnoneを代入する形)
+	//検索して見つかれば@sikibetusihozonresultsに代入　居なければダミー識別子sikibetusi_emptyを代入
+	//(複数要素対応のため0ではなくsikibetusi_emptyを代入する形)
 	//複数要素変数対応 @sikibetusihozontargetと同じ順に@sikibetusihozonresultsに代入される
 	//対象勢力・領地・ユニットなどを@sikibetusihozontarget,保存領地を@sikibetusihozonspotに代入して呼ぶ
 	//キャッシュ用ユニットがいれば@sikibetusihozoncacheに入れ、sikibetusi_hozon_indexoptionに1以上の数字を入れる
-	if (@sikibetusihozontarget==0) {return()}
-	storeskillofunit(@sikibetusihozoncache,@sikibetusihozontemp) /+pushv(@sikibetusihozontemp,num) msg(&num&)
-	storeunitofspot(@sikibetusihozonspot,@sikibetusihozontemp2)
-	subv(@sikibetusihozontemp2,@sikibetusihozontemp)//キャッシュとの被りを除去
-	addv(@sikibetusihozontemp,@sikibetusihozontemp2)
-	pushv(@sikibetusihozontarget,sikibetusihozon1)
 	clear(@sikibetusihozonresults)
-	set(sikibetusihozon_idx,0)
-	while (sikibetusihozon1>sikibetusihozon_idx) {
-		index(@sikibetusihozontarget,sikibetusihozon_idx,@sikibetusihozonunit)
-		pushv(@sikibetusihozontemp,sikibetusihozon2)
-		set(sikibetusihozon_idx2,0)
-		while (sikibetusihozon2>sikibetusihozon_idx2) {
-			index(@sikibetusihozontemp,sikibetusihozon_idx2,@sikibetusihozontemp2)
-			storeskillofunit(@sikibetusihozontemp2,@sikibetusihozonunit2)
-			index(@sikibetusihozonunit2,0,@sikibetusihozonunit2)
-			if (@sikibetusihozonunit2==@sikibetusihozonunit) {break()}
-			clear(@sikibetusihozontemp2)
-			add(sikibetusihozon_idx2,1)
+	if (@sikibetusihozontarget!=0) {
+		
+		routine(sikibetusi_hozon_setting)
+		
+		pushv(@sikibetusihozontarget,sikibetusihozon1)
+		set(sikibetusihozon_idx,0)
+		while (sikibetusihozon1>sikibetusihozon_idx) {
+			index(@sikibetusihozontarget,sikibetusihozon_idx,@sikibetusihozonunit)
+			pushv(@sikibetusihozontemp,sikibetusihozon2)
+			set(sikibetusihozon_idx2,0)
+			while (sikibetusihozon2>sikibetusihozon_idx2) {
+				index(@sikibetusihozontemp,sikibetusihozon_idx2,@sikibetusihozontemp2)
+				storeskillofunit(@sikibetusihozontemp2,@sikibetusihozonunit2)
+				index(@sikibetusihozonunit2,0,@sikibetusihozonunit2)
+				if (@sikibetusihozonunit2==@sikibetusihozonunit) {break()}
+				clear(@sikibetusihozontemp2)
+				add(sikibetusihozon_idx2,1)
+			}
+			
+			if (@sikibetusihozontemp2==0) {addv(@sikibetusihozonresults,sikibetusi_empty)}
+			else {addv(@sikibetusihozonresults,@sikibetusihozontemp2)}
+			add(sikibetusihozon_idx,1)
 		}
-		addv(@sikibetusihozonresults,@sikibetusihozontemp2)
-		if (@sikibetusihozontemp2==0) {addv(@sikibetusihozonresults,none)}
-		add(sikibetusihozon_idx,1)
-	}
-	if (sikibetusi_hozon_indexoption>=1) {
-		//オプションをオンにすると参照ターン数と参照回数を記録しキャッシュ
-		//数が多いときはこれを使って並べ替えたりすると良いかも
-		addskill(@sikibetusihozoncache,@sikibetusihozonresults)//キャッシュ用ユニットに保存
-		setstatus(@sikibetusihozonresults,speed,nekomodT)//最後に参照したターン数を素早さに保存
-		//参照回数をHP回復力に保存 重要度に応じて増加数値を変えられる
-		addstatus(@sikibetusihozonresults,hprec,sikibetusi_hozon_indexoption)
-		set(sikibetusi_hozon_indexoption,0)
-	}
+		routine(sikibetusi_hozon_indexoption)
 
-	clear(@sikibetusihozontemp) clear(@sikibetusihozontemp2) clear(@sikibetusihozonunit) clear(@sikibetusihozonunit2)
-	clear(@sikibetusihozontarget) clear(@sikibetusihozonspot) clear(@sikibetusihozoncache)
-	set(sikibetusihozon1,0) set(sikibetusihozon2,0) set(sikibetusihozon_idx,0) set(sikibetusihozon_idx2,0)
+		clear(@sikibetusihozontemp) clear(@sikibetusihozontemp2) clear(@sikibetusihozonunit) clear(@sikibetusihozonunit2)
+		clear(@sikibetusihozontarget) clear(@sikibetusihozonspot) clear(@sikibetusihozoncache)
+		set(sikibetusihozon1,0) set(sikibetusihozon2,0) set(sikibetusihozon_idx,0) set(sikibetusihozon_idx2,0)
+	}
 }
 
 event sikibetusi_search2_main
@@ -189,21 +191,40 @@ event sikibetusi_search2_main
 	//検索して見つかれば@sikibetusihozonresultsに代入　一人も居なければ0を代入
 	//対象勢力・領地・ユニットなどを@sikibetusihozontarget,保存領地を@sikibetusihozonspotに代入して呼ぶ
 	//キャッシュ用ユニットがいれば@sikibetusihozoncacheに入れ、sikibetusi_hozon_indexoptionに1以上の数字を入れる
-	if (@sikibetusihozontarget==0) {return()}
-	storeskillofunit(@sikibetusihozoncache,@sikibetusihozontemp) /+pushv(@sikibetusihozontemp,num) msg(&num&)
+	clear(@sikibetusihozonresults)
+	if (@sikibetusihozontarget!=0) {
+
+		routine(sikibetusi_hozon_setting)
+
+		pushv(@sikibetusihozontemp,sikibetusihozon1)
+		set(sikibetusihozon_idx,0)
+		while (sikibetusihozon1>sikibetusihozon_idx) {
+			index(@sikibetusihozontemp,sikibetusihozon_idx,@sikibetusihozonunit)
+			storeskillofunit(@sikibetusihozonunit,@sikibetusihozontemp2)
+			if (has(@sikibetusihozontemp2,@sikibetusihozontarget)) {addv(@sikibetusihozonresults,@sikibetusihozonunit)}
+			add(sikibetusihozon_idx,1)
+		}
+
+		routine(sikibetusi_hozon_indexoption)
+
+		clear(@sikibetusihozontemp) clear(@sikibetusihozontemp2) clear(@sikibetusihozonunit) clear(@sikibetusihozonunit2)
+		clear(@sikibetusihozontarget) clear(@sikibetusihozonspot) clear(@sikibetusihozoncache)
+		set(sikibetusihozon1,0) set(sikibetusihozon2,0) set(sikibetusihozon_idx,0) set(sikibetusihozon_idx2,0)
+	}
+}
+
+event sikibetusi_hozon_setting
+{
+	//キャッシュ→それ以外の保存ユニット　の順に@sikibetusihozontempに代入する処理
+	storeskillofunit(@sikibetusihozoncache,@sikibetusihozontemp) //pushv(@sikibetusihozontemp,num) msg(&num&)
 	storeunitofspot(@sikibetusihozonspot,@sikibetusihozontemp2)
 	subv(@sikibetusihozontemp2,@sikibetusihozontemp)//キャッシュとの被りを除去
 	addv(@sikibetusihozontemp,@sikibetusihozontemp2)
-	pushv(@sikibetusihozontemp,sikibetusihozon1)
-	clear(@sikibetusihozonresults)
-	set(sikibetusihozon_idx,0)
-	while (sikibetusihozon1>sikibetusihozon_idx) {
-		index(@sikibetusihozontemp,sikibetusihozon_idx,@sikibetusihozonunit)
-		storeskillofunit(@sikibetusihozontunit,@sikibetusihozontemp2)
-		if (has(@sikibetusihozontemp2,@sikibetusihozontarget)) {addv(@sikibetusihozonresults,@sikibetusihozonunit)}
-		add(sikibetusihozon_idx,1)
-	}
+}
 
+event sikibetusi_hozon_indexoption
+{
+	//キャッシュに参照ターン数と参照回数を記録する処理
 	if (sikibetusi_hozon_indexoption>=1) {
 		//オプションをオンにすると参照ターン数と参照回数を記録しキャッシュ
 		//数が多いときはこれを使って並べ替えたりすると良いかも
@@ -213,10 +234,6 @@ event sikibetusi_search2_main
 		addstatus(@sikibetusihozonresults,hprec,sikibetusi_hozon_indexoption)
 		set(sikibetusi_hozon_indexoption,0)
 	}
-
-	clear(@sikibetusihozontemp) clear(@sikibetusihozontemp2) clear(@sikibetusihozonunit) clear(@sikibetusihozonunit2)
-	clear(@sikibetusihozontarget) clear(@sikibetusihozonspot) clear(@sikibetusihozoncache)
-	set(sikibetusihozon1,0) set(sikibetusihozon2,0) set(sikibetusihozon_idx,0) set(sikibetusihozon_idx2,0)
 }
 
 class sikibetusi_class
@@ -236,13 +253,24 @@ class sikibetusi_class
 	mprec=0
 	speed=0
 }
+
+unit sikibetusi_empty
+{
+	//どういうわけかpushstatusが0を返さないため、実体を用意
+	//このため、sikibetusi_emptyはeraseunitとかの対象にしてはいけない
+	//かならずsubvすること
+	class=sikibetusi_class
+}
 	
 event sikibetusi_hozon_index_main
 {
 	//保存ユニットを参照頻度順に並べ替えるサンプル　もっといいやり方がありそう
 	//対象キャッシュユニットを全て@sikibetusiidxunitに代入して呼び出す
+	//sikibetusi_hozon_index_hozonunitを1にして呼び出すと1番目のスキルを並べ替えから除外する
+	//(保存ユニットをキャッシュ化している場合用のオプション)
 	pushv(@sikibetusiidxunit,sikibetusiidx1)
 	while (sikibetusiidx1>0) {
+		clear(@sikibetusiidxhozonunit)
 		clear(@sikibetusiidxtemp4) clear(@sikibetusiidxtemp5) clear(@sikibetusiidxtemp6) clear(@sikibetusiidxtemp7) clear(@sikibetusiidxtemp8)
 		clear(@sikibetusiidxtemp9) clear(@sikibetusiidxtemp10) clear(@sikibetusiidxtemp11) clear(@sikibetusiidxtemp12) clear(@sikibetusiidxtemp13)
 		clear(@sikibetusiidxtemp14) clear(@sikibetusiidxtemp15)
@@ -254,6 +282,11 @@ event sikibetusi_hozon_index_main
 		while (sikibetusiidx2>sikibetusiidx_idx) {
 			index(@sikibetusiidxtemp2,sikibetusiidx_idx,@sikibetusiidxtemp3)
 			add(sikibetusiidx_idx,1)
+			if (sikibetusi_hozon_index_hozonunit==1 && sikibetusiidx_idx==1) {
+				//sikibetusi_hozon_index_hozonunit==1の場合、1番目のスキルは並べ替えから除外
+				setv(@sikibetusiidxhozonunit,@sikibetusiidxtemp3)
+				continue()
+			}
 			pushstatus(@sikibetusiidxtemp3,speed,sikibetusiidx3)
 			//未参照8ターン以上経過はキャッシュから削除
 			sub(sikibetusiidx3,nekomodT)
@@ -275,7 +308,7 @@ event sikibetusi_hozon_index_main
 		}
 		//一度eraseskill後、順番にaddskillする
 		eraseskill(@sikibetusiidxtemp)
-		addskill(@sikibetusiidxtemp,@sikibetusiidxtemp15,@sikibetusiidxtemp14,@sikibetusiidxtemp13,@sikibetusiidxtemp12,@sikibetusiidxtemp11,@sikibetusiidxtemp10,@sikibetusiidxtemp9,@sikibetusiidxtemp8,@sikibetusiidxtemp7,@sikibetusiidxtemp6,@sikibetusiidxtemp5)
+		addskill(@sikibetusiidxtemp,@sikibetusiidxhozonunit,@sikibetusiidxtemp15,@sikibetusiidxtemp14,@sikibetusiidxtemp13,@sikibetusiidxtemp12,@sikibetusiidxtemp11,@sikibetusiidxtemp10,@sikibetusiidxtemp9,@sikibetusiidxtemp8,@sikibetusiidxtemp7,@sikibetusiidxtemp6,@sikibetusiidxtemp5)
 	}
 	
 	set(sikibetusiidx1,nekomodT)
@@ -296,8 +329,29 @@ event sikibetusi_hozon_index_main
 	clear(@sikibetusiidxtemp7) clear(@sikibetusiidxtemp8) clear(@sikibetusiidxtemp9)
 	clear(@sikibetusiidxtemp10) clear(@sikibetusiidxtemp11) clear(@sikibetusiidxtemp12)
 	clear(@sikibetusiidxtemp13) clear(@sikibetusiidxtemp14) clear(@sikibetusiidxtemp15)
-	clear(@sikibetusiidxunit) set(sikibetusiidx_idx,0) set(sikibetusiidx1,0)
+	clear(@sikibetusiidxunit) clear(@sikibetusiidxhozonunit) set(sikibetusiidx_idx,0) set(sikibetusiidx1,0)
 	set(sikibetusiidx2,0) set(sikibetusiidx3,0) set(sikibetusiidx_turn,0)
+	set(sikibetusi_hozon_index_hozonunit,0)
+}
+
+event sikibetusi_hozon_deldead
+{
+	//死亡勢力・死亡ユニットの保存ユニットを削除する @sikibetusihozondeldeadunitに対象を代入して呼ぶ
+	//isalive()で判定するため、領地などの保存ユニットは非対応
+	pushv(@sikibetusihozondeldeadunit,sikibetusihozondeldeadidx)
+	while (sikibetusihozondeldeadidx>0) {
+		sub(sikibetusihozondeldeadidx,1)
+		index(@sikibetusihozondeldeadunit,sikibetusihozondeldeadidx,@sikibetusihozondeldeadunit2)
+		storeskillofunit(@sikibetusihozondeldeadunit2,@sikibetusihozondeldeadunit3)
+		index(@sikibetusihozondeldeadunit3,0,@sikibetusihozondeldeadunit3)
+		if (isalive(@sikibetusihozondeldeadunit3)==0) {
+			//一応巻き込みが怖いので中継地点に移して削除
+			addunit(@sikibetusihozondeldeadunit2,nekoerasespot)
+			routine(youhei_storage_del_option)
+		}
+	}
+	clear(@sikibetusihozondeldeadunit) clear(@sikibetusihozondeldeadunit2)
+	clear(@sikibetusihozondeldeadunit3) set(sikibetusihozondeldeadidx,0)
 }
 
 class nekochoice_none
@@ -717,6 +771,7 @@ event nekochoice
 {
 	//@nekomemberの要素を選択肢表示するルーティン
 	//@nekomember2,@nekomember3に追加情報を入れられる(@nekomemberと同じ順に入れる)
+	//@nekomember2,@nekomember3は終了時にclearしないと次の呼び出し時に引き継がれるのでちゃんと消すこと
 	//nekochoice_leveloption=1で呼び出すとこの追加情報がレベル表示になる　レベル0は非表示となる
 	//選択された要素は@nekotempに代入　やめるを選択すると0が入る
 	//nekochoicenoresetに1を代入して呼び出すと前回のページから再開する

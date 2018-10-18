@@ -1,0 +1,30 @@
+skill pride_s_kaihen : pride_s
+{
+	attr=mprec
+	time=50
+	direct=on
+}
+skill pride_a_kaihen : pride_a
+{
+	attr=mprec
+	time=40
+	direct=on
+}
+skill pride_b_kaihen : pride_b
+{
+	attr=mprec
+	time=30
+	direct=on
+}
+skill pride_c_kaihen : pride_c
+{
+	attr=mprec
+	time=20
+	direct=on
+}
+skill pride_d_kaihen : pride_d
+{
+	attr=mprec
+	time=10
+	direct=on
+}

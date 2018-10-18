@@ -2,7 +2,7 @@
 //これに伴って各modのstoryが消滅したのでそれらのファイルは削除して大丈夫です(上書き用に残してあるだけ)
 story modtumeawase_story
 {
-	if (yet(modtumeawase_syokisyori_ver1.03) && SWITCHop!=0) {event(modtumeawase_syokisyori_ver1.03)}
+	if (yet(modtumeawase_syokisyori_ver1.04) && SWITCHop!=0) {event(modtumeawase_syokisyori_ver1.04)}
 	if (isnewturn()) {
 		//キャッシュの最適化処理　数が少ないからあまり意味がないかもしれない
 		setv(@sikibetusiidxunit,ObjectiveautoCCmod_cache_class)
@@ -10,7 +10,18 @@ story modtumeawase_story
 		routine(sikibetusi_hozon_index_main)
 		//ターンを跨ぐとフィルターリセット
 		routine(filtermod_reset)
+		
+		if (loyaltyOFFskillchange==1) {
+			routine(loyaltyOFFskillchange_eraseelation3)
+		}
 	}
+	
+	//領地のマーキング解除
+	if (filtermod_spotmark==1 && isplayerend()) {
+		set(filtermod_spotmark,0)
+		spotmark()
+	}
+
 	if (yet(addclasslistmodspotantiguide) && ismaster(hikari)) {event(addclasslistmodspotantiguide)}
 
 	//サブイベのやつみたいな常に監視して置き換えしなきゃいけない内政ユニットの置き換え処理
@@ -21,27 +32,42 @@ story modtumeawase_story
 	//3.detailは継承されないので説明文があるやつはちゃんと書き写すこと
 
 	setv(@modchangetargetspot,politics1)
-	routine(modtumeawase_changeunit)
+	routine(modchangeunit_routine)
 
 	setv(@modchangetargetspot,politics2)
-	routine(modtumeawase_changeunit)
+	routine(modchangeunit_routine)
 
 	setv(@modchangetargetspot,camp1)
-	routine(modtumeawase_changeunit)
+	routine(modchangeunit_routine)
 
-	clear(@modchangetargetspot) clear(@modtumeawase) clear(@modtumeawase2)
-	clear(@modtumeawase3) clear(@modtumeawase4)
+	clear(@modchangetargetspot) clear(@modchangeunit2)
 	
 	routine(LoyaldownONOFF_addunit)
 }
 
-event modtumeawase_syokisyori_ver1.03
+event modtumeawase_syokisyori_ver1.04
 {
+	if (filtermod_filtered_Ecard!=0) {
+		set(filtermod_filtered_skill,filtermod_filtered_Ecard)
+		if (filtermod_filtered_Ecard<1102) {
+			setud(@modtumeawase,energycard)
+		}
+		else {
+			setud(@modtumeawase,ccpass)
+			sub(filtermod_filtered_skill,2)
+		}
+		setud(filtermod_filtered_selectedskill,@modtumeawase)
+		set(filtermod_filtered_Ecard,0)
+		clear(@modtumeawase)
+	}
+
 	if (yet(addclasslistmodspot_main_ver1.03)) {event(addclasslistmodspot_main_ver1.03)}
+	
 	if (ismaster(@nekoplay)) {
 		if (yet(filtermod_unitchange_main)) {event(filtermod_unitchange_main)}
-		if (yet(objectiveautoCCmod_addunit)) {event(objectiveautoCCmod_addunit)}
+		if (yet(objectiveautoCCmod_addunit_1.04)) {event(objectiveautoCCmod_addunit_1.04)}
 		if (yet(modtumeawase_addallGimmickUnit)) {event(modtumeawase_addallGimmickUnit)}
+		if (yet(loyaltyOFFskillchange_ONOFF)) {event(loyaltyOFFskillchange_ONOFF)}
 	}
 }
 
@@ -62,38 +88,35 @@ event modtumeawase_addallGimmickUnit
 	clear(@modtumeawase)
 }
 
-event modtumeawase_changeunit
+event modchangeunit_routine
 {
-	//addstrで対象内政領地の対象ユニットの入ったスキルセットを取得
-	setv(@modtumeawase,modchangeunit_memory_)
-	addstr(@modtumeawase,@modchangetargetspot)
-	storeskillset(@modtumeawase,@modtumeawase)
+	setv(@modchangeunit3,modchangeunit_memory_)
+	addstr(@modchangeunit3,@modchangetargetspot)
+	storeskillset(@modchangeunit3,@modchangeunit)
 
-	clear(@modtumeawase3) clear(@modtumeawase4)
+	clear(@modchangeunit3)
 
-	while (@modtumeawase!=0) {
-		index(@modtumeawase,0,@modtumeawase2) subv(@modtumeawase,@modtumeawase2)
-		if (inspot(@modchangetargetspot,@modtumeawase2)!=0) {
-			//対象ユニットがいればeraseunitし、その後_kaihenをaddstrしてaddunit
-			//削除したユニットを@modtumeawase3,追加ユニットを@modtumeawase4に格納
-			eraseunit2(@modchangetargetspot,@modtumeawase2)
-			eraseunit(@modtumeawase2)
-			addv(@modtumeawase3,@modtumeawase2)
-			addstr(@modtumeawase2,_kaihen)
-			addunit(@modtumeawase2,@modchangetargetspot)
-			addv(@modtumeawase4,@modtumeawase2)
+	while (@modchangeunit!=0) {
+		index(@modchangeunit,0,@modchangeunit2) subv(@modchangeunit,@modchangeunit2)
+		if (inspot(@modchangetargetspot,@modchangeunit2)!=0) {
+			eraseunit2(@modchangetargetspot,@modchangeunit2)
+			eraseunit(@modchangeunit2)
+			addv(@modchangeunit3,@modchangeunit2)
+			addstr(@modchangeunit2,_kaihen)
+			addunit(@modchangeunit2,@modchangetargetspot)
 		}
 	}
 
-	if (@modtumeawase3!=0 && @modchangetargetspot==politics1) {
-		//politics1への追加である場合はSAVEallGimmickUnitの書き換えを行う
-		storeud(SAVEallGimmickUnit,@modtumeawase)
-
-		subv(@modtumeawase,@modtumeawase3)
-		addv(@modtumeawase,@modtumeawase4)
-
-		setud(SAVEallGimmickUnit, @modtumeawase)
-		clear(@modtumeawase3) clear(@modtumeawase4)
+	if (@modchangeunit3!=0 && @modchangetargetspot==politics1) {
+		storeud(SAVEallGimmickUnit,@modchangeunit)
+		while (@modchangeunit3!=0) {
+			index(@modchangeunit3,0,@modchangeunit2) subv(@modchangeunit3,@modchangeunit2)
+			
+			subv(@modchangeunit,@modchangeunit2)
+			addstr(@modchangeunit2,_kaihen)
+			addv(@modchangeunit,@modchangeunit2)
+		}
+		setud(SAVEallGimmickUnit, @modchangeunit)
 	}
 }
 

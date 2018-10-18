@@ -1,25 +1,123 @@
 event PrivateData
 {
-	setv(@memoryunit,memoryunit_)
-	addstr(@memoryunit,@unit)
-	setv(@belongingToPower,SAVEbelongingToPower_)
-	addstr(@belongingToPower,@unit)
+	//お勉強用にミドナのルーティンを弄ってみたやつ　テストはしてないので実用時は適当に弄って下さい
+	
+	routine(getIndexNumber)
 	if (purpose == 1) {
-		setud(@belongingToPower, @power)
+		clear(@NewallbelongingToPower)
+		//まず、IndexNumberの1つ下までの保存要素を@NewallbelongingToPowerに格納
+		storeud(SAVEbelongingToPower,@allbelongingToPower)
+		set(idx,0)
+		while (idx<IndexNumber) {
+			index(@allbelongingToPower,idx,@belongingToPower)
+			addv(@NewallbelongingToPower,@belongingToPower)
+			add(idx,1)
+		}
+		
+		//そこに保存対象ユニットの所属勢力を追加
+		addv(@NewallbelongingToPower,@power)
+		
+		//残りを追加
+		pushv(@allbelongingToPower,idx)
+		add(IndexNumber,1)
+		while (idx>IndexNumber) {
+			index(@allbelongingToPower,IndexNumber,@belongingToPower)
+			addv(@NewallbelongingToPower,@belongingToPower)
+			add(IndexNumber,1)
+		}
+		
+		//保存
+		//これで順番は保たれる
+		setud(SAVEbelongingToPower,@NewallbelongingToPower)
 	}else if (purpose == 2) {
-		storeud(@belongingToPower,@belongingToPower)
+		storeud(SAVEbelongingToPower,@belongingToPower)
+		index(@belongingToPower,IndexNumber,@belongingToPower)
 	}else if (purpose == 3) {
-		setstatus(@memoryunit,magic,numberOfMember)
+		//数値を文字変数に変換して保存する
+		clear(@NewallnumberOfMember)
+
+		//まず、IndexNumberの1つ下までの保存要素を@NewallnumberOfMemberに格納
+		storeud(SAVEnumberOfMember,@allnumberOfMember)
+		set(idx,0)
+		while (idx<IndexNumber) {
+			index(@allnumberOfMember,idx,@numberOfMember)
+			addv(@NewallnumberOfMember,@numberOfMember)
+			add(idx,1)
+		}
+		
+		//そこに保存対象ユニットのメンバー数を追加
+		if (numberOfMember==1) {setv(@numberOfMember,_1)}
+		else if (numberOfMember==2) {setv(@numberOfMember,_2)}
+		else if (numberOfMember==3) {setv(@numberOfMember,_3)}
+		else if (numberOfMember==4) {setv(@numberOfMember,_4)}
+		else if (numberOfMember==5) {setv(@numberOfMember,_5)}
+		else if (numberOfMember==6) {setv(@numberOfMember,_6)}
+		else if (numberOfMember==7) {setv(@numberOfMember,_7)}
+		addv(@NewallnumberOfMember,@numberOfMember)
+		
+		//残りを追加
+		pushv(@allnumberOfMember,idx)
+		add(IndexNumber,1)
+		while (idx>IndexNumber) {
+			index(@allnumberOfMember,IndexNumber,@numberOfMember)
+			addv(@NewallnumberOfMember,@numberOfMember)
+			add(IndexNumber,1)
+		}
+		
+		//保存
+		//これで順番は保たれる
+		setud(SAVEnumberOfMember,@NewallnumberOfMember)
 	}else if (purpose == 4) {
-		pushstatus(@memoryunit,magic,numberOfMember)
+		//文字変数を数値に変換して返す
+		storeud(SAVEnumberOfMember,@numberOfMember)
+		index(@numberOfMember,IndexNumber,@numberOfMember)
+		if (@numberOfMember==_1) {set(numberOfMember,1)}
+		else if (@numberOfMember==_2) {set(numberOfMember,2)}
+		else if (@numberOfMember==_3) {set(numberOfMember,3)}
+		else if (@numberOfMember==_4) {set(numberOfMember,4)}
+		else if (@numberOfMember==_5) {set(numberOfMember,5)}
+		else if (@numberOfMember==_6) {set(numberOfMember,6)}
+		else if (@numberOfMember==_7) {set(numberOfMember,7)}
 	}else if (purpose == 5) {
-		storeskillofunit(@memoryunit,@objectiveClass)
-		index(@objectiveClass,1,@objectiveClass)
-		pushstatus(@memoryunit,defense,objectiveNumber)
+		//文字変数を数値に変換して返す
+		storeud(SAVEobjectiveNumber,@objectiveNumber)
+		index(@objectiveNumber,IndexNumber,@objectiveNumber)
+		if (@objectiveNumber==_0) {set(objectiveNumber,0)}
+		else if (@objectiveNumber==_1) {set(objectiveNumber,1)}
+		else if (@objectiveNumber==_2) {set(objectiveNumber,2)}
+		else if (@objectiveNumber==_3) {set(objectiveNumber,3)}
 	}else if (purpose == 6) {
-		storeclassofunit(@memoryunit,@politicsUnit)
+		storeud(SAVEpoliticsUnit,@politicsUnit)
+		index(@politicsUnit,IndexNumber,@politicsUnit)
 	}else if (purpose == 7) {
-		storeraceofunit(@memoryunit,@startClass)
-		pushstatus(@memoryunit,attack,startLv)
+		storeud(SAVEstartClass,@startClass)
+		index(@startClass,IndexNumber,@startClass)
+		
+		//文字変数を数値に変換して返す
+		storeud(SAVEstartLv,@startLv)
+		index(@startLv,IndexNumber,@startLv)
+		if (@startLv==_1) {set(startLv,1)}
+		else if (@startLv==_11) {set(startLv,11)}
+		else if (@startLv==_21) {set(startLv,21)}
+		else if (@startLv==_31) {set(startLv,31)}
+		else if (@startLv==_16) {set(startLv,16)}
+	}
+}
+
+event getIndexNumber
+{
+	//alltalentにはゲーム開始時点でstorealltalentした変数をsetudしておく
+	//(storealltalentは未登場や死亡も含むため本来変化しないはずなのだが、ミドナは何故かtalent=onになっていない
+	//内政ユニットまで格納されるため、何かの手違いで変化する可能性があるので念のために初期段階で保存しておく)
+	//この変数の何番目に格納されているかを取得し、この順番に要素を並べればprivateDataは全員上記のルーティンで
+	//取り出せる
+	//このルーティンはIndexNumberにindexで何番を入力すれば取り出せるかを返す
+	//(該当なしは0になるが、0番目は内政ユニットなのでまあ問題ない)
+	storeud(alltalent,@alltalent)
+	pushv(@alltalent,IndexNumber)
+	while (IndexNumber>0) {
+		sub(IndexNumber,1)
+		index(@alltalent,IndexNumber,@talent)
+		if (@talent==@unit) {break()}
 	}
 }

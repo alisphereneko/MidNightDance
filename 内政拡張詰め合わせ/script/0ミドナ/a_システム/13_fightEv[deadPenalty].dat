@@ -1,0 +1,135 @@
+//■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■
+event deadPenalty
+{
+//■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■
+//(※挙動に怪しい箇所あり、細心の注意を払うこと)■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■
+//■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■
+//▼▼(１デッドペナルティ被破壊者処理（※リーダーのみ）)▼▼
+//▼▼【解説】・次に被破壊者(@dead_event_d)が人材且リーダーなら気位スキルに従って忠誠値を低下させる。
+//▼▼また自身が破壊された際に発動する固有能力もここで処理する。
+//▼▼(※最後に破壊者による感染系クラススキル処理も実行)
+	clear(@deadUnit)
+	setv(@deadUnit, @dead_event_d)
+	storeSkillOfUnit(@deadUnit, @skill)
+	storePowerOfUnit(@deadUnit, @power)
+//ΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞ
+//※※＜(デバック用)＞※※
+//if (isTalent(@deadUnit) == 1 && @power == @) {
+//talk(fel, fel_tu.png, ［デバックメッセージ］警告！勢力記入なしユニットだよ。$現在放浪状態になってる可能性があるかも？$人材名「&deadUnit&」)
+//}
+//ΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞ
+	if (isTalent(@deadUnit) == 1 && isLeader(@deadUnit) == 1 && @power != @) {
+		addv(@allDeadLeader, @deadUnit)
+		if (has(@skill, pride_d) == 1 && isMaster(@deadUnit) == 0) {
+			set(loyalSubSize, 10)
+		}else if (has(@skill, pride_c) == 1 && isMaster(@deadUnit) == 0) {
+			set(loyalSubSize, 20)
+		}else if (has(@skill, pride_b) == 1 && isMaster(@deadUnit) == 0) {
+			set(loyalSubSize, 30)
+		}else if (has(@skill, pride_a) == 1 && isMaster(@deadUnit) == 0) {
+			set(loyalSubSize, 40)
+		}else if (has(@skill, pride_s) == 1 && isMaster(@deadUnit) == 0) {
+			set(loyalSubSize, 50)
+		}
+//[勇猛＆慈愛]〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓
+//※スキル［勇猛］及び[慈愛]による破壊時忠誠無効化を発動※____________________________________________________________________________________________________
+		if (has(@skill, bravery) == 1 || has(@skill, affectionate) == 1) {
+			if (has(@skill, seal10) == 0 && has(@skill, seal9) == 0 && has(@skill, seal8) == 0 && has(@skill, seal7) == 0 && has(@skill, seal6) == 0&& has(@skill, seal5) == 0 && has(@skill, seal4) == 0 && has(@skill, seal3) == 0 && has(@skill, seal2) == 0 && has(@skill, seal1) == 0) {
+				set(loyalSubSize, 0)
+			}
+		}
+//[離間策]〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓
+//※スキル「離間策」の被対象ユニットはここで更に忠誠を失う※____________________________________________________________________________________________________
+		if (has(@allAlienateVictim_Double, @deadUnit) == 1 && isMaster(@deadUnit) == 0) {
+			set(victimDamage, 30)
+			pushv(@allAlienateVictim_Double, @deadUnit, victimDamageMul)
+			mul(victimDamage, victimDamageMul)
+		}
+		if (has(@allAlienateVictim, @deadUnit) == 1 && isMaster(@deadUnit) == 0) {
+			set(victimDamage, 15)
+			pushv(@allAlienateVictim, @deadUnit, victimDamageMul)
+			mul(victimDamage, victimDamageMul)
+		}
+		add(loyalSubSize, victimDamage)
+//[非難]〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓
+//※スキル［非難］による一時能力を付与する予定のユニットを探しまとめて設定する※____________________________________________________________________________________________________
+//※ここで付与すれば二重習得が発生するため、実行は戦闘終了後実行※____________________________________________________________________________________________________
+		if (has(@skill, condemn) == 1) {
+			if (has(@skill, seal10) == 0 && has(@skill, seal9) == 0 && has(@skill, seal8) == 0 && has(@skill, seal7) == 0 && has(@skill, seal6) == 0&& has(@skill, seal5) == 0 && has(@skill, seal4) == 0 && has(@skill, seal3) == 0 && has(@skill, seal2) == 0 && has(@skill, seal1) == 0) {
+				clear(@killerUnit)
+				setv(@killerUnit, @dead_event_a)
+				storePowerOfUnit(@killerUnit, @destroyerPower)
+				storeLeaderOfPower(@destroyerPower, @absenceBattleLeader)
+				subv(@absenceBattleLeader, @allBattleLeader)
+				storeLeaderOfPower(@destroyerPower, @allDestroyerLeader)
+				subv(@allDestroyerLeader, @absenceBattleLeader)
+//ΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞ
+//pushv(@allDestroyerLeader, allDestroyerLeaderCount)
+//talk(fel, fel_tu.png, ［デバックメッセージ］一時スキル［非難］が発動した筈だよ。$破壊勢力「&destroyerPower&」人数「&allDestroyerLeaderCount&」)
+//ΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞ
+				if (has(@skill, double) == 0) {
+					addv(@condemn5EquippingUnit, @allDestroyerLeader)
+				}else if (has(@skill, double) == 1) {
+					addv(@condemn10EquippingUnit, @allDestroyerLeader)
+				}
+			}
+		}
+//[マゾヒスト]〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓
+//※スキル［マゾヒスト］所持者は忠誠を回復※____________________________________________________________________________________________________
+		if (has(@skill, masochist) == 1) {
+			if (has(@skill, seal10) == 0 && has(@skill, seal9) == 0 && has(@skill, seal8) == 0 && has(@skill, seal7) == 0 && has(@skill, seal6) == 0&& has(@skill, seal5) == 0 && has(@skill, seal4) == 0 && has(@skill, seal3) == 0 && has(@skill, seal2) == 0 && has(@skill, seal1) == 0) {
+				if (has(@skill, double) == 0) {
+ 					set(loyaltyOFFskillchange_loyal,30) routine(loyaltyOFFskillchange_addloyal_deadunit)//mod変更行
+				}else if (has(@skill, double) == 1) {
+					set(loyaltyOFFskillchange_loyal,60) routine(loyaltyOFFskillchange_addloyal_deadunit)//mod変更行
+				}
+			}
+		}
+//〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓
+		if (has(@skill, loyaltykeep) == 1) {
+			set(loyalSubSize, 0)
+		}else if (has(@skill, loyaltybuffer) == 1) {
+			per(loyalSubSize, 50)
+		}
+		mul(loyalSubSize, -1)
+		set(loyaltyOFFskillchange_loyal,loyalSubSize) routine(loyaltyOFFskillchange_addloyal_deadunit)//mod変更行
+
+//※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※
+//[破壊者クラススキル処理(感染系)]▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽▽
+//※クラススキル「ゾンビ感染」「顔文字感染」「クローンフェル化」のスキル発動※____________________________________________________________________________________________________
+//※破壊者(@dead_event_a)のスキルを読み込み、上記所持者ならば被破壊者(@deadUnit)をリストに登録※____________________________________________________________________________________________________
+		if (has(@skill, medicine) == 0) {
+			clear(@killerUnit)
+			setv(@killerUnit, @dead_event_a)
+			storeSkillOfUnit(@killerUnit, @skill)
+			clear(@dead_event_a)
+			if (has(@skill, infectzombie) == 1) {
+				addv(@allInfectVictimUnit, @deadUnit)
+				addv(@allZombieVictimUnit, @deadUnit)
+			}else if (has(@skill, infectkaomozi) == 1) {
+				addv(@allInfectVictimUnit, @deadUnit)
+				addv(@allKaomoziVictimUnit, @deadUnit)
+			}else if (has(@skill, infectfel) == 1) {
+				addv(@allInfectVictimUnit, @deadUnit)
+				addv(@allFelVictimUnit, @deadUnit)
+			}
+		}
+//※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※
+//■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■
+
+//■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■
+//▼▼(２デッドペナルティ被破壊者処理（※非リーダーのみ）)▼▼
+//▼▼【解説】・部隊員の人材はここで在籍勢力(@belongingToPower_?)を登録して強制的に休暇処理を実行。
+	}else if (isTalent(@deadUnit) == 1 && isLeader(@deadUnit) == 0 && @power != @) {
+			setv(@unit, @deadUnit)
+//ΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞ
+//choice(testChoice, 一時停止テスト用「※バトル時非リーダー撃破処理」)
+//talk(fel, fel_tu.png, ［デバックメッセージ］非リーダー撃破処理発動したよ。$人材名「&unit&」所属勢力名「&power&」)
+//ΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞ
+			set(purpose, 1)
+			routine(privateData)
+			routine(sleepRemoval)
+	}
+	clear(@dead_event_d)
+}
+//■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■

@@ -36,6 +36,7 @@ event ObjectiveautoCCmod_hozon2
 event ObjectiveautoCCmod_search2
 {
 	//@classの優先クラスチェンジ先保存用のユニットを呼び出すルーティン
+	//不在の場合新しく作成せずnoneを返す
 	setv(@sikibetusihozontarget,@class)
 	setv(@sikibetusihozonspot,autoCCmodspot2)
 	setv(@sikibetusihozoncache,ObjectiveautoCCmod_cache_class)

@@ -10,10 +10,15 @@ event ObjectiveautoCCmod_trigger
 	if (ptest(politics1,Objectiveautoclasschangeclass)) {event(ObjectiveautoCCmod_classchoiceforEachClass)}
 }
 
-event objectiveautoCCmod_addunit
+event objectiveautoCCmod_addunit_1.04
 {
-	eraseunit(011autoChange)
-	addunit(011autoChange_kaihen,politics1)
+	addunit(ObjectiveautoCCmod_cache_unit,nekotempspot2)
+	addunit(ObjectiveautoCCmod_cache_class,nekotempspot2)
+	
+	if (yet(objectiveautoCCmod_addunit)) {
+		eraseunit(011autoChange)
+		addunit(011autoChange_kaihen,politics1)
+	}
 }
 
 event ObjectiveautoCCmod_main
@@ -25,28 +30,29 @@ event ObjectiveautoCCmod_main
 		setv(@objectiveCC2,@objectiveCC)
 		subv(@objectiveCC,infectzombie) subv(@objectiveCC,infectkaomozi) subv(@objectiveCC,infectfel)
 		//感染系でクラスチェンジされたユニットは対象にならない
-		if (@objectiveCC!=@objectiveCC2) {return()}
-		routine(ObjectiveautoCCmod_search)
-		pushstatus(@sikibetusihozonresults,attack,ObjectiveautoCCONOFF)
-		if (ObjectiveautoCCONOFF!=0) {
-			storeskillofunit(@sikibetusihozonresults,@objectiveClass)
-			index(@objectiveClass,1,@objectiveClass)
-			//msg(&unit& &ObjectiveautoCCONOFF& &objectiveClass&)
-		}
-		else {
-			storebaseclassofunit(@unit,@class)
-			routine(ObjectiveautoCCmod_search2)
+		if (@objectiveCC==@objectiveCC2) {
+			routine(ObjectiveautoCCmod_search)
 			pushstatus(@sikibetusihozonresults,attack,ObjectiveautoCCONOFF)
 			if (ObjectiveautoCCONOFF!=0) {
 				storeskillofunit(@sikibetusihozonresults,@objectiveClass)
 				index(@objectiveClass,1,@objectiveClass)
-				//msg(&class& &ObjectiveautoCCONOFF& &objectiveClass&)
+				//msg(&unit& &ObjectiveautoCCONOFF& &objectiveClass&)
 			}
-		}
-		if (@objectiveClass==mizusyoubaim || @objectiveClass==mizusyoubaiw) {
-			pushsex(@unit,unitSex)
-			if (unitSex==1) {setv(@objectiveClass,mizusyoubaim)}
-			else {setv(@objectiveClass,mizusyoubaiw)}
+			else {
+				storebaseclassofunit(@unit,@class)
+				routine(ObjectiveautoCCmod_search2)
+				pushstatus(@sikibetusihozonresults,attack,ObjectiveautoCCONOFF)
+				if (ObjectiveautoCCONOFF!=0) {
+					storeskillofunit(@sikibetusihozonresults,@objectiveClass)
+					index(@objectiveClass,1,@objectiveClass)
+					//msg(&class& &ObjectiveautoCCONOFF& &objectiveClass&)
+				}
+			}
+			if (@objectiveClass==mizusyoubaim || @objectiveClass==mizusyoubaiw) {
+				pushsex(@unit,unitSex)
+				if (unitSex==1) {setv(@objectiveClass,mizusyoubaim)}
+				else {setv(@objectiveClass,mizusyoubaiw)}
+			}
 		}
 	}
 }
@@ -189,7 +195,7 @@ event ObjectiveautoCCmod_classchoiceforEachClass
 		set(ObjectiveautoCCmodnum2,0)
 		while (ObjectiveautoCCmodnum>ObjectiveautoCCmodnum2) {
 			index(@sikibetusihozonresults,ObjectiveautoCCmodnum2,@ObjectiveautoCCmodtemp)
-			if (@ObjectiveautoCCmodtemp==none) {addv(@ObjectiveautoCCmodtemp2,ObjectiveautoCCmod_omakase)}
+			if (@ObjectiveautoCCmodtemp==sikibetusi_empty) {addv(@ObjectiveautoCCmodtemp2,ObjectiveautoCCmod_omakase)}
 			else {
 				storeskillofunit(@ObjectiveautoCCmodtemp,@ObjectiveautoCCmodtemp)
 				index(@ObjectiveautoCCmodtemp,1,@ObjectiveautoCCmodtemp)
@@ -247,6 +253,11 @@ event ObjectiveautoCCmod_classchoiceforEachClass
 		set(classChangeActive, 0)
 
 		routine(autoCC_save)
+		clear(@ObjectiveautoCCmodtemp) clear(@ObjectiveautoCCmodtemp2) clear(@ObjectiveautoCCmod1)
+		clear(@ObjectiveautoCCmod2) clear(@ObjectiveautoCCmod3) clear(@ObjectiveautoCCmod4)
+		clear(@ObjectiveautoCCmod5) clear(@ObjectiveautoCCmod6) clear(@ObjectiveautoCCmod7)
+		clear(@ObjectiveautoCCmod8) clear(@ObjectiveautoCCmod9) clear(@ObjectiveautoCCmod10)
+		clear(@ObjectiveautoCCmod11) clear(@ObjectiveautoCCmod12) clear(@ObjectiveautoCCmod0)
 	}
 	clear(@ObjectiveautoCCmodtemp) clear(@ObjectiveautoCCmodtemp2) clear(@ObjectiveautoCCmod1)
 	clear(@ObjectiveautoCCmod2) clear(@ObjectiveautoCCmod3) clear(@ObjectiveautoCCmod4)

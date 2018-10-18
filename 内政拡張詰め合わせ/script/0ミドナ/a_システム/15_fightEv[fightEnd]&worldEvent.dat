@@ -215,7 +215,7 @@ if (SWITCHbattleAfter == 1 && SWITCHbattleSystemOff == 0 && isNewTurn() == 0 && 
 				}else if (has(@skill, double) == 1) {
 					mul(allDeadLeaderCount, 4)
 				}
-				addLoyal(@unit, allDeadLeaderCount)
+				routine(loyaltyOFFskillchange_addloyal_allDeadLeaderCounttype) //mod変更行
 			}
 		}
 		if (has(@skill, affectionate) == 1) {
@@ -227,7 +227,7 @@ if (SWITCHbattleAfter == 1 && SWITCHbattleSystemOff == 0 && isNewTurn() == 0 && 
 				}else if (has(@skill, double) == 1) {
 					mul(allDeadLeaderCount, -4)
 				}
-				addLoyal(@unit, allDeadLeaderCount)
+				routine(loyaltyOFFskillchange_addloyal_allDeadLeaderCounttype) //mod変更行
 			}
 		}
 		if (has(@skill, sadist) == 1) {
@@ -241,7 +241,7 @@ if (SWITCHbattleAfter == 1 && SWITCHbattleSystemOff == 0 && isNewTurn() == 0 && 
 				}else if (has(@skill, double) == 1) {
 					mul(allDeadLeaderCount, 8)
 				}
-				addLoyal(@unit, allDeadLeaderCount)
+				routine(loyaltyOFFskillchange_addloyal_allDeadLeaderCounttype) //mod変更行
 			}
 		}
 //■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■
@@ -329,11 +329,11 @@ if (SWITCHbattleAfter == 1 && SWITCHbattleSystemOff == 0 && isNewTurn() == 0 && 
 					if (has(@skill, seal10) == 0 && has(@skill, seal9) == 0 && has(@skill, seal8) == 0 && has(@skill, seal7) == 0 && has(@skill, seal6) == 0&& has(@skill, seal5) == 0 && has(@skill, seal4) == 0 && has(@skill, seal3) == 0 && has(@skill, seal2) == 0 && has(@skill, seal1) == 0) {
 						set(madnessLoyalHeal, numberOfMember)
 						mul(madnessLoyalHeal, 2)
-						addLoyal(@unit, madnessLoyalHeal)
+						routine(loyaltyOFFskillchange_addloyal_madness) //mod変更行
 					}
 				}
 				mul(loyalSubSize, -1)
-				addLoyal(@unit, loyalSubSize)
+				routine(loyaltyOFFskillchange_addloyal_member)//mod変更行
 //ΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞΞ
 // if (has(@skill, pride_d) == 1) {
 // 	set(loyalSize, 5)
