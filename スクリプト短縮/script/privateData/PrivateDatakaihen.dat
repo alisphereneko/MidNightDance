@@ -1,10 +1,11 @@
-event PrivateData
+event privateData
 {
 	//お勉強用にミドナのルーティンを弄ってみたやつ　テストはしてないので実用時は適当に弄って下さい
-	//別々の識別子や数値変数に保存していたデータを全ユニット共通にすることにより、簡易なルーティンに
+	//個別の識別子や数値変数に保存していたデータを全ユニット共通にすることにより、簡易なルーティンに
 	//よるゲーム中の書き換えがしやすくなり、メンテナンス性も上がります…動けば。
-	//if式数的にも総合的に見ればさほど変化はないと思います。あとはstoreud、setud、indexあたりの処理
-	//速度がどの程度であるか次第か。
+	//if式数的にも総合的に見ればさほど変化はないと思います。
+	//あとはstoreud、setud、indexあたりの処理速度がどの程度であるか次第か。
+	//ちょっと動かしてみた感じだとそんなに重くは無かったです
 
 	routine(getIndexNumber)
 
@@ -108,6 +109,7 @@ event PrivateData
 		else if (@startLv==_21) {set(startLv,21)}
 		else if (@startLv==_31) {set(startLv,31)}
 		else if (@startLv==_16) {set(startLv,16)}
+		else {set(startLv,0)}
 	}
 }
 
