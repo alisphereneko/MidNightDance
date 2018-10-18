@@ -1,8 +1,13 @@
 event PrivateData
 {
 	//お勉強用にミドナのルーティンを弄ってみたやつ　テストはしてないので実用時は適当に弄って下さい
-	
+	//別々の識別子や数値変数に保存していたデータを全ユニット共通にすることにより、簡易なルーティンに
+	//よるゲーム中の書き換えがしやすくなり、メンテナンス性も上がります…動けば。
+	//if式数的にも総合的に見ればさほど変化はないと思います。あとはstoreud、setud、indexあたりの処理
+	//速度がどの程度であるか次第か。
+
 	routine(getIndexNumber)
+
 	if (purpose == 1) {
 		clear(@NewallbelongingToPower)
 		//まず、IndexNumberの1つ下までの保存要素を@NewallbelongingToPowerに格納
@@ -15,6 +20,7 @@ event PrivateData
 		}
 		
 		//そこに保存対象ユニットの所属勢力を追加
+		if (@power==0) {setv(@power,empty)}
 		addv(@NewallbelongingToPower,@power)
 		
 		//残りを追加
@@ -53,6 +59,7 @@ event PrivateData
 		else if (numberOfMember==5) {setv(@numberOfMember,_5)}
 		else if (numberOfMember==6) {setv(@numberOfMember,_6)}
 		else if (numberOfMember==7) {setv(@numberOfMember,_7)}
+		else {setv(@numberOfMember,empty)}
 		addv(@NewallnumberOfMember,@numberOfMember)
 		
 		//残りを追加
@@ -112,7 +119,7 @@ event getIndexNumber
 	//この変数の何番目に格納されているかを取得し、この順番に要素を並べればprivateDataは全員上記のルーティンで
 	//取り出せる
 	//このルーティンはIndexNumberにindexで何番を入力すれば取り出せるかを返す
-	//(該当なしは0になるが、0番目は内政ユニットなのでまあ問題ない)
+	//(該当なしは0になるが、0番目は内政ユニットなのでまあ使用されないし問題ないだろう)
 	storeud(alltalent,@alltalent)
 	pushv(@alltalent,IndexNumber)
 	while (IndexNumber>0) {

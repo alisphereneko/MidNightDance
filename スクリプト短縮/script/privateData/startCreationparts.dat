@@ -5,11 +5,13 @@ event ObjectiveConfig_kaihen
 	//本家はこの部分で指向変数を乱数で決め、クラスチェンジ処理時にその指向変数に沿ってクラスチェンジ先を選ぶが
 	//改変後はこの段階でもうクラスチェンジ先を抽選し保存する
 	//改変後は指向クラスの変更が汎用ルーティンで容易になるため必要なくなるとは思うがobjectivenumberも一応保存する
-	//また、同時にstartClass,startLv,politicsUnitも保存する
+	//また、同時にその他の個人データの保存または初期処理も行う
 
 	storeAllTalent(@allUnit)
 	setud(alltalent,@allUnit)
 
+	clear(@allbelongingToPower)
+	clear(@allnumberOfMember)
 	clear(@allObjectiveClass)
 	clear(@allObjectiveNumber)
 	clear(@allPoliticsUnit)
@@ -2010,7 +2012,14 @@ event ObjectiveConfig_kaihen
 		else if (startLv==31) {addv(@allStartLv,_31)}
 		else if (startLv==16) {addv(@allStartLv,_16)}
 		else {addv(@allStartLv,empty)}
+
+		//所属勢力とメンバー数はとりあえずemptyを詰めておく
+		addv(@allbelongingToPower,empty)
+		addv(@allnumberOfMember,empty)
 	}
+	
+	setud(SAVEbelongingToPower,@allbelongingToPower)
+	setud(SAVEnumberOfMember,@NewallnumberOfMember)
 	setud(SAVEobjectiveClass,@allObjectiveClass)
 	setud(SAVEobjectiveNumber,@allObjectiveNumber)
 	setud(SAVEpoliticsUnit,@allPoliticsUnit)
