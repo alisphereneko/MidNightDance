@@ -1,0 +1,78 @@
+event changePrivateData
+{
+	//@routineSendsの内のindexNumberで指定された位置のデータを@routineSends2に置き換えるルーティン。
+	//同要素を含む可能性がある関係でsubvなどが利用できないので特殊なルーティンを組んでいる。
+	//@routineSendsに置き換えられる全体のデータを、@routineSends2に置き換える新しいデータを代入して呼ぶ。
+	//@routineSends2に複数要素変数を指定しないこと(順番が乱れる)。
+	//変更後のデータは@routineResultsに入る。
+	//当然だが事前にgetIndexNumberを使うこと。
+	clear(@routineResults)
+	
+	//まず、indexNumberの1つ下までの保存要素を@routineResultsに格納
+	set(idx,0)
+	while (idx<indexNumber) {
+		index(@routineSends,idx,@routine)
+		addv(@routineResults,@routine)
+		add(idx,1)
+	}
+	
+	//そこに保存対象データを追加
+	if (@routineSends2==0) {setv(@routineSends2,empty)}
+	addv(@routineResults,@routineSends2)
+	
+	//残りを追加
+	set(idx,indexNumber)
+	add(idx,1)
+	pushv(@routineSends,idx2)
+	while (idx2>idx) {
+		index(@routineSends,idx,@routine)
+		addv(@routineResults,@routine)
+		add(idx,1)
+	}
+}
+
+event numberTranslate
+{
+	//routineSendの数値に対応する文字変数を@routineResultsに返す
+	if (routineSend==0) {setv(@routineResults,_0)}
+	else if (routineSend==1) {setv(@routineResults,_1)}
+	else if (routineSend==2) {setv(@routineResults,_2)}
+	else if (routineSend==3) {setv(@routineResults,_3)}
+	else if (routineSend==4) {setv(@routineResults,_4)}
+	else if (routineSend==5) {setv(@routineResults,_5)}
+	else if (routineSend==6) {setv(@routineResults,_6)}
+	else if (routineSend==7) {setv(@routineResults,_7)}
+	else if (routineSend==11) {setv(@routineResults,_11)}
+	else if (routineSend==21) {setv(@routineResults,_21)}
+	else if (routineSend==31) {setv(@routineResults,_31)}
+	else if (routineSend==16) {setv(@routineResults,_16)}
+	else {setv(@routineResults,_0)}
+}
+
+event numberTranslate2
+{
+	//@routineSendsの文字変数数字に対応する数値をroutineResultに返す
+	if (@routineSends==_0) {set(routineResult,0)}
+	else if (@routineSends==_1) {set(routineResult,1)}
+	else if (@routineSends==_2) {set(routineResult,2)}
+	else if (@routineSends==_3) {set(routineResult,3)}
+	else if (@routineSends==_4) {set(routineResult,4)}
+	else if (@routineSends==_5) {set(routineResult,5)}
+	else if (@routineSends==_6) {set(routineResult,6)}
+	else if (@routineSends==_7) {set(routineResult,7)}
+	else if (@routineSends==_11) {set(routineResult,11)}
+	else if (@routineSends==_21) {set(routineResult,21)}
+	else if (@routineSends==_31) {set(routineResult,31)}
+	else if (@routineSends==_16) {set(routineResult,16)}
+	else {set(routineResult,0)}
+}
+
+event changeObjectiveClass
+{
+	//@unitの指向クラスを変更するサンプルルーティン
+	//プレイヤーもCPUも一律に変更される
+
+	routine(getIndexNumber)
+	storeud(SAVEobjectiveClass,@routineSends)
+	setv(@routineSends2,@newObjectiveClass)
+}

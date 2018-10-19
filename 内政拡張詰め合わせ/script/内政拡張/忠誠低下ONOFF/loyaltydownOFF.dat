@@ -111,7 +111,7 @@ event loyaltyOFFskillchange_addloyal
 			}
 		}
 	}
-	else if (isnpc(@loyaltyOFFskillchangepower)) {
+	else {
 		addLoyal(@loyaltyOFFskillchangeunit,loyaltyOFFskillchange_loyal)
 	}
 }

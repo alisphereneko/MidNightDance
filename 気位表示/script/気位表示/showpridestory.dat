@@ -1,6 +1,5 @@
 story showpride
 {
-	if (yet(showprideskillchange)) {routine(showprideskillchange)}
 	if (isPlayerturn()) {
 		routine(showprideskillchange)
 	}
